@@ -3,13 +3,15 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `TOWERS.md`, `STAT_TREE.md`, `LEVEL_DESIGN.md`, `WAVE_PACING.md`, `STAGE_BOSSES.md`, `REBIRTH.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `TUTORIAL.md`, `SOCIAL.md`, `SETTINGS.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`
+- 관련 문서: `V1_COMPLETION_PACING.md`, `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `TOWERS.md`, `STAT_TREE.md`, `LEVEL_DESIGN.md`, `WAVE_PACING.md`, `STAGE_BOSSES.md`, `REBIRTH.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `TUTORIAL.md`, `SOCIAL.md`, `SETTINGS.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`
 - 하위 문서 예정: `../spec/PROGRESSION.md`
 - 마지막 정리: 2026-08-02
 
 ## 요약
 
 Tower RNG의 진행은 무료 굴리기, 자동 전투, 직접 코인 수집, 물리적 스테이지 문, 하나의 거대한 스탯 트리와 방어 경험치 환생으로 구성합니다.
+
+V1 메인 콘텐츠 완주는 스테이지 15 최초 클리어이며 활성 플레이 중앙값 `12~15시간`을 목표로 합니다. 빠른 진행은 `8~10시간`, 느린 진행은 `18~22시간`, 스테이지 15 안정 파밍과 V1 숙련은 `20~30시간`을 목표로 합니다. 전체 수집에는 완료 시간을 두지 않습니다.
 
 첫 수직 슬라이스의 경제 기준:
 
@@ -283,6 +285,8 @@ RequiredDefenseXP(r) = 7,000 × (r + 1)^1.65
 
 자동 합체는 만들지 않습니다.
 
+기능별 목표 해금 시간과 메인 완주 구간은 `V1_COMPLETION_PACING.md`를 따릅니다. V1 핵심 시스템은 약 5~7시간까지 모두 해금하고, 이후 구간은 이미 해금한 시스템을 조합해 후반 지역을 공략하도록 설계합니다.
+
 ---
 
 ## 10. 재접속 진행
@@ -298,7 +302,7 @@ RequiredDefenseXP(r) = 7,000 × (r + 1)^1.65
 
 ---
 
-## 11. 출시 범위
+## 11. 출시 범위와 완주
 
 - 일반 굴리기 타워 최소 50종
 - 역할별 약 8~10종
@@ -311,7 +315,15 @@ RequiredDefenseXP(r) = 7,000 × (r + 1)^1.65
 - 희귀 타워 리더보드
 - 설정·접근성
 
-라이브 웨이브는 후속 콘텐츠로 유지합니다.
+```text
+스테이지 15 최초 클리어 중앙값: 12~15시간
+빠른 완주: 8~10시간
+느린 완주: 18~22시간
+스테이지 15 안정 파밍·V1 숙련: 20~30시간
+전체 수집: 완료 시간 없음
+```
+
+특정 극희귀 타워·변종·합체 결과를 메인 완주 조건으로 요구하지 않습니다. 라이브 웨이브는 후속 콘텐츠로 유지합니다.
 
 ---
 
@@ -323,6 +335,7 @@ RequiredDefenseXP(r) = 7,000 × (r + 1)^1.65
 - 환생은 실제 전투 진행으로 획득
 - 코인 소비와 환생 진행을 분리
 - 약한 운에서도 15분 안에 첫 환생 가능
+- 특정 극희귀 없이 18~22시간 안에 느린 V1 완주 가능
 - 전투시간은 대기시간이 아니라 성장의 척도
 - 자동 합체와 거래 없음
 - 현재 행운 적용 확률 미표시
@@ -332,8 +345,10 @@ RequiredDefenseXP(r) = 7,000 × (r + 1)^1.65
 
 ## 13. 남은 검증
 
-- 최초 50종 공식 분모와 실제 첫 10분 전투력 분포
-- 스테이지 2·3 실제 전투 데이터
-- 두 번째 환생 요구량
-- 환생 영구 배율 공식
+- 최초 50종 공식 분모와 실제 첫 10분·15시간 전투력 분포
+- 지역별 누적 도달시간과 문 가격
+- 스테이지 2~15 실제 전투 데이터
+- 두 번째 이후 환생 요구량과 영구 배율
+- 변종·합체·텔레포터 실제 해금 시각
+- 빠른·중앙·느린 스테이지 15 도달 시뮬레이션
 - 이벤트·한정 풀 운영
