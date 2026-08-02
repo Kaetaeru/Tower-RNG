@@ -2,7 +2,7 @@
 
 - 계층: 게임 기획
 - 상태: Confirmed with provisional balance values
-- 관련 문서: `docs/design/POTIONS.md`, `docs/COMBAT_AND_LEVEL_DESIGN.md`
+- 관련 문서: `docs/design/POTIONS.md`, `docs/design/LEVEL_DESIGN.md`
 - 하위 문서 예정: `docs/spec/CURRENCY.md`
 - 마지막 정리: 2026-08-02
 
