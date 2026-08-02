@@ -1,267 +1,253 @@
 # Tower RNG 문서 인덱스
 
-- 상태: Active
-- 필수 참고: `../AGENTS.md`
+- 상태: **Active**
 - 마지막 정리: 2026-08-03
+- 필수 참고: `../AGENTS.md`
 
-## 문서 계층
-
-```text
-AGENTS.md
-→ README.md / docs/INDEX.md
-→ design
-→ reference
-→ spec
-→ technical
-→ implementation
-→ code
-```
-
-하위 데이터가 공개 규칙을 바꾸면 영향을 받는 상위 문서를 같은 작업에서 갱신합니다.
-
----
-
-## 프로젝트 진입
+## 먼저 볼 문서
 
 | 문서 | 책임 |
 |---|---|
-| `../README.md` | 최신 게임 루프·V1 범위·핵심 수치 |
-| `../AGENTS.md` | 승인·계층·동기화·수치·저장 원칙 |
-| `INDEX.md` | 문서 위치와 우선순위 |
+| `PROJECT_STATUS.md` | 전체 진행률, 마스터 체크리스트, 현재 다음 작업 |
+| `../README.md` | 게임 루프와 V1 범위 |
+| `../AGENTS.md` | 승인·동기화·저장·수치 작업 원칙 |
+| `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
+| `balance/INDEX.md` | 수식·가정·시뮬레이션·검증 결과 |
 
----
-
-## 게임 기획
-
-### 진행·확률·경제
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, V1 시간축, 스테이지 기준형 환생 |
-| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15 12~15시간, 실제 슬롯·코인 성장 완주 전력 |
-| `design/RNG_PROBABILITY.md` | Confirmed · Living | 임의 정밀도 `1/N`, 로그 압축과 환생 행운 공식 |
-| `design/ROLLING.md` | Confirmed · Living | 4.0→3.6초, 환생 속도와 2.0초 하한, 특수 굴림 |
-| `design/BALANCE_MODEL.md` | Confirmed · Living | PowerBudget, StageScale, SpawnCost, 보상 |
-| `design/ECONOMY_PACING.md` | Confirmed · Living | 영구 코인·문, 환생 XP·토큰 경제 |
-| `design/CURRENCY.md` | Confirmed · Living | 코인·정수·Defense XP·환생 토큰 |
-| `design/REBIRTH.md` | Confirmed · Living | XP 기준 스테이지, 토큰 4개, 네 스탯과 재분배 |
-| `design/STAT_TREE.md` | Confirmed · Living | 코인 트리와 네 분야 환생 스탯 |
-| `design/OFFLINE_PROGRESS.md` | Confirmed · Living | 제한된 오프라인 코인 |
-| `design/POTIONS.md` | Confirmed · Living | 포션 효과·시간·중첩 |
-
-### 타워·전투
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `design/TOWERS.md` | Confirmed · Living | 최소 50종, 역할·희귀도 성능 순서 |
-| `design/COMBAT.md` | Confirmed · Living | 추종 자동 전투와 역할 |
-| `design/FORMATION.md` | Confirmed · Living | 4→12슬롯 가격, 역할 상한 2→3→4, 자동 편성 |
-| `design/TARGETING.md` | Confirmed | 경로 진행도·예약 피해 |
-| `design/TOWER_BEHAVIOR.md` | Confirmed · Living | 이동·행동·전달 문법 |
-| `design/TOWER_EXTENSIONS.md` | Confirmed · Living | 고유 능력·사건 반응 |
-| `design/FUSION.md` | Confirmed · Living | 수동 합체·자동 합체 금지 |
-| `design/TOWER_VARIANTS.md` | Confirmed · Living | 인화성·독성·공허·거대 |
-| `design/PRESENTATION_FEEL.md` | Confirmed · Living | 모델 동작·피격·음향 중심 타격감 |
-
-### 월드·몬스터
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `design/WORLD_NAVIGATION.md` | Confirmed · Living | 물리적 영구 문·텔레포터·빠른 복귀 |
-| `design/LEVEL_DESIGN.md` | Confirmed · Living | 15스테이지·5웨이브·예산 |
-| `design/WAVE_PACING.md` | Confirmed · Living | 진입·파밍 시간과 후반 상한 |
-| `design/STAGE_VALIDATION.md` | Confirmed · Living | 기준 스테이지 완전 검증과 중간 스테이지 경량 생성·승격 규칙 |
-| `design/STAGE_BOSSES.md` | Confirmed · Living | 보스 계열·예산·보상 |
-| `design/MONSTERS.md` | Confirmed · Living | 몬스터 스케일·SpawnCost |
-
-### UI·운영
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `design/UI_FLOW.md` | Confirmed · Living | HUD·XP 기준 스테이지·네 스탯·재분배 흐름 |
-| `design/SETTINGS.md` | Confirmed · Living | 효과·카메라·음향·접근성 |
-| `design/SOCIAL.md` | Confirmed · Living | 공식 분모 리더보드·거래 금지 |
-| `design/MONETIZATION.md` | Confirmed · Living | 상품 방향과 금지선 |
-| `design/TUTORIAL.md` | Confirmed · Living | 최초 슬라임·4슬롯·자동 굴리기 |
-| `design/LIVE_WAVE.md` | Draft | 후속 서버 공동 전투 |
-
----
-
-## 참조 데이터와 벤치마크
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `reference/TOWER_CATALOG.md` | Active Catalog | 실제 타워 ID·행동·수치·자산 |
-| `reference/V1_TOWER_PROBABILITY_LADDER.md` | Active Benchmark | 50자리 공식 분모·정확한 합·전체 보유 체감 |
-| `reference/V1_TOP_TOWER_BENCHMARK.md` | Active Benchmark | 최고 일반 타워 `1/10^20`, 기여도 약 6,310 |
-| `reference/V1_LUCK_COMPRESSION_BENCHMARK.md` | Active Benchmark | 실제 환생 시각·행운·속도별 최고 타워 획득률 |
-| `reference/V1_REBIRTH_STAT_BENCHMARK.md` | Active Benchmark | 토큰 4개와 네 스탯 공식·집중 상한 |
-| `reference/V1_REBIRTH_XP_BENCHMARK.md` | Active Benchmark | XP 기준 스테이지·진행률 보존·20/35/50분 곡선 |
-| `reference/V1_ROSTER_POWER_DISTRIBUTION.md` | Active Benchmark | 20,000계정 보유·무제한 Top-K 전투력 분포 |
-| `reference/V1_FORMATION_SLOT_BENCHMARK.md` | Active Benchmark | 슬롯 5~12 가격·해금 시각·역할 제한 편성 P10/P50/P90 |
-| `reference/V1_COIN_COMBAT_BENCHMARK.md` | Active Benchmark | 코인 전투 ×1.25→×5.00와 통합 15h·30h 전투력 |
-| `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6역할 기여도 |
-| `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 몬스터와 보스 |
-| `reference/STAGE_CATALOG.md` | Active Catalog | 최초 전투·스테이지 1·문 가격 |
-| `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 스테이지 1 전체 15개 4역할 편성 검증 |
-| `reference/STAGE2_WAVE_BENCHMARK.md` | Active Benchmark | 스테이지 2 진입·파밍과 66초 경제 프록시 검증 |
-| `reference/STAGE3_WAVE_BENCHMARK.md` | Active Benchmark | 지역 1 최종전, 4슬롯 진입·5슬롯 78초 파밍 검증 |
-| `reference/STAGE4_5_LIGHT_BENCHMARK.md` | Active Benchmark | 사막 도입·심부의 대표 편성 6개 경량 검증과 62·68초 프록시 |
-| `reference/STAGE6_WAVE_BENCHMARK.md` | Active Benchmark | 지역 2 최종전, 6슬롯 진입·7슬롯 75초 파밍 검증 |
-| `reference/STAGE15_WAVE_BENCHMARK.md` | Active Benchmark | 15h P10/P50·30h P10의 스테이지 15 직접 클리어 검증 |
-| `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | Active Benchmark | 첫 7,000 XP 도달 |
-| `reference/STAT_TREE_CATALOG.md` | Active Catalog | 초기 코인 노드·좌표·가격 |
-
-지역:
+현재 전체 V1 준비도는 `PROJECT_STATUS.md` 기준 약 **31%**입니다.
 
 ```text
-1 초원·숲
-2 사막
-3 정글
-4 설원
-5 용암지대
+기획·밸런스만 보면 약 64%
+콘텐츠 카탈로그 약 12%
+저장소에서 확인되는 Roblox 구현·QA는 아직 초기 단계
 ```
 
 ---
 
-## 밸런스 도구
+# 문서 책임 구조
 
-| 경로 | 책임 |
-|---|---|
-| `../tools/balance/tower_baseline.py` | 최저급 6종 기여도 |
-| `../tools/balance/stage1_wave_sim.py` | 스테이지 1 웨이브 1~5 |
-| `../tools/balance/stage2_wave_sim.py` | 스테이지 2 진입·파밍과 66초 프록시 |
-| `../tools/balance/stage3_wave_sim.py` | 스테이지 3 지역 최종전과 78초 프록시 |
-| `../tools/balance/stage4_5_light_sim.py` | 스테이지 4·5 대표 편성 경량 검사와 62·68초 프록시 |
-| `../tools/balance/stage6_wave_sim.py` | 스테이지 6 지역 최종전과 75초 프록시 |
-| `../tools/balance/stage15_wave_sim.py` | 스테이지 15 집계 EC 직접 클리어 검증 |
-| `../tools/balance/stage_validation_plan.py` | 완전·경량 검증 스테이지와 15스테이지 계획률 |
-| `../tools/balance/first_rebirth_economy.py` | 첫 환생 임계점 경제 |
-| `../tools/balance/v1_probability_ladder.py` | 50슬롯·정확한 확률 합 |
-| `../tools/balance/v1_luck_compression.py` | 초기 독립 행운 계수 기록 |
-| `../tools/balance/v1_rebirth_xp_curve.py` | 스테이지 기준형 환생 XP와 횟수 |
-| `../tools/balance/rebirth_stat_tokens.py` | XP 곡선·네 스탯·굴림·최고 타워 통합 검증 |
-| `../tools/balance/v1_roster_power_distribution.py` | 20,000계정 보유 수량·무제한 Top-K 전투력 |
-| `../tools/balance/v1_formation_slot_economy.py` | 슬롯 가격·해금 시각·역할 제한 실제 편성 전투력 |
-| `../tools/balance/v1_coin_combat_curve.py` | 코인 전투 성장과 통합 Final EC |
+```text
+AGENTS.md
+→ README.md / docs/INDEX.md / docs/PROJECT_STATUS.md
+→ design        게임 규칙과 플레이어 경험
+→ catalog       실제 콘텐츠와 최종 채택 수치
+→ balance       계산·시뮬레이션·검증
+→ spec          정확한 시스템 동작 계약
+→ technical     서버·클라이언트·저장 구조
+→ implementation 실제 파일·함수·Remote 명세
+→ code          Roblox 구현
+```
+
+## 카탈로그와 계산 분리
+
+```text
+계산이 값을 추천
+→ catalog가 값을 채택
+→ implementation이 동일 값을 사용
+```
+
+- 카탈로그에는 시뮬레이션 로그와 역산 과정을 넣지 않습니다.
+- 계산 문서에는 최종 이름·자산을 확정하는 권한이 없습니다.
+- 계산용 임시 이름은 카탈로그 완료로 세지 않습니다.
+- 기존 `reference` 폴더는 링크 호환 영역이며 새 문서를 추가하지 않습니다.
+
+이전 안내: `reference/README.md`
 
 ---
+
+# 게임 기획
+
+## 진행·확률·경제
+
+| 문서 | 상태 | 책임 |
+|---|---|---|
+| `design/PROGRESSION.md` | Confirmed · Living | 최초 25초와 장기 진행 |
+| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 12~15시간 중앙 완주 |
+| `design/RNG_PROBABILITY.md` | Confirmed · Living | 공식 `1/N`과 행운 압축 |
+| `design/ROLLING.md` | Confirmed · Living | 굴리기 속도와 특수 굴림 |
+| `design/BALANCE_MODEL.md` | Confirmed · Living | 공통 수치 공식 |
+| `design/ECONOMY_PACING.md` | Confirmed · Living | 코인·문·환생 경제 |
+| `design/CURRENCY.md` | Confirmed · Living | 코인·정수·XP·환생 토큰 |
+| `design/REBIRTH.md` | Confirmed · Living | 진행 유지 환생과 네 스탯 |
+| `design/STAT_TREE.md` | Confirmed · Living | 코인 트리와 환생 스탯 |
+| `design/OFFLINE_PROGRESS.md` | Confirmed · Living | 제한된 오프라인 코인 |
+| `design/POTIONS.md` | Confirmed · Living | 포션 효과와 중첩 |
+
+## 타워·전투
+
+| 문서 | 상태 | 책임 |
+|---|---|---|
+| `design/TOWERS.md` | Confirmed · Living | 50종 이상과 역할·희귀도 |
+| `design/COMBAT.md` | Confirmed · Living | 추종 자동 전투 |
+| `design/FORMATION.md` | Confirmed · Living | 4→12슬롯과 역할 상한 |
+| `design/TARGETING.md` | Confirmed | 타겟 선정과 예약 피해 |
+| `design/TOWER_BEHAVIOR.md` | Confirmed · Living | 타워 행동 문법 |
+| `design/TOWER_EXTENSIONS.md` | Confirmed · Living | 고유 능력 확장 |
+| `design/FUSION.md` | Confirmed · Living | 수동 합체 |
+| `design/TOWER_VARIANTS.md` | Confirmed · Living | 변종 계열 |
+| `design/PRESENTATION_FEEL.md` | Confirmed · Living | 타격감과 피드백 |
+
+## 월드·몬스터·스테이지
+
+| 문서 | 상태 | 책임 |
+|---|---|---|
+| `design/WORLD_NAVIGATION.md` | Confirmed · Living | 물리적 영구 문과 복귀 |
+| `design/LEVEL_DESIGN.md` | Confirmed · Living | 15스테이지와 5웨이브 |
+| `design/WAVE_PACING.md` | Confirmed · Living | 진입·파밍 목표시간 |
+| `design/STAGE_VALIDATION.md` | Confirmed · Living | 완전·경량 검증 정책 |
+| `design/STAGE_BOSSES.md` | Confirmed · Living | 보스 예산과 보상 |
+| `design/MONSTERS.md` | Confirmed · Living | 몬스터 스케일과 SpawnCost |
+
+## UI·운영
+
+| 문서 | 상태 | 책임 |
+|---|---|---|
+| `design/UI_FLOW.md` | Confirmed · Living | HUD와 주요 흐름 |
+| `design/SETTINGS.md` | Confirmed · Living | 카메라·효과·접근성 |
+| `design/SOCIAL.md` | Confirmed · Living | 리더보드와 거래 금지 |
+| `design/MONETIZATION.md` | Confirmed · Living | 상품 방향과 금지선 |
+| `design/TUTORIAL.md` | Confirmed · Living | 최초 계정 튜토리얼 |
+| `design/LIVE_WAVE.md` | Draft | 후속 공동 전투 |
+
+---
+
+# 콘텐츠 카탈로그
+
+권위 인덱스: `catalog/INDEX.md`
+
+현재 기존 경로:
+
+| 문서 | 책임 |
+|---|---|
+| `reference/TOWER_CATALOG.md` | 타워 ID·행동·수치·자산 |
+| `reference/MONSTER_CATALOG.md` | 몬스터·보스 데이터 |
+| `reference/STAGE_CATALOG.md` | 지역·스테이지 데이터 |
+| `reference/STAT_TREE_CATALOG.md` | 코인 스탯 트리 데이터 |
+
+새 카탈로그 문서는 `docs/catalog`에만 작성합니다.
+
+---
+
+# 계산·검증
+
+권위 인덱스: `balance/INDEX.md`
+
+## 확률·타워 성장
+
+| 문서 | 책임 |
+|---|---|
+| `reference/V1_TOWER_PROBABILITY_LADDER.md` | 50자리 공식 확률표 |
+| `reference/V1_TOP_TOWER_BENCHMARK.md` | 최고 일반 타워 기준 |
+| `reference/V1_LUCK_COMPRESSION_BENCHMARK.md` | 행운 압축과 획득률 |
+| `reference/V1_ROSTER_POWER_DISTRIBUTION.md` | 시간대별 보유 전력 |
+| `reference/TOWER_BALANCE_BENCHMARK.md` | 최저급 6역할 기준 |
+
+## 환생·경제·편성
+
+| 문서 | 책임 |
+|---|---|
+| `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | 첫 환생 경제 |
+| `reference/V1_REBIRTH_XP_BENCHMARK.md` | 이후 환생 XP |
+| `reference/V1_REBIRTH_STAT_BENCHMARK.md` | 네 환생 스탯 |
+| `reference/V1_FORMATION_SLOT_BENCHMARK.md` | 슬롯 가격과 역할 제한 |
+| `reference/V1_COIN_COMBAT_BENCHMARK.md` | 코인 전투 성장 |
+
+## 스테이지 전투
+
+| 문서 | 상태 |
+|---|---|
+| `reference/STAGE1_WAVE_BENCHMARK.md` | 완전 검증 완료 |
+| `reference/STAGE2_WAVE_BENCHMARK.md` | 추가 완전 검증 완료 |
+| `reference/STAGE3_WAVE_BENCHMARK.md` | 지역 1 완전 검증 완료 |
+| `reference/STAGE4_5_LIGHT_BENCHMARK.md` | 지역 2 경량 검증 완료 |
+| `reference/STAGE6_WAVE_BENCHMARK.md` | 지역 2 완전 검증 완료 |
+| `reference/STAGE15_WAVE_BENCHMARK.md` | 집계 검증 완료·행동형 재검증 예정 |
+
+---
+
+# 밸런스 재현 도구
+
+경로: `../tools/balance`
+
+| 도구 | 책임 |
+|---|---|
+| `tower_baseline.py` | 최저급 역할 기여도 |
+| `v1_probability_ladder.py` | 공식 확률 합 |
+| `v1_luck_compression.py` | 행운 압축 |
+| `v1_rebirth_xp_curve.py` | 환생 XP 곡선 |
+| `rebirth_stat_tokens.py` | 환생 스탯·굴림 통합 |
+| `v1_roster_power_distribution.py` | 보유 전력 분포 |
+| `v1_formation_slot_economy.py` | 슬롯 경제 |
+| `v1_coin_combat_curve.py` | 코인 전투 성장 |
+| `stage1_wave_sim.py` | 스테이지 1 |
+| `stage2_wave_sim.py` | 스테이지 2 |
+| `stage3_wave_sim.py` | 스테이지 3 |
+| `stage4_5_light_sim.py` | 스테이지 4·5 |
+| `stage6_wave_sim.py` | 스테이지 6 |
+| `stage15_wave_sim.py` | 스테이지 15 집계 검증 |
+| `stage_validation_plan.py` | 검증 깊이와 계획 주기 |
+
+---
+
+# 시스템·기술 문서
+
+## 시스템 명세
+
+경로: `spec/`
+
+정확한 입력·출력·경계 조건·수용 조건을 기록합니다. 현재 서비스별 세부 명세는 마스터 체크리스트에서 추적합니다.
 
 ## 기술 설계
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `technical/STATE_LIFECYCLE.md` | Confirmed · Living | 프로필·XP 기준 상승·환생·토큰 재분배 원자성 |
-| `technical/TOWER_MODELING.md` | Confirmed · Living | 3D 모델과 모션 견본 |
-| `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 행동·전달·자원 문법 |
-| `technical/TOWER_EXTENSION_FRAMEWORK.md` | Confirmed · Living | 확장 모듈·훅 |
-| `technical/MONSTER_MODELING.md` | Confirmed · Living | 몬스터 제작 규약 |
+| `technical/STATE_LIFECYCLE.md` | Confirmed · Living | 프로필·재접속·환생 원자성 |
+| `technical/TOWER_MODELING.md` | Confirmed · Living | 타워 3D 제작 규약 |
+| `technical/MONSTER_MODELING.md` | Confirmed · Living | 몬스터 3D 제작 규약 |
+| `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 행동 데이터 문법 |
+| `technical/TOWER_EXTENSION_FRAMEWORK.md` | Confirmed · Living | 확장 모듈과 훅 |
+
+## 구현 명세
+
+경로: `implementation/`
+
+실제 Roblox 파일·모듈·Remote·데이터 스키마가 정해질 때 작성합니다.
 
 ---
 
-## 구현 전 권위 문서
+# 현재 완료 범위
 
 ```text
-확률·행운
-→ design/RNG_PROBABILITY.md
-→ reference/V1_TOWER_PROBABILITY_LADDER.md
-→ reference/V1_LUCK_COMPRESSION_BENCHMARK.md
-→ reference/V1_ROSTER_POWER_DISTRIBUTION.md
-
-편성 슬롯·역할 제한
-→ design/FORMATION.md
-→ reference/V1_FORMATION_SLOT_BENCHMARK.md
-
-코인 전투 성장
-→ design/STAT_TREE.md
-→ reference/V1_COIN_COMBAT_BENCHMARK.md
-
-환생 XP·스탯
-→ design/REBIRTH.md
-→ reference/V1_REBIRTH_XP_BENCHMARK.md
-→ reference/V1_REBIRTH_STAT_BENCHMARK.md
-
-환생·저장
-→ design/CURRENCY.md
-→ design/WORLD_NAVIGATION.md
-→ technical/STATE_LIFECYCLE.md
-
-타워·몬스터·스테이지 수치
-→ design/BALANCE_MODEL.md
-→ reference 카탈로그와 벤치마크
-
-스테이지 생성·검증 깊이
-→ design/STAGE_VALIDATION.md
-→ reference/STAGE1_WAVE_BENCHMARK.md
-→ reference/STAGE2_WAVE_BENCHMARK.md
-→ reference/STAGE3_WAVE_BENCHMARK.md
-→ reference/STAGE4_5_LIGHT_BENCHMARK.md
-→ reference/STAGE6_WAVE_BENCHMARK.md
-→ reference/STAGE15_WAVE_BENCHMARK.md
-
-완주 시간·완주 전력
-→ design/V1_COMPLETION_PACING.md
-→ reference/V1_FORMATION_SLOT_BENCHMARK.md
-→ reference/V1_COIN_COMBAT_BENCHMARK.md
-→ reference/STAGE15_WAVE_BENCHMARK.md
-
-웨이브 시간
-→ design/WAVE_PACING.md
-→ design/STAGE_VALIDATION.md
-→ reference/STAGE1_WAVE_BENCHMARK.md
-→ reference/STAGE2_WAVE_BENCHMARK.md
-→ reference/STAGE3_WAVE_BENCHMARK.md
-→ reference/STAGE4_5_LIGHT_BENCHMARK.md
-→ reference/STAGE6_WAVE_BENCHMARK.md
-→ reference/STAGE15_WAVE_BENCHMARK.md
+확률·행운·환생·슬롯·코인 전투 성장 계산 완료
+스테이지 1~6 전투 검증 완료
+스테이지 15 집계 클리어 검증 완료
+50자리 확률 슬롯 완료
+실제 타워 콘텐츠는 기준 6종 중심
+후반 스테이지·전체 문 경제·변종·합체 계산 미완료
+Roblox 수직 슬라이스는 저장소 기준 미완료
 ```
+
+상세 진행률: `PROJECT_STATUS.md`
 
 ---
 
-## 현재 완료
+# 현재 다음 작업
 
 ```text
-- 역할별 최저급 기준 타워 6종
-- 스테이지 1 실제 주기 56.28초, 전체 15개 편성 누수 0
-- 스테이지 2 실제 파밍 주기 65.90초, 계획 66초와 약 0.15% 차이
-- 스테이지 3 실제 파밍 주기 78.00초, 5슬롯 전체 6개 편성 누수 0
-- 스테이지 4 실제 파밍 주기 61.23초, 대표 편성 진입·파밍 누수 0
-- 스테이지 5 실제 파밍 주기 67.71초, 대표 편성 진입·파밍 누수 0
-- 스테이지 6 실제 파밍 주기 75.00초, 7슬롯 96개 편성 누수 0
-- 스테이지 6 정상 진입 6슬롯 31개 최소 5역할 편성 누수 0
-- 기준 스테이지 1·3·6·9·12·15 완전 검증, 나머지 경량 검증 정책
-- 첫 7,000 Defense XP 7.80~14.34분
-- 코인·문·전투를 유지하는 환생
-- 환생 1회당 스탯 토큰 4개
-- 행운·성능·재화·주사위 속도 네 분야
-- XP 기준 스테이지와 진행률 보존
-- 두 번째 20분, 세 번째 35분, 4~50번째 50분 환생 곡선
-- 균형형 30시간 약 46회 환생
-- V1 완주 12~15시간
-- 최고 일반 타워 1 / 10^20, 기여도 약 6,309.57
-- 정확한 합 1의 50자리 공식 확률 사다리
-- 20,000계정 시간대별 보유 전투력 분포
-- 슬롯 5~12 가격과 균형형 11분→13시간 31분 해금 곡선
-- 역할 상한 4~6슬롯 2개, 7~9슬롯 3개, 10~12슬롯 4개
-- 코인 전투 성장 15시간 ×4.50, 20시간 이후 ×5.00
-- 균형형 15h 통합 Final EC P10/P50/P90 = 10,188/19,665/54,374
-- 균형형 30h 통합 Final EC P10/P50/P90 = 60,575/115,335/190,905
-- 스테이지 15 직접 검증: 15h P10 112.24초, P50 57.54초, 30h P10 35.35초, 누수 0
+BAL-NEXT-001
+스테이지 4~15 영구 문 가격과 전체 12~15시간 코인 경제
 ```
 
----
-
-## 다음 우선순위
+이 작업이 끝난 뒤:
 
 ```text
-1. 스테이지 4~15 문 가격과 전체 12~15시간 경제
-2. 스테이지 9 지역 3 최종전 완전 검증
-3. 스테이지 7·8 경량 검사
-4. 스테이지 12 기준점과 10·11 경량 검사
-5. 스테이지 13·14 경량 검사와 스테이지 15 실제 행동형 재검증
-6. 중간 희귀도 실제 타워 작성
-7. 변종·합체의 시간대별 전투력 기여
-8. 실제 지원·제어 중첩과 자동 편성 평가
-9. 환생 스탯 배분·재분배 UI 상세 명세
-10. 지역 1 수직 슬라이스 구현
+스테이지 9 완전 검증
+→ 스테이지 7·8 경량 검증
+→ 스테이지 12와 10·11
+→ 스테이지 13·14와 스테이지 15 행동형
+→ 지원·제어·변종·합체
+→ 카탈로그 채택
+→ 지역 1 수직 슬라이스
 ```
+
+모든 완료 작업은 같은 커밋에서 `PROJECT_STATUS.md` 체크박스와 진행률을 갱신합니다.
