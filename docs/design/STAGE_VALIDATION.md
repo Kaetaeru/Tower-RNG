@@ -4,7 +4,7 @@
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
 - 상위 문서: `BALANCE_MODEL.md`, `WAVE_PACING.md`, `LEVEL_DESIGN.md`, `ECONOMY_PACING.md`
-- 관련 문서: `../reference/STAGE1_WAVE_BENCHMARK.md`, `../reference/STAGE2_WAVE_BENCHMARK.md`, `../reference/STAGE3_WAVE_BENCHMARK.md`, `../reference/STAGE15_WAVE_BENCHMARK.md`
+- 관련 문서: `../reference/STAGE1_WAVE_BENCHMARK.md`, `../reference/STAGE2_WAVE_BENCHMARK.md`, `../reference/STAGE3_WAVE_BENCHMARK.md`, `../reference/STAGE6_WAVE_BENCHMARK.md`, `../reference/STAGE15_WAVE_BENCHMARK.md`
 - 재현 도구: `../../tools/balance/stage_validation_plan.py`
 - 마지막 정리: 2026-08-02
 
@@ -93,7 +93,7 @@ V1의 15개 스테이지를 모두 같은 깊이로 계산하지 않습니다.
 - 특정 역할 하나가 없다는 이유만으로 진행이 정지하지 않는가
 - 새 행동이 기존 SpawnCost로 설명 가능한가
 
-경량 검증은 전체 조합을 돌리지 않으므로, 아래 승격 조건을 항상 적용합니다.
+경량 검증은 전체 조합을 돌리지 않으므로 아래 승격 조건을 항상 적용합니다.
 
 ---
 
@@ -197,7 +197,7 @@ CoinValue 또는 DefenseXP
 | 5 | 110~150 |
 | 전체 | 360~440 |
 
-이 범위는 고정 공식이 아니라 현재 검증된 스테이지 1·2·3·15를 포함하는 제작 경계입니다.
+이 범위는 고정 공식이 아니라 현재 검증된 스테이지 1·2·3·6·15를 포함하는 제작 경계입니다.
 
 범위를 벗어날 수 있는 경우:
 
@@ -227,7 +227,7 @@ CoinValue 또는 DefenseXP
 - 해당 지역의 완전 검증 기준점
 ```
 
-새 지역 첫 스테이지의 주기가 이전 지역 최종전보다 짧을 수 있습니다. 이는 난이도가 내려간다는 뜻이 아니라, 더 높은 `StageScale`의 적을 단순하고 읽기 쉬운 구성으로 소개하기 위한 것입니다.
+새 지역 첫 스테이지의 주기가 이전 지역 최종전보다 짧을 수 있습니다. 이는 난이도가 내려간다는 뜻이 아니라 더 높은 `StageScale`의 적을 단순하고 읽기 쉬운 구성으로 소개하기 위한 것입니다.
 
 ---
 
@@ -242,7 +242,7 @@ CoinValue 또는 DefenseXP
 | 3 | 78초 | 완전 검증 완료, 실측 78.00초 |
 | 4 | 62초 | 경량 검증 예정 |
 | 5 | 68초 | 경량 검증 예정 |
-| 6 | 75초 | 완전 검증 예정 |
+| 6 | 75초 | 완전 검증 완료, 실측 75.00초 |
 | 7 | 68초 | 경량 검증 예정 |
 | 8 | 75초 | 경량 검증 예정 |
 | 9 | 82초 | 완전 검증 예정 |
@@ -272,7 +272,7 @@ CoinValue 또는 DefenseXP
 앞으로의 기준 작업:
 
 ```text
-스테이지 6 완전 검증
+스테이지 6 완전 검증 완료
 → 스테이지 4·5 경량 작성 및 검사
 
 스테이지 9 완전 검증
@@ -304,9 +304,16 @@ CoinValue 또는 DefenseXP
 - 계획 78초
 - 실제 파밍 주기 78.00초
 - 차이 없음
+
+스테이지 6
+- 계획 75초
+- 실제 파밍 주기 75.00초
+- 7슬롯 최소 5역할 96개 조합 누수 0
+- 6슬롯 최소 5역할 31개 진입 조합 누수 0
+- 보스 시간 비중 32.7%
 ```
 
-초기 세 스테이지가 기존 경제 프록시를 그대로 재현했으므로, 이후 지역도 같은 생성·검증 절차를 사용할 근거가 확보됐습니다.
+스테이지 1·2·3·6이 기존 경제 프록시를 그대로 재현했으므로 중간 스테이지를 공식으로 생성하고 대표 편성으로 검사하는 방식의 근거가 확보됐습니다.
 
 ---
 
