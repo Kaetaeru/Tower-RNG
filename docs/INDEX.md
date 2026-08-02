@@ -14,11 +14,11 @@
 | `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
 | `balance/INDEX.md` | 수식·가정·시뮬레이션·검증 결과 |
 
-현재 전체 V1 준비도:
+현재 준비도:
 
 ```text
-전체 약 33%
-기획·밸런스 약 69%
+전체 V1 약 34%
+기획·밸런스 약 73%
 콘텐츠 카탈로그 약 12%
 Roblox 구현·QA는 저장소 기준 초기 단계
 ```
@@ -52,8 +52,6 @@ balance가 값을 추천
 - 계산용 임시 이름은 카탈로그 완료로 세지 않습니다.
 - 기존 `reference` 폴더는 링크 호환 영역이며 새 문서를 추가하지 않습니다.
 
-이전 안내: `reference/README.md`
-
 ---
 
 # 게임 기획
@@ -72,7 +70,6 @@ balance가 값을 추천
 | `design/REBIRTH.md` | Confirmed · Living | 진행 유지 환생과 네 스탯 |
 | `design/STAT_TREE.md` | Confirmed · Living | 코인 트리와 환생 스탯 |
 | `design/OFFLINE_PROGRESS.md` | Confirmed · Living | 제한된 오프라인 코인 |
-| `design/POTIONS.md` | Confirmed · Living | 포션 효과와 중첩 |
 
 ## 타워·전투
 
@@ -95,20 +92,9 @@ balance가 값을 추천
 | `design/WORLD_NAVIGATION.md` | Confirmed · Living | 영구 문과 복귀 |
 | `design/LEVEL_DESIGN.md` | Confirmed · Living | 15스테이지와 5웨이브 |
 | `design/WAVE_PACING.md` | Confirmed · Living | 진입·파밍 목표시간 |
-| `design/STAGE_VALIDATION.md` | Confirmed · Living | 완전·경량 검증 정책 |
+| `design/STAGE_VALIDATION.md` | Confirmed · Living | 완전·경량 검증 정책과 현재 실측 |
 | `design/STAGE_BOSSES.md` | Confirmed · Living | 보스 예산과 보상 |
 | `design/MONSTERS.md` | Confirmed · Living | 몬스터 스케일과 SpawnCost |
-
-## UI·운영
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `design/UI_FLOW.md` | Confirmed · Living | HUD와 주요 흐름 |
-| `design/SETTINGS.md` | Confirmed · Living | 카메라·효과·접근성 |
-| `design/SOCIAL.md` | Confirmed · Living | 리더보드와 거래 금지 |
-| `design/MONETIZATION.md` | Confirmed · Living | 상품 방향과 금지선 |
-| `design/TUTORIAL.md` | Confirmed · Living | 최초 계정 튜토리얼 |
-| `design/LIVE_WAVE.md` | Draft | 후속 공동 전투 |
 
 ---
 
@@ -133,23 +119,14 @@ balance가 값을 추천
 
 권위 인덱스: `balance/INDEX.md`
 
-## 확률·타워 성장
+## 성장·경제
 
 | 문서 | 책임 |
 |---|---|
 | `reference/V1_TOWER_PROBABILITY_LADDER.md` | 50자리 공식 확률표 |
-| `reference/V1_TOP_TOWER_BENCHMARK.md` | 최고 일반 타워 기준 |
 | `reference/V1_LUCK_COMPRESSION_BENCHMARK.md` | 행운 압축과 획득률 |
 | `reference/V1_ROSTER_POWER_DISTRIBUTION.md` | 시간대별 보유 전력 |
-| `reference/TOWER_BALANCE_BENCHMARK.md` | 최저급 6역할 기준 |
-
-## 환생·경제·편성
-
-| 문서 | 책임 |
-|---|---|
-| `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | 첫 환생 경제 |
-| `reference/V1_REBIRTH_XP_BENCHMARK.md` | 이후 환생 XP |
-| `reference/V1_REBIRTH_STAT_BENCHMARK.md` | 네 환생 스탯 |
+| `reference/V1_REBIRTH_XP_BENCHMARK.md` | 환생 XP 곡선 |
 | `reference/V1_FORMATION_SLOT_BENCHMARK.md` | 슬롯 가격과 역할 제한 |
 | `reference/V1_COIN_COMBAT_BENCHMARK.md` | 독립 코인 전투 성장 |
 | `balance/V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투 통합 경제 |
@@ -163,8 +140,18 @@ balance가 값을 추천
 | `reference/STAGE3_WAVE_BENCHMARK.md` | 지역 1 완전 검증 완료 |
 | `reference/STAGE4_5_LIGHT_BENCHMARK.md` | 지역 2 경량 검증 완료 |
 | `reference/STAGE6_WAVE_BENCHMARK.md` | 지역 2 완전 검증 완료 |
+| `balance/STAGE7_8_LIGHT_BENCHMARK.md` | 지역 3 경량 검증 완료 |
 | `balance/STAGE9_WAVE_BENCHMARK.md` | 지역 3 완전 검증 완료 |
+| `balance/STAGE12_WAVE_BENCHMARK.md` | 지역 4 완전 검증 완료 |
 | `reference/STAGE15_WAVE_BENCHMARK.md` | 집계 검증 완료·행동형 재검증 예정 |
+
+현재 검증 상태:
+
+```text
+완료 스테이지 11 / 15
+완료: 1~9, 12, 15
+남음: 10·11·13·14와 스테이지 15 행동형 재검증
+```
 
 ---
 
@@ -188,35 +175,10 @@ balance가 값을 추천
 | `stage3_wave_sim.py` | 스테이지 3 |
 | `stage4_5_light_sim.py` | 스테이지 4·5 |
 | `stage6_wave_sim.py` | 스테이지 6 |
+| `stage7_8_light_sim.py` | 스테이지 7·8 |
 | `stage9_wave_sim.py` | 스테이지 9 |
+| `stage12_wave_sim.py` | 스테이지 12 |
 | `stage15_wave_sim.py` | 스테이지 15 집계 검증 |
-| `stage_validation_plan.py` | 검증 깊이와 계획 주기 |
-
----
-
-# 시스템·기술 문서
-
-## 시스템 명세
-
-경로: `spec/`
-
-정확한 입력·출력·경계 조건·수용 조건을 기록합니다. 서비스별 세부 명세는 마스터 체크리스트에서 추적합니다.
-
-## 기술 설계
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `technical/STATE_LIFECYCLE.md` | Confirmed · Living | 프로필·재접속·환생 원자성 |
-| `technical/TOWER_MODELING.md` | Confirmed · Living | 타워 3D 제작 규약 |
-| `technical/MONSTER_MODELING.md` | Confirmed · Living | 몬스터 3D 제작 규약 |
-| `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 행동 데이터 문법 |
-| `technical/TOWER_EXTENSION_FRAMEWORK.md` | Confirmed · Living | 확장 모듈과 훅 |
-
-## 구현 명세
-
-경로: `implementation/`
-
-실제 Roblox 파일·모듈·Remote·데이터 스키마가 정해질 때 작성합니다.
 
 ---
 
@@ -226,12 +188,12 @@ balance가 값을 추천
 확률·행운·환생·슬롯·코인 전투 성장 계산 완료
 스테이지 4~15 문 가격과 통합 코인 경제 계산 완료
 주요 소비 전략 비교 완료
-스테이지 1~6과 9 전투 검증 완료
+스테이지 1~9·12 전투 검증 완료
 스테이지 15 집계 클리어 검증 완료
-검증 완료 스테이지 8 / 15
 50자리 확률 슬롯 완료
 실제 타워 콘텐츠는 기준 6종 중심
-후반 스테이지·변종·합체·런타임 계산 미완료
+스테이지 10·11·13·14와 스테이지 15 행동형 미완료
+변종·합체·런타임 계산 미완료
 가격 권고안은 카탈로그 채택 전
 Roblox 수직 슬라이스는 저장소 기준 미완료
 ```
@@ -243,18 +205,15 @@ Roblox 수직 슬라이스는 저장소 기준 미완료
 # 현재 다음 작업
 
 ```text
-BAL-NEXT-003
-스테이지 7·8 정글 중간 스테이지 경량 검증
+BAL-NEXT-005
+스테이지 10·11 설원 중간 스테이지 경량 검증
 ```
 
 이후:
 
 ```text
-스테이지 12와 10·11
-→ 스테이지 13·14와 스테이지 15 행동형
+스테이지 13·14와 스테이지 15 행동형
 → 지원·제어·변종·합체
 → 카탈로그 채택
 → 지역 1 수직 슬라이스
 ```
-
-완료 작업은 같은 작업에서 `PROJECT_STATUS.md` 체크박스와 진행률을 갱신합니다.
