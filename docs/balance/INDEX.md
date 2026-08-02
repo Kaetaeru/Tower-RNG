@@ -29,23 +29,25 @@ balance에서 계산
 | `V1_FUSION_BENCHMARK.md` | 완료 | 수동 합체 재료·배율·가격·획득시간 |
 | `RUNTIME_LOSS_BUDGET.md` | 조건부 | Roblox 잔여 손실 예산, 실측 대기 |
 | `OFFLINE_COIN_BENCHMARK.md` | 완료 | 오프라인 기준·효율·상한·가격 |
-| `FINAL_ECONOMY_INTEGRATION.md` | 조건부 | 후반 선택 경제와 추가 싱크 요구량 |
+| `FINAL_ECONOMY_INTEGRATION.md` | 완료 | 후반 선택 경제와 30시간 잔여 검사 |
+| `MASTERY_UTILITY_SINK_BENCHMARK.md` | 완료 | 숙련 제어실 25.2B 가격·시간·잔여 검사 |
 | `FINAL_ACCOUNT_PATHS.md` | 완료 | 빠른·중앙·느린 완주 경로 |
 
 현재 판정:
 
 ```text
 계산 수행 6 / 6
-완전 완료 4
-조건부 완료 2
+완전 완료 5
+조건부 완료 1
 ```
 
 조건부 항목:
 
 ```text
 실제 Roblox RuntimeEfficiency 측정
-추가 15~25B 숙련 코인 싱크의 콘텐츠 정체성
 ```
+
+수학적으로 수행 가능한 V1 밸런스 계산은 완료됐습니다.
 
 ---
 
@@ -76,6 +78,7 @@ balance에서 계산
 | `SUPPORT_CONTROL_STACKING_BENCHMARK.md` | 지원·제어 중첩과 한계 기여 |
 | `OFFLINE_COIN_BENCHMARK.md` | 오프라인 코인 |
 | `FINAL_ECONOMY_INTEGRATION.md` | 전체 선택 가지 통합 |
+| `MASTERY_UTILITY_SINK_BENCHMARK.md` | 숙련 제어실과 최종 잔여 코인 |
 
 현재 주요 가격 권고:
 
@@ -86,10 +89,21 @@ balance에서 계산
 변종 가지              25,018,500,000
 합체 가지               2,750,250,000
 오프라인 가지           3,120,100,000
-현재 전체 영구 싱크     67,285,675,200
+숙련 제어실            25,200,000,000
+최종 영구 싱크         92,485,675,200
 ```
 
-추가 선택형 숙련 싱크 `15~25B`가 필요합니다.
+30시간 잔여:
+
+```text
+문 우선        4.870B
+균형형         0.034B
+전투 우선      0.648B
+슬롯 우선      0.648B
+코인 실현 70%  3.798B
+```
+
+모든 검사 전략이 잔여 5B 이하를 통과합니다.
 
 ---
 
@@ -132,7 +146,7 @@ Stage15 FirstClearEC = 10,050
 Stage15 StableFarmEC = 12,200
 ```
 
-변종과 합체는 완주 필수 전력에서 제외했습니다.
+변종과 합체는 완주 필수 전력에서 제외했습니다. 숙련 제어실도 전투력과 코인 생산을 바꾸지 않습니다.
 
 ---
 
@@ -157,6 +171,7 @@ Stage15 StableFarmEC = 12,200
 | `../../tools/balance/offline_coin_benchmark.py` | 오프라인 코인 |
 | `../../tools/balance/runtime_loss_budget.py` | 런타임 손실 예산 |
 | `../../tools/balance/final_economy_integration.py` | 후반 경제 통합 |
+| `../../tools/balance/mastery_utility_sink.py` | 숙련 제어실 가격·시간·잔여 |
 | `../../tools/balance/final_account_paths.py` | 전체 계정 경로 |
 
 ## 스테이지
@@ -167,16 +182,14 @@ Stage15 StableFarmEC = 12,200
 
 # 다음 작업
 
-계산 기준으로 카탈로그 채택을 시작할 수 있습니다.
-
 ```text
 CAT-NEXT-001
-문·슬롯·전투·변종·합체·오프라인 권고값 채택 검토
+문·슬롯·전투·변종·합체·오프라인·숙련 제어실 권고값 채택 검토
 ```
 
 별도 미완료:
 
 ```text
-DES-NEXT-001 추가 15~25B 숙련 싱크 정체성
-RUN-NEXT-001 지역 1 수직 슬라이스 런타임 측정
+RUN-NEXT-001
+지역 1 수직 슬라이스에서 RuntimeEfficiency 측정
 ```
