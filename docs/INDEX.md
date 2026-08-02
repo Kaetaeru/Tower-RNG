@@ -14,12 +14,13 @@
 | `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
 | `balance/INDEX.md` | 수식·가정·시뮬레이션·검증 결과 |
 
-현재 전체 V1 준비도는 `PROJECT_STATUS.md` 기준 약 **32%**입니다.
+현재 전체 V1 준비도:
 
 ```text
-기획·밸런스만 보면 약 68%
+전체 약 33%
+기획·밸런스 약 69%
 콘텐츠 카탈로그 약 12%
-저장소에서 확인되는 Roblox 구현·QA는 아직 초기 단계
+Roblox 구현·QA는 저장소 기준 초기 단계
 ```
 
 ---
@@ -29,25 +30,25 @@
 ```text
 AGENTS.md
 → README.md / docs/INDEX.md / docs/PROJECT_STATUS.md
-→ design        게임 규칙과 플레이어 경험
-→ catalog       실제 콘텐츠와 최종 채택 수치
-→ balance       계산·시뮬레이션·검증
-→ spec          정확한 시스템 동작 계약
-→ technical     서버·클라이언트·저장 구조
-→ implementation 실제 파일·함수·Remote 명세
-→ code          Roblox 구현
+→ design          게임 규칙과 플레이어 경험
+→ catalog         실제 콘텐츠와 최종 채택 수치
+→ balance         계산·시뮬레이션·검증
+→ spec            정확한 시스템 동작 계약
+→ technical       서버·클라이언트·저장 구조
+→ implementation  실제 파일·함수·Remote 명세
+→ code            Roblox 구현
 ```
 
 ## 카탈로그와 계산 분리
 
 ```text
-계산이 값을 추천
+balance가 값을 추천
 → catalog가 값을 채택
 → implementation이 동일 값을 사용
 ```
 
-- 카탈로그에는 시뮬레이션 로그와 역산 과정을 넣지 않습니다.
-- 계산 문서에는 최종 이름·자산을 확정하는 권한이 없습니다.
+- 카탈로그에는 역산 과정과 전체 시뮬레이션 로그를 넣지 않습니다.
+- 계산 문서에는 최종 이름·외형·자산을 확정하는 권한이 없습니다.
 - 계산용 임시 이름은 카탈로그 완료로 세지 않습니다.
 - 기존 `reference` 폴더는 링크 호환 영역이며 새 문서를 추가하지 않습니다.
 
@@ -91,7 +92,7 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `design/WORLD_NAVIGATION.md` | Confirmed · Living | 물리적 영구 문과 복귀 |
+| `design/WORLD_NAVIGATION.md` | Confirmed · Living | 영구 문과 복귀 |
 | `design/LEVEL_DESIGN.md` | Confirmed · Living | 15스테이지와 5웨이브 |
 | `design/WAVE_PACING.md` | Confirmed · Living | 진입·파밍 목표시간 |
 | `design/STAGE_VALIDATION.md` | Confirmed · Living | 완전·경량 검증 정책 |
@@ -115,7 +116,7 @@ AGENTS.md
 
 권위 인덱스: `catalog/INDEX.md`
 
-현재 기존 경로:
+현재 호환 경로:
 
 | 문서 | 책임 |
 |---|---|
@@ -151,7 +152,7 @@ AGENTS.md
 | `reference/V1_REBIRTH_STAT_BENCHMARK.md` | 네 환생 스탯 |
 | `reference/V1_FORMATION_SLOT_BENCHMARK.md` | 슬롯 가격과 역할 제한 |
 | `reference/V1_COIN_COMBAT_BENCHMARK.md` | 독립 코인 전투 성장 |
-| `balance/V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투 통합 경제와 소비 전략 |
+| `balance/V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투 통합 경제 |
 
 ## 스테이지 전투
 
@@ -162,6 +163,7 @@ AGENTS.md
 | `reference/STAGE3_WAVE_BENCHMARK.md` | 지역 1 완전 검증 완료 |
 | `reference/STAGE4_5_LIGHT_BENCHMARK.md` | 지역 2 경량 검증 완료 |
 | `reference/STAGE6_WAVE_BENCHMARK.md` | 지역 2 완전 검증 완료 |
+| `balance/STAGE9_WAVE_BENCHMARK.md` | 지역 3 완전 검증 완료 |
 | `reference/STAGE15_WAVE_BENCHMARK.md` | 집계 검증 완료·행동형 재검증 예정 |
 
 ---
@@ -180,12 +182,13 @@ AGENTS.md
 | `v1_roster_power_distribution.py` | 보유 전력 분포 |
 | `v1_formation_slot_economy.py` | 슬롯 경제 |
 | `v1_coin_combat_curve.py` | 독립 코인 전투 성장 |
-| `v1_gate_economy.py` | 문·슬롯·전투 통합 코인 경제 |
+| `v1_gate_economy.py` | 문·슬롯·전투 통합 경제 |
 | `stage1_wave_sim.py` | 스테이지 1 |
 | `stage2_wave_sim.py` | 스테이지 2 |
 | `stage3_wave_sim.py` | 스테이지 3 |
 | `stage4_5_light_sim.py` | 스테이지 4·5 |
 | `stage6_wave_sim.py` | 스테이지 6 |
+| `stage9_wave_sim.py` | 스테이지 9 |
 | `stage15_wave_sim.py` | 스테이지 15 집계 검증 |
 | `stage_validation_plan.py` | 검증 깊이와 계획 주기 |
 
@@ -197,7 +200,7 @@ AGENTS.md
 
 경로: `spec/`
 
-정확한 입력·출력·경계 조건·수용 조건을 기록합니다. 현재 서비스별 세부 명세는 마스터 체크리스트에서 추적합니다.
+정확한 입력·출력·경계 조건·수용 조건을 기록합니다. 서비스별 세부 명세는 마스터 체크리스트에서 추적합니다.
 
 ## 기술 설계
 
@@ -221,14 +224,15 @@ AGENTS.md
 
 ```text
 확률·행운·환생·슬롯·코인 전투 성장 계산 완료
-스테이지 4~15 문 가격과 12~15시간 통합 코인 경제 계산 완료
-문 우선·전투 우선·슬롯 우선 전략 비교 완료
-스테이지 1~6 전투 검증 완료
+스테이지 4~15 문 가격과 통합 코인 경제 계산 완료
+주요 소비 전략 비교 완료
+스테이지 1~6과 9 전투 검증 완료
 스테이지 15 집계 클리어 검증 완료
+검증 완료 스테이지 8 / 15
 50자리 확률 슬롯 완료
 실제 타워 콘텐츠는 기준 6종 중심
 후반 스테이지·변종·합체·런타임 계산 미완료
-문 가격과 최종 전투 노드 가격은 카탈로그 채택 전
+가격 권고안은 카탈로그 채택 전
 Roblox 수직 슬라이스는 저장소 기준 미완료
 ```
 
@@ -239,19 +243,18 @@ Roblox 수직 슬라이스는 저장소 기준 미완료
 # 현재 다음 작업
 
 ```text
-BAL-NEXT-002
-스테이지 9 지역 3 최종전 완전 검증
+BAL-NEXT-003
+스테이지 7·8 정글 중간 스테이지 경량 검증
 ```
 
-이 작업이 끝난 뒤:
+이후:
 
 ```text
-스테이지 7·8 경량 검증
-→ 스테이지 12와 10·11
+스테이지 12와 10·11
 → 스테이지 13·14와 스테이지 15 행동형
 → 지원·제어·변종·합체
 → 카탈로그 채택
 → 지역 1 수직 슬라이스
 ```
 
-모든 완료 작업은 같은 작업에서 `PROJECT_STATUS.md` 체크박스와 진행률을 갱신합니다.
+완료 작업은 같은 작업에서 `PROJECT_STATUS.md` 체크박스와 진행률을 갱신합니다.
