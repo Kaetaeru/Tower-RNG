@@ -4,12 +4,12 @@
 - 상태: **Active Benchmark**
 - 필수 참고: `../../AGENTS.md`
 - 상위 문서: `../design/RNG_PROBABILITY.md`, `../design/BALANCE_MODEL.md`, `../design/TOWERS.md`, `../design/V1_COMPLETION_PACING.md`
-- 관련 문서: `TOWER_CATALOG.md`, `TOWER_BALANCE_BENCHMARK.md`, `STAGE_CATALOG.md`
+- 관련 문서: `V1_TOWER_PROBABILITY_LADDER.md`, `TOWER_CATALOG.md`, `TOWER_BALANCE_BENCHMARK.md`, `STAGE_CATALOG.md`
 - 마지막 정리: 2026-08-02
 
 ## 목적
 
-V1 일반 굴리기 타워의 희귀도·전투력 상한을 고정합니다. 이 기준점에서 50종 확률 사다리, 시간대별 보유 전투력 분포와 스테이지 15 권장 편성을 역산합니다.
+V1 일반 굴리기 타워의 희귀도·전투력 상한을 고정합니다. 이 기준점과 `V1_TOWER_PROBABILITY_LADDER.md`의 50자리 사다리에서 시간대별 보유 전투력 분포와 스테이지 15 권장 편성을 역산합니다.
 
 이 문서는 최종 타워 이름·외형·특수 능력을 확정하지 않습니다. 실제 TowerId와 행동은 `TOWER_CATALOG.md`에서 후속 작성합니다.
 
@@ -115,7 +115,7 @@ EquivalentContribution: 약 6,309.57
 
 ## 5. 획득 체감 목표
 
-아래 값은 행운 곡선과 50종 전체 확률표가 아직 없으므로 **Confirmed Design Target, Not Yet Simulated**입니다.
+50자리 공식 분모 사다리와 정확한 단위분수 합은 작성되었습니다. 아래 값은 행운 곡선과 시간대별 굴림 수가 아직 없으므로 **Confirmed Design Target, Not Yet Simulated**입니다.
 
 ```text
 스테이지 15 최초 클리어, 중앙 12~15시간
@@ -155,15 +155,23 @@ V1 숙련·안정 파밍, 20~30시간
 - 치명타와 오버킬 처리
 - 변종별 최종 공식 분모와 성능
 - 합체 계보에서의 위치
-- 공식 확률표와 행운 적용 후 실제 누적 획득률
+- 행운 적용 후 실제 누적 획득률
 
 ---
 
-## 8. 다음 검증
+## 8. 완료된 검증
 
-1. 최소 50종의 공식 분모 사다리 골격 작성
-2. 공식 단위분수 합이 정확히 1인지 검증
-3. 15분·30분·2시간·5시간·12~15시간·20~30시간의 누적 굴림 수 설정
-4. 시간대별 최고 보유 분모와 편성 EquivalentContribution 분포 계산
-5. 행운 압축 곡선을 적용해 최고 타워 누적 획득 목표 검증
-6. 결과에서 스테이지 2~15 권장 편성 예산 역산
+- 일반 굴리기 최고 분모 `1 / 10^20`
+- 최고 기본 EquivalentContribution 약 `6,309.57`
+- 50자리 공식 분모 사다리 골격
+- 공식 단위분수 합 정확히 1
+- 최고 슬롯을 포함한 역할 수량 `9, 9, 8, 8, 8, 8`
+
+---
+
+## 9. 다음 검증
+
+1. 15분·30분·2시간·5시간·12~15시간·20~30시간의 누적 굴림 수 설정
+2. 시간대별 최고 보유 분모와 편성 EquivalentContribution 분포 계산
+3. 행운 압축 곡선을 적용해 최고 타워 누적 획득 목표 검증
+4. 결과에서 스테이지 2~15 권장 편성 예산 역산
