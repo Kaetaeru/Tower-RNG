@@ -10,7 +10,7 @@
 |---|---|
 | `PROJECT_STATUS.md` | 전체 진행률·체크리스트·현재 작업 |
 | `catalog/INDEX.md` | 실제 채택 ID·수치·콘텐츠 상태 |
-| `catalog/TOWER_CATALOG.md` | 일반 타워 50종·역할·확률·테마·행동 |
+| `catalog/TOWER_CATALOG.md` | 일반 타워 50종·역할·확률·희귀도 규모·행동 |
 | `catalog/TOWER_SYSTEM_CATALOG.md` | 변종·합체 공통 규칙 |
 | `catalog/STAGE_CATALOG.md` | 5지역·15스테이지·웨이브 |
 | `catalog/MONSTER_CATALOG.md` | 몬스터 39종·전투 프로필·행동 |
@@ -51,7 +51,7 @@ balance에서 계산
 
 | 문서 | 채택 범위 | 상태 |
 |---|---|---|
-| `catalog/TOWER_CATALOG.md` | TowerId 50개, 역할·확률·PowerBudget·ThemeStageId·ActionProfileId | Confirmed Identity · Runtime Parameters Pending |
+| `catalog/TOWER_CATALOG.md` | TowerId 50개, 역할·확률·PowerBudget·FantasyTier·ActionProfileId | Confirmed Identity · Runtime Parameters Pending |
 | `catalog/TOWER_SYSTEM_CATALOG.md` | 변종 티켓·PowerBudget·합체 조합 | Confirmed System Values |
 | `catalog/STAGE_GATE_CATALOG.md` | GateId 14개와 가격 | Confirmed |
 | `catalog/STAGE_CATALOG.md` | RegionId 5개, StageId·WaveSetId 15개 | Confirmed Combat Data |
@@ -73,7 +73,9 @@ MonsterId 39
 
 ---
 
-# 일반 타워 역할 분포
+# 일반 타워 방향
+
+역할 분포:
 
 ```text
 단일 화력 9
@@ -85,7 +87,17 @@ MonsterId 39
 합계 50
 ```
 
-각 타워는 15개 스테이지 중 하나의 `ThemeStageId`를 가집니다. 이는 외형·설정·공격 연출의 출신 테마이며 획득·사용 제한이 아닙니다.
+타워를 특정 스테이지 테마에 대응시키지 않습니다.
+
+```text
+1~12   생활인·견습병·초보 모험가
+13~24  숙련병·전문가·초급 마법 사용자
+25~36  고위 마도사·기사단장·영웅
+37~44  전설적 영웅·용·세계수·시간
+45~50  운명·심판·천상·신수·종말·영원
+```
+
+희귀도에 따라 설정과 시각 연출의 규모가 상승하지만 실제 전투력은 공식 PowerBudget으로만 결정합니다. 고희귀 신화 타워는 V1 완주 필수 조건이 아닙니다.
 
 ---
 
