@@ -14,10 +14,10 @@
 | `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
 | `balance/INDEX.md` | 수식·가정·시뮬레이션·검증 결과 |
 
-현재 전체 V1 준비도는 `PROJECT_STATUS.md` 기준 약 **31%**입니다.
+현재 전체 V1 준비도는 `PROJECT_STATUS.md` 기준 약 **32%**입니다.
 
 ```text
-기획·밸런스만 보면 약 64%
+기획·밸런스만 보면 약 68%
 콘텐츠 카탈로그 약 12%
 저장소에서 확인되는 Roblox 구현·QA는 아직 초기 단계
 ```
@@ -150,7 +150,8 @@ AGENTS.md
 | `reference/V1_REBIRTH_XP_BENCHMARK.md` | 이후 환생 XP |
 | `reference/V1_REBIRTH_STAT_BENCHMARK.md` | 네 환생 스탯 |
 | `reference/V1_FORMATION_SLOT_BENCHMARK.md` | 슬롯 가격과 역할 제한 |
-| `reference/V1_COIN_COMBAT_BENCHMARK.md` | 코인 전투 성장 |
+| `reference/V1_COIN_COMBAT_BENCHMARK.md` | 독립 코인 전투 성장 |
+| `balance/V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투 통합 경제와 소비 전략 |
 
 ## 스테이지 전투
 
@@ -178,7 +179,8 @@ AGENTS.md
 | `rebirth_stat_tokens.py` | 환생 스탯·굴림 통합 |
 | `v1_roster_power_distribution.py` | 보유 전력 분포 |
 | `v1_formation_slot_economy.py` | 슬롯 경제 |
-| `v1_coin_combat_curve.py` | 코인 전투 성장 |
+| `v1_coin_combat_curve.py` | 독립 코인 전투 성장 |
+| `v1_gate_economy.py` | 문·슬롯·전투 통합 코인 경제 |
 | `stage1_wave_sim.py` | 스테이지 1 |
 | `stage2_wave_sim.py` | 스테이지 2 |
 | `stage3_wave_sim.py` | 스테이지 3 |
@@ -219,11 +221,14 @@ AGENTS.md
 
 ```text
 확률·행운·환생·슬롯·코인 전투 성장 계산 완료
+스테이지 4~15 문 가격과 12~15시간 통합 코인 경제 계산 완료
+문 우선·전투 우선·슬롯 우선 전략 비교 완료
 스테이지 1~6 전투 검증 완료
 스테이지 15 집계 클리어 검증 완료
 50자리 확률 슬롯 완료
 실제 타워 콘텐츠는 기준 6종 중심
-후반 스테이지·전체 문 경제·변종·합체 계산 미완료
+후반 스테이지·변종·합체·런타임 계산 미완료
+문 가격과 최종 전투 노드 가격은 카탈로그 채택 전
 Roblox 수직 슬라이스는 저장소 기준 미완료
 ```
 
@@ -234,15 +239,14 @@ Roblox 수직 슬라이스는 저장소 기준 미완료
 # 현재 다음 작업
 
 ```text
-BAL-NEXT-001
-스테이지 4~15 영구 문 가격과 전체 12~15시간 코인 경제
+BAL-NEXT-002
+스테이지 9 지역 3 최종전 완전 검증
 ```
 
 이 작업이 끝난 뒤:
 
 ```text
-스테이지 9 완전 검증
-→ 스테이지 7·8 경량 검증
+스테이지 7·8 경량 검증
 → 스테이지 12와 10·11
 → 스테이지 13·14와 스테이지 15 행동형
 → 지원·제어·변종·합체
@@ -250,4 +254,4 @@ BAL-NEXT-001
 → 지역 1 수직 슬라이스
 ```
 
-모든 완료 작업은 같은 커밋에서 `PROJECT_STATUS.md` 체크박스와 진행률을 갱신합니다.
+모든 완료 작업은 같은 작업에서 `PROJECT_STATUS.md` 체크박스와 진행률을 갱신합니다.
