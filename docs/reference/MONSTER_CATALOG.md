@@ -3,8 +3,8 @@
 - 계층: 참조 데이터
 - 상태: **Active Catalog**
 - 필수 참고: `../../AGENTS.md`
-- 상위 문서: `../design/BALANCE_MODEL.md`, `../design/MONSTERS.md`, `../design/LEVEL_DESIGN.md`, `../design/STAGE_BOSSES.md`
-- 관련 문서: `TOWER_CATALOG.md`, `TOWER_BALANCE_BENCHMARK.md`, `STAGE1_WAVE_BENCHMARK.md`, `STAT_TREE_CATALOG.md`, `STAGE_CATALOG.md`
+- 상위 문서: `../design/BALANCE_MODEL.md`, `../design/MONSTERS.md`, `../design/LEVEL_DESIGN.md`, `../design/STAGE_BOSSES.md`, `../design/WAVE_PACING.md`
+- 관련 문서: `TOWER_CATALOG.md`, `TOWER_BALANCE_BENCHMARK.md`, `STAGE1_WAVE_BENCHMARK.md`, `FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `STAT_TREE_CATALOG.md`, `STAGE_CATALOG.md`
 - 마지막 정리: 2026-08-02
 
 ## 목적
@@ -187,7 +187,7 @@ RawSpawnCost
 
 # 지역 1 기준 일반 몬스터
 
-아래 세 몬스터는 스테이지 1 일반 웨이브의 기준 세트입니다. 이름과 역할은 확정하고, 세부 수치는 Roblox 런타임 전투 전까지 임시 밸런스 값으로 취급합니다.
+아래 세 몬스터는 스테이지 1 일반 웨이브의 기준 세트입니다. 이름과 역할은 확정하고, 세부 수치는 Roblox 런타임 전까지 임시 밸런스 값으로 취급합니다.
 
 ## 초원 슬라임
 
@@ -244,7 +244,7 @@ RawSpawnCost
 
 ### 배치 메모
 
-- 적합 웨이브: 기본 소개, 혼합 웨이브
+- 적합 웨이브: 최초 준비 전투, 기본 소개, 혼합 웨이브
 - 함께 배치하기 좋은 몬스터: 들쥐, 어린 멧돼지
 - 강조 역할: 특정 역할 강제 없음
 
@@ -402,11 +402,11 @@ RawSpawnCost
 - BaseThreat: 5.00
 - SpecialThreatFactor: 보스 집중 압박과 5웨이브 절정 보정을 포함해 시뮬레이션 검증
 - 공식 원시값만으로는 약 52 이상이며 보스 보정에 따라 75 전후
-- 최종 SpawnCost 근거: 15개 기준 편성에서 평균 16초의 보스 웨이브와 일반 웨이브 대비 1.60배 보상을 동시에 만족하도록 100으로 설정
+- 최종 SpawnCost 근거: 15개 기준 편성에서 평균 16초의 보스 웨이브와 대형 사냥 역할 기여를 만족하도록 100으로 설정
 - 기준 편성 처리시간: 동반 들쥐 2마리 포함 평균 16.00초, 최장 20.00초
 - 누수: 15개 편성 모두 0
 
-`SpawnCost 100`은 단순 공식 반올림만으로 확정한 값이 아니라, 보스 주기의 실제 처리시간·베이스 위험·보상 비율을 함께 반영한 잠정값입니다.
+`SpawnCost 100`은 단순 공식 반올림만으로 확정한 값이 아니라 보스 주기의 실제 처리시간과 베이스 위험을 함께 반영한 잠정값입니다. 보상 프리미엄은 SpawnCost와 분리된 RewardModifier로 관리합니다.
 
 ### 행동
 
@@ -420,17 +420,17 @@ RawSpawnCost
 
 ### 보상
 
-- CoinRewardModifier: 1.00
-- DefenseXPModifier: 1.00
+- CoinRewardModifier: **1.15**
+- DefenseXPModifier: **1.15**
 - 연금 정수 보너스: 미정
 - 코인 묶음 표현: 일반 적보다 큰 물리 코인 묶음을 분출
 
 ```text
-기본 CoinValue = 100 × StageCoinUnit
-기본 Defense XP = 100
+기본 CoinValue = 100 × StageCoinUnit × 1.15 = 115
+기본 Defense XP = 100 × 1.15 = 115
 ```
 
-웨이브 5의 들쥐 2마리를 합치면 총 보상 예산은 110입니다.
+웨이브 5의 들쥐 2마리를 합치면 생성 SpawnCost는 110, 코인·Defense XP 가치는 125입니다.
 
 ### 연출
 
@@ -457,6 +457,12 @@ RawSpawnCost
 | 우두머리 멧돼지 | 100 | 초·중반 기준 보스 | 웨이브 5 평균 16.00초 |
 
 전체 5웨이브는 15개 혼합 편성에서 평균 56.28초, 누수 0으로 검증되었습니다.
+
+```text
+전체 생성 SpawnCost: 385
+전체 코인·Defense XP 가치: 400
+보스 시간 비중: 약 28.4%
+```
 
 ---
 
@@ -485,4 +491,4 @@ RawSpawnCost
 보스: 우두머리 멧돼지
 ```
 
-다음 몬스터 작업은 스테이지 2의 강화 구성 또는 스테이지 1 보스의 실제 Roblox 런타임 검증입니다.
+다음 몬스터 작업은 스테이지 2의 실제 몬스터·웨이브를 작성해 현재 경제 프록시를 교체하는 것입니다.
