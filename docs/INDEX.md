@@ -48,7 +48,7 @@ README.md / docs/INDEX.md
 | `design/REBIRTH.md` | Confirmed · Living | 코인·지역 진행 초기화와 영구 코인·행운 배율 |
 | `design/TUTORIAL.md` | Confirmed · Living | 첫 굴리기, 코인 수집, 자동 기능과 지연형 안내 |
 | `design/FUSION.md` | Confirmed · Living | 중후반 중복 타워 합체와 영구 누적 진행 |
-| `design/TOWER_VARIANTS.md` | Confirmed | 별도 고정 변종 타워와 해금 규칙 |
+| `design/TOWER_VARIANTS.md` | Confirmed · Living | 별도 고정 변종 타워와 해금 규칙 |
 
 ### 전투와 편성
 
@@ -67,13 +67,13 @@ README.md / docs/INDEX.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `design/CURRENCY.md` | Confirmed · Living | 코인 월드 드롭·직접 수집, 자석과 연금 정수 |
-| `design/POTIONS.md` | Confirmed | 포션 상점, 효과, 지속시간과 중첩 |
+| `design/POTIONS.md` | Confirmed · Living | 포션 상점, 효과, 지속시간과 환생 보존 |
 
 ### 추가 전투 콘텐츠
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `design/STAGE_BOSSES.md` | Draft | 플레이어별 개인 보스, 출현과 보상 |
+| `design/STAGE_BOSSES.md` | Draft | 플레이어별 개인 보스, 출현과 월드 코인 보상 |
 | `design/LIVE_WAVE.md` | Draft | 실제 시간 기반 서버 공동 전투와 기여 보상 |
 
 ---
