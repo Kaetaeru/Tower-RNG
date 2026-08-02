@@ -26,7 +26,40 @@ Roblox의 RNG 수집 성장과 지속형 타워 디펜스 전투를 결합한 �
 → 영구 코인·행운 성장
 ```
 
-첫 환생은 약 7~15분을 목표로 합니다. 이후 환생 요구량은 점차 증가하며 같은 시간마다 연속 환생하는 구조가 아닙니다.
+---
+
+## 첫 수직 슬라이스 기준
+
+현재 `Confirmed (Provisional Balance)` 값:
+
+```text
+기본 굴리기 간격: 4.0초
+굴리기 속도 I: 3.6초
+스테이지 1 StageCoinUnit: 1
+스테이지 2 문: 750코인
+스테이지 3 문: 3,200코인
+첫 환생: 6,500 Defense XP
+```
+
+스테이지 1의 검증된 5웨이브 주기:
+
+```text
+평균 주기: 56.28초
+총 코인 가치: 385
+총 Defense XP: 385
+일반 웨이브: 약 10초
+보스 웨이브: 평균 16초
+```
+
+첫 환생 경제 시뮬레이션:
+
+```text
+균형 소비: 7.92~12.91분
+문 우선: 7.67~13.86분
+트리 우선: 9.48~12.27분
+```
+
+스테이지 1에 머물러도 15분 안에 환생할 수 있고, 강한 타워로 스테이지 2를 실제 방어하면 약 8분대로 단축됩니다.
 
 ---
 
@@ -46,6 +79,7 @@ Roblox의 RNG 수집 성장과 지속형 타워 디펜스 전투를 결합한 �
 - 환생 시 모든 일반 문 재잠금
 - 재접속은 로비에서 시작
 - 마지막 활동 스테이지가 열려 있으면 빠른 복귀 버튼 제공
+- 문은 전투력 검사가 아니며 높은 스테이지 행운만 받고 복귀하는 전략 허용
 - 라이브 웨이브 입구는 로비
 
 ---
@@ -69,7 +103,7 @@ Roblox의 RNG 수집 성장과 지속형 타워 디펜스 전투를 결합한 �
 - 과부하 시 3초 정지 후 같은 스테이지 1웨이브
 - 이미 떨어진 코인은 과부하 중 유지
 
-스테이지 1의 일반 웨이브는 권장 편성 기준 약 10초입니다. 후반 웨이브는 타워 DPS 카탈로그에 맞춰 점진적으로 길어질 수 있습니다.
+스테이지 1 기준 보스는 `우두머리 멧돼지`이며 HP 55, SpawnCost 100입니다.
 
 ---
 
@@ -110,20 +144,43 @@ StageScale(S) = 10 ^ ((S - 1) / 3)
 RawPowerBudget(N) = (N / 10) ^ 0.20
 ```
 
-같은 역할에서는 `1 / 999` 타워가 `1 / 998` 타워보다 반드시 강합니다. 서로 다른 역할도 공통 기여도 기준에서 더 희귀한 타워가 더 높은 예산을 가집니다.
+같은 역할에서는 `1 / 999` 타워가 `1 / 998` 타워보다 반드시 강합니다.
+
+현재 역할별 최저급 `1 / 10` 기준 타워 6종과 스테이지 1 전체 주기 시뮬레이션이 작성되어 있습니다.
+
+---
+
+## 거대한 스탯 트리
+
+첫 환생 전 중심 가격:
+
+```text
+자동 굴리기 10
+자동 편성 30
+자석 범위 I 50
+핵심 성능 I 100
+굴리기 속도 I 160
+자석 속도 I 220
+전투 분야 해금 450
+핵심 성능 II 650
+코인 획득 I 550
+편성 슬롯 5 1,200
+```
+
+모든 노드는 한 좌표 공간에 연결되며 환생 후 유지합니다.
 
 ---
 
 ## 환생
 
-환생 조건:
+첫 버전의 Defense XP:
 
 ```text
-몬스터 처치·웨이브·보스
-→ Defense XP
-→ 요구량 충족
-→ 선택적으로 환생
+Defense XP
+= 처치한 SpawnCost × StageRewardScale
 ```
+
+별도의 웨이브 완료 XP 보너스는 아직 사용하지 않습니다. 보스의 높은 가치는 높은 SpawnCost에 포함됩니다.
 
 환생 시 초기화:
 
@@ -249,20 +306,13 @@ RawPowerBudget(N) = (N / 10) ^ 0.20
 | 확률·행운 | `docs/design/RNG_PROBABILITY.md` |
 | 통합 밸런스 | `docs/design/BALANCE_MODEL.md` |
 | 경제 템포 | `docs/design/ECONOMY_PACING.md` |
+| 첫 환생 경제 검증 | `docs/reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` |
 | 굴리기 | `docs/design/ROLLING.md` |
-| 타워 | `docs/design/TOWERS.md` |
-| 편성 | `docs/design/FORMATION.md` |
-| 전투 | `docs/design/COMBAT.md` |
-| 스테이지 | `docs/design/LEVEL_DESIGN.md` |
-| 몬스터 | `docs/design/MONSTERS.md` |
+| 타워 카탈로그 | `docs/reference/TOWER_CATALOG.md` |
+| 몬스터 카탈로그 | `docs/reference/MONSTER_CATALOG.md` |
+| 스테이지 카탈로그 | `docs/reference/STAGE_CATALOG.md` |
+| 스탯 트리 카탈로그 | `docs/reference/STAT_TREE_CATALOG.md` |
 | 환생 | `docs/design/REBIRTH.md` |
-| 재화 | `docs/design/CURRENCY.md` |
-| 스탯 트리 | `docs/design/STAT_TREE.md` |
-| 합체 | `docs/design/FUSION.md` |
-| 변종 | `docs/design/TOWER_VARIANTS.md` |
-| UI | `docs/design/UI_FLOW.md` |
-| 표현·타격감 | `docs/design/PRESENTATION_FEEL.md` |
-| 설정 | `docs/design/SETTINGS.md` |
 | 상태·저장 | `docs/technical/STATE_LIFECYCLE.md` |
 
 프로젝트 작업 전 `AGENTS.md`와 `docs/INDEX.md`를 먼저 읽습니다.
