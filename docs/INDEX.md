@@ -38,7 +38,7 @@ AGENTS.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, V1 시간축, 스테이지 기준형 환생 |
-| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15 12~15시간, 숙련 20~30시간 |
+| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15 12~15시간, P10~P90 완주 전력 기준 |
 | `design/RNG_PROBABILITY.md` | Confirmed · Living | 임의 정밀도 `1/N`, 로그 압축과 환생 행운 공식 |
 | `design/ROLLING.md` | Confirmed · Living | 4.0→3.6초, 환생 속도와 2.0초 하한, 특수 굴림 |
 | `design/BALANCE_MODEL.md` | Confirmed · Living | PowerBudget, StageScale, SpawnCost, 보상 |
@@ -91,11 +91,12 @@ AGENTS.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `reference/TOWER_CATALOG.md` | Active Catalog | 실제 타워 ID·행동·수치·자산 |
-| `reference/V1_TOWER_PROBABILITY_LADDER.md` | Active Benchmark | 50자리 공식 분모와 정확한 합 1 |
+| `reference/V1_TOWER_PROBABILITY_LADDER.md` | Active Benchmark | 50자리 공식 분모·정확한 합·전체 보유 체감 |
 | `reference/V1_TOP_TOWER_BENCHMARK.md` | Active Benchmark | 최고 일반 타워 `1/10^20`, 기여도 약 6,310 |
 | `reference/V1_LUCK_COMPRESSION_BENCHMARK.md` | Active Benchmark | 실제 환생 시각·행운·속도별 최고 타워 획득률 |
 | `reference/V1_REBIRTH_STAT_BENCHMARK.md` | Active Benchmark | 토큰 4개와 네 스탯 공식·집중 상한 |
 | `reference/V1_REBIRTH_XP_BENCHMARK.md` | Active Benchmark | XP 기준 스테이지·진행률 보존·20/35/50분 곡선 |
+| `reference/V1_ROSTER_POWER_DISTRIBUTION.md` | Active Benchmark | 20,000계정 최고 보유·Top-4~12 전투력 P10/P50/P90 |
 | `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6역할 기여도 |
 | `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 몬스터와 보스 |
 | `reference/STAGE_CATALOG.md` | Active Catalog | 최초 전투·스테이지 1·문 가격 |
@@ -126,6 +127,7 @@ AGENTS.md
 | `../tools/balance/v1_luck_compression.py` | 초기 독립 행운 계수 기록 |
 | `../tools/balance/v1_rebirth_xp_curve.py` | 스테이지 기준형 환생 XP와 횟수 |
 | `../tools/balance/rebirth_stat_tokens.py` | XP 곡선·네 스탯·굴림·최고 타워 통합 검증 |
+| `../tools/balance/v1_roster_power_distribution.py` | 20,000계정 보유 수량·Top-K 전투력 분포 |
 
 ---
 
@@ -148,6 +150,7 @@ AGENTS.md
 → design/RNG_PROBABILITY.md
 → reference/V1_TOWER_PROBABILITY_LADDER.md
 → reference/V1_LUCK_COMPRESSION_BENCHMARK.md
+→ reference/V1_ROSTER_POWER_DISTRIBUTION.md
 
 환생 XP·스탯
 → design/REBIRTH.md
@@ -164,8 +167,9 @@ AGENTS.md
 → design/BALANCE_MODEL.md
 → reference 카탈로그와 벤치마크
 
-완주 시간
+완주 시간·완주 전력
 → design/V1_COMPLETION_PACING.md
+→ reference/V1_ROSTER_POWER_DISTRIBUTION.md
 
 웨이브 시간
 → design/WAVE_PACING.md
@@ -192,7 +196,9 @@ AGENTS.md
 - V1 완주 12~15시간
 - 최고 일반 타워 1 / 10^20, 기여도 약 6,309.57
 - 정확한 합 1의 50자리 공식 확률 사다리
-- 균형형 최고 타워 누적 13.5h 3.005%, 15h 4.680%, 25h 18.146%, 30h 24.799%
+- 균형형 최고 타워 누적 13.5h 약 3%, 15h 약 4.7%, 25h 약 18%, 30h 약 25%
+- 20,000계정 시간대별 최고 보유·Top-4~12 전투력 분포
+- 균형형 15h Top-12 Final EC P10/P50/P90 = 2,313/4,409/12,183
 ```
 
 ---
@@ -200,14 +206,14 @@ AGENTS.md
 ## 다음 우선순위
 
 ```text
-1. 전체 50종의 시간대별 최고 보유·4~12슬롯 편성 전투력 분포
-2. 스테이지 15 권장 편성·계정 성장 배율 역산
-3. 스테이지 2 실제 몬스터·웨이브·보스
-4. 스테이지 2 진입·파밍 시간과 실제 XP율 검증
-5. 중간 희귀도 실제 타워 작성
-6. 후속 코인 굴리기 속도와 환생 속도 중첩 검증
-7. 환생 스탯 배분·재분배 UI 상세 명세
-8. 지역 1 수직 슬라이스 구현
-9. 실제 데이터로 계획 XP 주기 교체
-10. 검증 후 50종·15스테이지 확장
+1. 실제 4→12슬롯 해금 시각·가격과 역할별 슬롯 상한
+2. 코인 전투 스탯의 15시간·30시간 배율
+3. 실제 슬롯·코인 성장·P10 보유 전력을 합친 스테이지 15 권장 전투력 역산
+4. 스테이지 2 실제 몬스터·웨이브·보스
+5. 스테이지 2 진입·파밍 시간과 실제 XP율 검증
+6. 중간 희귀도 실제 타워 작성
+7. 변종·합체의 시간대별 전투력 기여
+8. 환생 스탯 배분·재분배 UI 상세 명세
+9. 지역 1 수직 슬라이스 구현
+10. 실제 데이터로 계획 XP 주기 교체 후 50종·15스테이지 확장
 ```
