@@ -23,8 +23,8 @@ Roblox의 RNG 수집 성장과 지속형 타워 디펜스 전투를 결합한 �
 → 더 강한 적·보상·행운
 → Defense XP 요구량 충족
 → 환생
-→ Defense XP 0 + 스탯 토큰 지급
-→ 원하는 영구 스탯에 배분
+→ Defense XP 0 + 스탯 토큰 4개
+→ 행운·성능·재화·주사위 속도에 배분
 → 코인·문·현재 전투를 유지한 채 계속 진행
 ```
 
@@ -40,7 +40,7 @@ Roblox의 RNG 수집 성장과 지속형 타워 디펜스 전투를 결합한 �
 4개 공통 변종 계열
 수동 합체
 코인 스탯 트리
-환생 스탯 토큰
+네 분야 환생 스탯
 ```
 
 플레이타임 목표:
@@ -67,6 +67,7 @@ Stage 1 StageCoinUnit: 1
 스테이지 2 문: 750코인
 스테이지 3 문: 3,200코인
 첫 환생: 7,000 Defense XP
+환생 보상: 스탯 토큰 4개
 ```
 
 스테이지 1:
@@ -192,10 +193,14 @@ V1 기준:
 ## 행운 압축
 
 ```text
+LuckCompressionBonus(L)
+= 0.0340 × min(L,25)
++ 0.0040 × max(L-25,0)
+
 BaseCompression
 = 1
 + 0.245 × (CurrentStage - 1)
-+ 0.040 × AllocatedLuckTokens
++ LuckCompressionBonus(L)
 + TemporaryCompressionBonus
 ```
 
@@ -207,13 +212,13 @@ BaseCompression
 다이아몬드 굴림 6.05
 ```
 
-균형 행운 토큰 배분에서 최고 `1/10^20` 타워 누적 획득률:
+실제 환생 XP 곡선의 균형형 최고 `1/10^20` 타워 누적 획득률:
 
 ```text
-13.5시간 3.012%
-15시간 4.661%
-25시간 17.062%
-30시간 22.705%
+13.5시간 3.005%
+15시간 4.680%
+25시간 18.146%
+30시간 24.799%
 ```
 
 내부 유효 확률은 UI에 표시하지 않습니다.
@@ -222,22 +227,73 @@ BaseCompression
 
 ## 환생
 
+첫 환생:
+
 ```text
-Defense XP 요구량 충족
-→ RebirthCount +1
-→ 스탯 토큰 지급
-→ Defense XP 0
+7,000 Defense XP
+→ 토큰 4개
+```
+
+두 번째 이후:
+
+```text
+RebirthXPAnchorStage
+= Defense XP를 획득한 가장 높은 스테이지
+```
+
+```text
+두 번째: 기준 스테이지 XP 약 20분치
+세 번째: 약 35분치
+4~50번째: 약 50분치
+```
+
+높은 스테이지에서 첫 XP를 얻어 기준이 상승하면 현재 진행률 퍼센트를 유지한 채 XP 숫자와 요구량을 함께 조정합니다.
+
+환생 실행:
+
+```text
+RebirthCount +1
+RebirthStatTokensEarned +4
+UnspentRebirthStatTokens +4
+Defense XP 0
 ```
 
 유지:
 
 - 코인
 - 열린 문
+- XP 기준 스테이지
 - 현재 위치·스테이지·웨이브
-- 타워·도감·스탯·합체·변종
+- 타워·도감·코인 스탯·합체·변종
 - 굴림 카운터·포션·설정
 
-스탯 토큰은 미사용분을 이월하고 플레이어가 직접 분배합니다. 환생당 지급량과 행운 외 스탯은 아직 미확정입니다.
+---
+
+## 환생 스탯
+
+```text
+행운
+성능
+재화
+주사위 속도
+```
+
+- 환생당 토큰 4개
+- 스탯 1포인트당 토큰 1개
+- 미사용분 영구 이월
+- 새 토큰은 언제든 투자 가능
+- 기존 배분 전체 재분배는 환생 직후 무료 1회
+
+상한:
+
+```text
+성능 최대 ×2.50
+재화 최대 ×4.00
+굴리기 최소 2.0초
+행운은 굴림별 Compression 상한
+```
+
+균형형은 30시간 약 46회 환생해 분야별 약 46포인트를 보유합니다.
 
 ---
 
@@ -276,7 +332,7 @@ Defense XP 요구량 충족
 8시간 → 12시간 → 24시간 저장
 ```
 
-코인만 제한적으로 지급합니다.
+코인만 제한적으로 지급하며 환생 재화 배율이 적용됩니다.
 
 ---
 
@@ -309,12 +365,13 @@ Defense XP 요구량 충족
 | 전체 진행 | `docs/design/PROGRESSION.md` |
 | V1 완주 | `docs/design/V1_COMPLETION_PACING.md` |
 | 확률·행운 | `docs/design/RNG_PROBABILITY.md` |
+| 환생 | `docs/design/REBIRTH.md` |
+| 환생 XP 벤치마크 | `docs/reference/V1_REBIRTH_XP_BENCHMARK.md` |
+| 환생 스탯 벤치마크 | `docs/reference/V1_REBIRTH_STAT_BENCHMARK.md` |
 | 행운 벤치마크 | `docs/reference/V1_LUCK_COMPRESSION_BENCHMARK.md` |
 | 50자리 확률 사다리 | `docs/reference/V1_TOWER_PROBABILITY_LADDER.md` |
 | 밸런스 | `docs/design/BALANCE_MODEL.md` |
 | 경제 | `docs/design/ECONOMY_PACING.md` |
-| 환생 | `docs/design/REBIRTH.md` |
-| 월드 이동 | `docs/design/WORLD_NAVIGATION.md` |
 | 상태·저장 | `docs/technical/STATE_LIFECYCLE.md` |
 
 프로젝트 작업 전 `AGENTS.md`와 `docs/INDEX.md`를 먼저 읽습니다.
