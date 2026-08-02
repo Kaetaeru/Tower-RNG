@@ -4,7 +4,7 @@
 - 상태: **Active Benchmark · Confirmed (Provisional Balance)**
 - 필수 참고: `../../AGENTS.md`
 - 상위 문서: `../design/RNG_PROBABILITY.md`, `../design/BALANCE_MODEL.md`, `../design/TOWERS.md`, `../design/V1_COMPLETION_PACING.md`
-- 관련 문서: `V1_TOWER_PROBABILITY_LADDER.md`, `V1_LUCK_COMPRESSION_BENCHMARK.md`, `V1_REBIRTH_STAT_BENCHMARK.md`, `TOWER_CATALOG.md`, `TOWER_BALANCE_BENCHMARK.md`, `STAGE_CATALOG.md`
+- 관련 문서: `V1_TOWER_PROBABILITY_LADDER.md`, `V1_LUCK_COMPRESSION_BENCHMARK.md`, `V1_REBIRTH_STAT_BENCHMARK.md`, `V1_REBIRTH_XP_BENCHMARK.md`, `TOWER_CATALOG.md`, `TOWER_BALANCE_BENCHMARK.md`, `STAGE_CATALOG.md`
 - 마지막 정리: 2026-08-02
 
 ## 목적
@@ -54,8 +54,6 @@ EquivalentContribution: 약 6,309.57
 ---
 
 ## 3. 행동 수치 기준
-
-후보:
 
 ```text
 기본 피해: 약 12,619.15
@@ -112,20 +110,19 @@ EquivalentContribution: 약 6,309.57
 V1 숙련 25~30시간: 누적 15~25%
 ```
 
-환생 1회당 토큰 4개를 받고 행운·성능·재화·주사위 속도에 한 개씩 투자하는 균형형 결과:
+실제 환생 XP 곡선에서 매 환생 행운·성능·재화·주사위 속도에 한 개씩 투자하는 균형형 결과:
 
 ```text
 5시간: 0.011%
-13.5시간: 3.028%
-15시간: 4.683%
-20시간: 11.052%
-25시간: 17.738%
-30시간: 24.618%
+13.5시간: 3.005%
+15시간: 4.680%
+25시간: 18.146%
+30시간: 24.799%
 ```
 
 두 목표를 모두 통과합니다.
 
-행운 집중형은 15시간 약 8.216%, 30시간 약 25.706%입니다. 최고 타워를 자동 보장하지 않으며, 주사위 속도를 섞은 행운 혼합형은 30시간 약 29.427%까지 올라갈 수 있습니다. 이 결과는 수집 빌드의 보상이며 최고 타워는 메인 완주 필수가 아닙니다.
+행운 집중형은 15시간 약 7.315%, 30시간 약 24.976%입니다. 행운 2·성능 1·속도 1 혼합형은 30시간 약 29.093%까지 올라갈 수 있습니다. 이 차이는 수집 빌드의 보상이며 최고 타워는 메인 완주 필수가 아닙니다.
 
 현재 행운 적용 후 타워별 유효 확률은 UI에 표시하지 않습니다. 도감·획득 연출·리더보드는 공식 기본 `1 / 10^20`을 사용합니다.
 
@@ -142,8 +139,6 @@ FinalEquivalentContribution
 × RebirthPerformanceMultiplier
 × TemporaryCombatMultiplier
 ```
-
-환생 성능 공식:
 
 ```text
 RebirthPerformanceMultiplier(P)
@@ -167,6 +162,8 @@ RebirthPerformanceMultiplier(P)
 
 코인 트리와 임시 전투 배율은 별도로 적용됩니다. 실제 스테이지 15는 극희귀 타워 없이도 클리어 가능해야 합니다.
 
+성능 투자는 Defense XP를 직접 곱하지 않지만 웨이브 처리시간을 줄여 환생 속도를 간접 가속합니다. 균형형은 30시간 약 46회, 성능 집중형은 약 55회 환생합니다.
+
 ---
 
 ## 7. 메인 진행과의 관계
@@ -186,7 +183,8 @@ RebirthPerformanceMultiplier(P)
 - 50자리 공식 분모 사다리와 정확한 합 1
 - 역할 수량 `9, 9, 8, 8, 8, 8`
 - 환생당 토큰 4개와 네 배분 분야
-- 행운·주사위 속도를 함께 반영한 누적 굴림 수
+- 스테이지 기준형 환생 XP 곡선
+- 행운·주사위 속도·실제 환생 시각을 함께 반영한 누적 굴림
 - 균형형 최고 타워 획득 체감 목표
 - 환생 성능 최대 배율 ×2.50
 
@@ -200,8 +198,8 @@ RebirthPerformanceMultiplier(P)
 - 치명타·오버킬 처리
 - 변종 분모와 성능
 - 합체 계보 위치
-- 실제 두 번째 이후 환생 간격
 - 전체 50종의 시간대별 최적 편성 전투력 분포
+- 실제 스테이지 2~15 전투에 따른 획득 시점 변화
 
 ---
 
