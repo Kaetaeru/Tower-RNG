@@ -38,21 +38,50 @@ Implemented
 
 | 영역 | 권위 문서 | 상태 |
 |---|---|---|
+| 일반 타워 50종 | `TOWER_CATALOG.md` | Confirmed Identity·Role·Odds·PowerBudget · Runtime Parameters Pending |
+| 변종·합체 공통 규칙 | `TOWER_SYSTEM_CATALOG.md` | Confirmed System Values · Individual Content Pending |
 | 영구 스테이지 문 | `STAGE_GATE_CATALOG.md` | Confirmed · Not Implemented |
 | 지역·스테이지·웨이브 | `STAGE_CATALOG.md` | Confirmed Combat Data · Map Pending |
 | 몬스터·보스 | `MONSTER_CATALOG.md` | Confirmed Gameplay Identity · Visuals Replaceable |
 | 코인 스탯 트리 | `STAT_TREE_CATALOG.md` | Confirmed Values · Layout Pending |
-| 변종·합체 공통 규칙 | `TOWER_SYSTEM_CATALOG.md` | Confirmed System Values · Individual Content Pending |
 
 기술 구조:
 
 ```text
 ../technical/MONSTER_CONTENT_ARCHITECTURE.md
+../technical/TOWER_MODELING.md
+../technical/TOWER_BEHAVIOR_GRAMMAR.md
 ```
 
 ---
 
 # 채택 현황
+
+## 일반 타워
+
+```text
+일반 굴리기 TowerId: 50 / 50
+공식 BaseOddsN: 50 / 50
+역할·희귀도 순서: 50 / 50
+ThemeStageId: 50 / 50
+ActionProfileId: 50 / 50
+교체 가능한 VisualProfileId: 50 / 50
+```
+
+역할 분포:
+
+```text
+단일 화력 9
+광역 화력 9
+제어 8
+마무리 8
+지원 8
+대형 사냥 8
+```
+
+모든 타워는 어느 스테이지에서나 획득·편성할 수 있습니다. `ThemeStageId`는 외형·설정·공격 연출의 출신 테마이며 획득 제한이나 원소 상성이 아닙니다.
+
+7~50번의 정확한 피해량·주기·범위와 투사체 속도는 역할별 PowerBudget 변환 단계에서 작성합니다. 전투 정체성·확률·PowerBudget은 이미 채택됐습니다.
 
 ## 스테이지·몬스터
 
@@ -66,7 +95,7 @@ WaveSetId: 15 / 15
 실제 맵·모델·애니메이션: 미구현
 ```
 
-모델은 `VisualProfileId`로 분리했습니다. 제작 난도가 높으면 전투 데이터와 웨이브를 유지하고 VisualProfile만 교체합니다.
+몬스터 모델은 `VisualProfileId`로 분리했습니다. 제작 난도가 높으면 전투 데이터와 웨이브를 유지하고 VisualProfile만 교체합니다.
 
 ## 스탯 트리·경제
 
@@ -96,14 +125,17 @@ V1 최대 2단계
 
 # 기존 reference 호환 문서
 
-다음 파일은 과거 링크 호환을 위해 남겨둡니다.
+다음 파일은 과거 링크와 계산 근거를 위해 남겨둡니다.
 
 ```text
 ../reference/TOWER_CATALOG.md
+../reference/V1_TOWER_PROBABILITY_LADDER.md
 ../reference/MONSTER_CATALOG.md
 ../reference/STAGE_CATALOG.md
 ../reference/STAT_TREE_CATALOG.md
 ```
+
+`V1_TOWER_PROBABILITY_LADDER.md`의 `V1_SLOT_07`~`V1_SLOT_50`은 과거 계산용 자리표시자입니다. 실제 TowerId와 이름은 `TOWER_CATALOG.md`가 소유합니다.
 
 충돌 시 `docs/catalog`의 권위 문서를 사용합니다. 내부 링크 이전이 끝나기 전에는 기존 파일을 삭제하지 않습니다.
 
@@ -111,22 +143,13 @@ V1 최대 2단계
 
 # 아직 필요한 카탈로그
 
-## 타워
+## 타워 확장
 
-- 일반 굴리기 타워 50종의 최종 이름과 `TowerId`
-- 50종 역할·행동·희귀도 순서
-- 지원·제어 타워의 개별 수치
+- 7~50번 역할별 정확한 피해·주기·범위 변환
 - 타워별 `AllowedVariantFamilies`
 - 개별 변종 `TowerId`, 이름과 행동
 - 기본형·변종 합체 계보와 결과 `TowerId`
-- 타워 모델·애니메이션·VFX·SFX 요구사항
-
-현재:
-
-```text
-공식 확률 슬롯 50 / 50
-기준 정체성 6 / 최소 50
-```
+- 실제 모델·애니메이션·VFX·SFX 자산
 
 ## 스테이지 표시 자산
 
@@ -151,21 +174,21 @@ V1 최대 2단계
 - 수치와 시각 자산의 상태를 분리합니다.
 - 모델 교체가 전투 판정을 바꾸지 않게 합니다.
 - 실제 런타임 효율은 Roblox 측정 전까지 Confirmed로 표시하지 않습니다.
-- MonsterId를 AssetId나 모델 파일명에 종속시키지 않습니다.
+- TowerId·MonsterId를 AssetId나 모델 파일명에 종속시키지 않습니다.
 
 ---
 
 # 다음 카탈로그 작업
 
 ```text
-CAT-NEXT-003
-일반 타워 50종 정체성·역할·행동 채택
+CAT-NEXT-004
+일반 타워 50종의 AllowedVariantFamilies와 개별 변종 정체성 채택
 ```
 
 그 다음:
 
 ```text
-CAT-NEXT-004 타워별 변종 허용 계열과 개별 변종
 CAT-NEXT-005 기본형·변종 합체 계보
 CAT-NEXT-006 스탯 트리 좌표·아이콘·연결선
+CAT-NEXT-007 타워 7~50 역할별 런타임 수치 변환
 ```
