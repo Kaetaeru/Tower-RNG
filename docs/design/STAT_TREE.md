@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `BALANCE_MODEL.md`, `CURRENCY.md`, `ROLLING.md`, `RNG_PROBABILITY.md`, `TOWERS.md`, `COMBAT.md`, `FORMATION.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `REBIRTH.md`, `TUTORIAL.md`, `PROGRESSION.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `WORLD_NAVIGATION.md`, `PRESENTATION_FEEL.md`, `../reference/STAT_TREE_CATALOG.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
+- 관련 문서: `BALANCE_MODEL.md`, `CURRENCY.md`, `ROLLING.md`, `RNG_PROBABILITY.md`, `TOWERS.md`, `COMBAT.md`, `FORMATION.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `REBIRTH.md`, `TUTORIAL.md`, `PROGRESSION.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `WORLD_NAVIGATION.md`, `PRESENTATION_FEEL.md`, `../reference/STAT_TREE_CATALOG.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`, `../reference/V1_REBIRTH_XP_BENCHMARK.md`
 - 하위 문서 예정: `../spec/STAT_TREE.md`
 - 마지막 정리: 2026-08-02
 
@@ -157,9 +157,7 @@
 - 텔레포터
 - 오프라인 확장
 
-첫 환생 전 중심 노드에는 환생 조건이 없습니다.
-
-문과 기존 구매 노드는 환생으로 초기화하지 않습니다.
+첫 환생 전 중심 노드에는 환생 조건이 없습니다. 문과 기존 구매 노드는 환생으로 초기화하지 않습니다.
 
 ---
 
@@ -187,6 +185,7 @@
 ## 7. 배분 데이터
 
 ```text
+RebirthXPAnchorStage
 RebirthStatTokensEarned
 UnspentRebirthStatTokens
 RebirthStatAllocations[StatId]
@@ -217,13 +216,14 @@ REBIRTH_ROLL_SPEED
 
 ```text
 LuckCompressionBonus(L)
-= 0.0315 × min(L, 25)
-+ 0.0090 × max(L - 25, 0)
+= 0.0340 × min(L, 25)
++ 0.0040 × max(L - 25, 0)
 ```
 
 - 로그 희귀도 압축 증가
-- 공식 `1 / N`은 유지
+- 공식 `1 / N` 유지
 - 일반·황금·다이아몬드 Compression 상한 적용
+- 첫 25포인트 이후 강한 감소 효율
 
 ### 성능
 
@@ -239,6 +239,8 @@ PerformanceMultiplier(P)
 
 - 모든 역할의 EquivalentContribution 강화
 - 역할별 피해·제어·지원 환산값에 적용
+- Defense XP를 직접 곱하지 않음
+- 빠른 웨이브 처리로 환생을 간접 가속
 
 ### 재화
 
@@ -275,7 +277,25 @@ FinalRollInterval
 
 ---
 
-## 9. 재분배
+## 9. 실제 토큰 속도
+
+`V1_REBIRTH_XP_BENCHMARK.md`의 중앙 경로 결과입니다.
+
+| 활성 플레이 | 균형형 환생 | 누적 토큰 | 분야별 포인트 |
+|---:|---:|---:|---:|
+| 30분 | 2 | 8 | 2 |
+| 2시간 | 4 | 16 | 4 |
+| 5시간 | 8 | 32 | 8 |
+| 13.5시간 | 20 | 80 | 20 |
+| 15시간 | 22 | 88 | 22 |
+| 25시간 | 38 | 152 | 38 |
+| 30시간 | 46 | 184 | 46 |
+
+성능 미투자는 30시간 약 37회, 성능 집중은 약 55회 환생합니다. 성능 빌드의 빠른 토큰 획득은 전투 성능에 따른 정상적인 간접 보상입니다.
+
+---
+
+## 10. 재분배
 
 - 새 미사용 토큰은 언제든 투자 가능
 - 이미 투자한 포인트는 다음 환생까지 고정
@@ -287,23 +307,24 @@ FinalRollInterval
 
 ---
 
-## 10. 배분 UI
+## 11. 배분 UI
 
 필수 정보:
 
 - 미사용 토큰
-- 각 StatId의 현재 투자량
+- 각 StatId 현재 투자량
 - 다음 토큰의 실제 효과
 - 25포인트 감소 효율 경계
 - 성능 ×2.50, 재화 ×4.00, 굴리기 2.0초와 행운 상한
 - 환생 직후 재분배 가능 여부
+- 현재 환생 XP 기준 스테이지
 - 서버 승인 결과
 
 환생 직후 배분 화면으로 이동할 수 있지만 강제하지 않습니다. 현재 전투와 굴리기는 계속됩니다.
 
 ---
 
-## 11. 저장과 피드백
+## 12. 저장과 피드백
 
 코인 노드 구매:
 
@@ -331,17 +352,19 @@ FinalRollInterval
 → 재분배 기회 소모
 ```
 
-피드백:
+XP 기준 스테이지 상승:
 
-- 입력 즉시 눌림 반응
-- 서버 승인 후 점등·수치 갱신
-- 구매 불가 이유 표시
-- 감소된 움직임 설정 지원
-- 일반 구매에 카메라 흔들림 없음
+```text
+높은 스테이지 XP 획득
+→ 기존 진행률 계산
+→ 기준 스테이지 상승
+→ 새 요구량 계산
+→ 같은 진행률로 XP 재조정
+```
 
 ---
 
-## 12. 사용하지 않는 구조
+## 13. 사용하지 않는 구조
 
 - 환생 시 코인 트리 초기화
 - 환생 시 토큰 배분 자동 초기화
@@ -354,12 +377,13 @@ FinalRollInterval
 - 자동 합체
 - 텔레포터로 잠긴 문 우회
 - 환생 뒤 문 목적지 삭제
+- 재화 포인트로 Defense XP 증가
 
 ---
 
-## 13. 남은 검증
+## 14. 남은 검증
 
-- 실제 두 번째 이후 환생 횟수와 토큰 속도
+- 실제 스테이지 2~15 주기에 따른 환생 속도
 - 성능의 역할별 런타임 적용
 - 코인 배율 중첩 순서
 - 후속 코인 굴리기 속도 노드
