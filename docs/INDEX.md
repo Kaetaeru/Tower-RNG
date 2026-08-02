@@ -40,11 +40,11 @@ AGENTS.md
 | `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, 첫 15분, V1 완주와 기능 순서 |
 | `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15까지 12~15시간, 숙련·수집 시간층 |
 | `design/RNG_PROBABILITY.md` | Confirmed · Living | 임의 정밀도 `1/N`, 확률표, 숨겨진 유효 확률과 행운 |
-| `design/BALANCE_MODEL.md` | Confirmed · Living | 희귀도 PowerBudget, StageScale, SpawnCost, 보상 인플레이션 |
+| `design/BALANCE_MODEL.md` | Confirmed · Living | 희귀도 PowerBudget, `1/10^20` 상한, StageScale, SpawnCost와 보상 |
 | `design/ECONOMY_PACING.md` | Confirmed · Living | 초기 가격, 문·스탯·환생 시간과 경제 검증 지표 |
 | `design/WAVE_PACING.md` | Confirmed · Living | 진입·파밍 목표 시간, 후반 상한과 보스 시간 비중 |
 | `design/ROLLING.md` | Confirmed · Living | 4.0초 무료 굴리기, 전역 풀과 특수 주사위 |
-| `design/TOWERS.md` | Confirmed · Living | 최소 50종, 역할 분포, 희귀도별 엄격한 성능 증가 |
+| `design/TOWERS.md` | Confirmed · Living | 최소 50종, 역할 분포, 희귀도별 증가와 V1 최고 기준점 |
 | `design/STAT_TREE.md` | Confirmed · Living | 하나의 거대한 트리와 첫 환생 전 중심 노드 |
 | `design/REBIRTH.md` | Confirmed · Living | 첫 7,000 XP, 증가하는 환생 주기와 초기화 범위 |
 | `design/TUTORIAL.md` | Confirmed · Living | 최초 슬라임·4슬롯 준비·첫 굴리기·환생 안내 |
@@ -92,6 +92,7 @@ AGENTS.md
 |---|---|---|
 | `reference/TOWER_CATALOG.md` | Active Catalog | 공식 분모, PowerBudget, 행동·수치·타격감과 기준 타워 |
 | `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6종의 솔로·혼합·보스 주기 역할 기여도 검증 |
+| `reference/V1_TOP_TOWER_BENCHMARK.md` | Active Benchmark | 일반 굴리기 최고 `1/10^20`, 약 6,310 DPS와 획득 체감 목표 |
 | `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 일반 몬스터 3종과 우두머리 멧돼지 보스 |
 | `reference/STAGE_CATALOG.md` | Active Catalog | 최초 준비 전투, 스테이지 1 전투·보상과 문 가격 |
 | `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 15개 4역할 편성의 전체 5웨이브·보상 검증 |
@@ -178,6 +179,7 @@ spec/LIVE_WAVE.md
 
 타워·몬스터·스테이지 수치
 → design/BALANCE_MODEL.md
+→ reference/V1_TOP_TOWER_BENCHMARK.md
 
 V1 전체 완주 시간
 → design/V1_COMPLETION_PACING.md
@@ -218,22 +220,25 @@ V1 전체 완주 시간
 - 최초 튜토리얼·빈 슬롯 채움 저장 계약
 - V1 스테이지 15 최초 클리어 중앙값 12~15시간
 - 빠른 8~10시간, 느린 18~22시간, 숙련 20~30시간
+- V1 일반 굴리기 최고 공식 확률 1 / 10^20
+- 최고 순수 단일 화력 기준 EquivalentContribution 약 6,309.57
 
 다음
-1. V1 최고 일반 굴리기 타워의 공식 분모와 PowerBudget 기준 설정
-2. 최고점에서 역산한 50종 희귀도 사다리 초안
-3. 스테이지 15 권장 편성·환생 배율 목표 설정
-4. 스테이지 2 실제 몬스터·웨이브·보스 작성
-5. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
-6. 역할별 `1 / 100` 기준 타워 6종 작성
-7. 초기 확률 사다리와 4초 굴림의 전투력 분포 시뮬레이션
-8. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
-9. 스테이지 1 Min·MaxBudget 변형 검증
-10. 두 번째 환생과 환생 영구 보상 시뮬레이션
-11. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
-12. UI·전투 피드백 토큰과 설정 Preview 기준 작성
-13. 지역 1 수직 슬라이스 구현
-14. 검증 후 타워 50종·15스테이지 확장
+1. 50종 공식 분모 사다리 골격과 정확한 단위분수 합 작성
+2. 15분·30분·2시간·5시간·12~15시간·20~30시간 누적 굴림 수 설정
+3. 시간대별 최고 보유 타워·4~12슬롯 편성 전투력 분포 시뮬레이션
+4. 행운 압축 곡선과 최고 타워 누적 획득률 3~5%, 15~25% 검증
+5. 스테이지 15 권장 편성과 계정 성장 배율 역산
+6. 스테이지 2 실제 몬스터·웨이브·보스 작성
+7. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
+8. 확률 사다리 결과에 따른 중간 희귀도 실제 타워 작성
+9. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
+10. 스테이지 1 Min·MaxBudget 변형 검증
+11. 두 번째 환생과 환생 영구 보상 시뮬레이션
+12. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
+13. UI·전투 피드백 토큰과 설정 Preview 기준 작성
+14. 지역 1 수직 슬라이스 구현
+15. 검증 후 타워 50종·15스테이지 확장
 ```
 
 라이브 웨이브는 기본 수직 슬라이스와 저장·밸런스 계약 검증 뒤 진행합니다.
