@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `V1_COMPLETION_PACING.md`, `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `TOWERS.md`, `STAT_TREE.md`, `LEVEL_DESIGN.md`, `WAVE_PACING.md`, `STAGE_BOSSES.md`, `REBIRTH.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `TUTORIAL.md`, `SOCIAL.md`, `SETTINGS.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`, `../reference/V1_REBIRTH_XP_BENCHMARK.md`
+- 관련 문서: `V1_COMPLETION_PACING.md`, `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `TOWERS.md`, `STAT_TREE.md`, `LEVEL_DESIGN.md`, `WAVE_PACING.md`, `STAGE_BOSSES.md`, `REBIRTH.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `TUTORIAL.md`, `SOCIAL.md`, `SETTINGS.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`, `../reference/V1_REBIRTH_XP_BENCHMARK.md`, `../reference/V1_ROSTER_POWER_DISTRIBUTION.md`
 - 하위 문서 예정: `../spec/PROGRESSION.md`
 - 마지막 정리: 2026-08-02
 
@@ -262,17 +262,35 @@ FinalRollInterval
 실제 환생 시각과 주사위 속도를 함께 반영한 균형형 최고 타워 누적 확률:
 
 ```text
-13.5시간: 3.005%
-15시간: 4.680%
-25시간: 18.146%
-30시간: 24.799%
+13.5시간: 약 3%
+15시간: 약 4.7%
+25시간: 약 18%
+30시간: 약 25%
 ```
 
 최고 타워는 메인 완주에 필요하지 않습니다.
 
 ---
 
-## 12. 토큰 배분과 재분배
+## 12. 시간대별 보유 편성 전투력
+
+50종 공식 확률표와 실제 환생·행운·주사위 속도를 사용해 시나리오당 20,000계정을 표본화했습니다.
+
+균형형 15시간의 환생 성능 적용 `Top-K Final EC`:
+
+| 슬롯 상한 | P10 | P50 | P90 |
+|---:|---:|---:|---:|
+| 4 | 1,312 | 2,968 | 10,649 |
+| 6 | 1,654 | 3,493 | 11,240 |
+| 8 | 1,902 | 3,868 | 11,623 |
+| 10 | 2,136 | 4,171 | 11,942 |
+| 12 | 2,313 | 4,409 | 12,183 |
+
+이 수치는 역할별 제한·지원 중첩·코인 전투 노드·변종·합체를 제외한 보유 타워 상한입니다. 실제 스테이지 15은 최고 타워나 P90이 아니라 P10~P25 보유 기반과 확정 성장의 합으로 완주 가능해야 합니다.
+
+---
+
+## 13. 토큰 배분과 재분배
 
 - 각 포인트는 토큰 1개
 - 미사용 토큰 영구 이월
@@ -283,7 +301,7 @@ FinalRollInterval
 
 ---
 
-## 13. 기능 등장 순서
+## 14. 기능 등장 순서
 
 ```text
 0~30분
@@ -309,7 +327,7 @@ FinalRollInterval
 
 ---
 
-## 14. 재접속
+## 15. 재접속
 
 유지:
 
@@ -328,7 +346,7 @@ FinalRollInterval
 
 ---
 
-## 15. 출시 범위
+## 16. 출시 범위
 
 - 일반 굴리기 타워 최소 50종
 - 역할별 약 8~10종
@@ -346,7 +364,7 @@ FinalRollInterval
 
 ---
 
-## 16. 핵심 원칙
+## 17. 핵심 원칙
 
 - 공식 분모가 큰 타워는 더 강함
 - 모든 굴림은 진행 가치를 가짐
@@ -357,14 +375,16 @@ FinalRollInterval
 - 전투시간은 성장의 척도
 - 자동 합체와 거래 없음
 - 현재 행운 적용 확률 비공개
+- 스테이지 15 필수 전력은 P90이 아니라 하위 분위수와 확정 성장 기준
 
 ---
 
-## 17. 남은 검증
+## 18. 남은 검증
 
-- 전체 50종 시간대별 최고 보유·편성 전투력 분포
+- 실제 4→12슬롯 해금 시각·가격과 역할별 상한
+- 코인 전투 스탯의 시간대별 배율
 - 지역별 문 가격과 실제 전투 데이터
 - 스테이지 2~15 실제 XP 주기
-- 후속 코인 굴리기 속도 노드
-- 빠른·중앙·느린 스테이지 15 도달 시뮬레이션
+- 변종·합체의 시간대별 전투력 기여
+- 빠른·중앙·느린 스테이지 15 통합 시뮬레이션
 - 환생 배분·재분배 UI 구현 검증
