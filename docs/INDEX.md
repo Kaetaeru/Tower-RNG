@@ -25,7 +25,7 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `../README.md` | Active | 최신 핵심 루프, 지역, 웨이브와 주요 시스템 개요 |
+| `../README.md` | Active | 최신 핵심 루프, 지역, 웨이브, 타격감과 주요 시스템 개요 |
 | `../AGENTS.md` | Required | 승인, 문서 계층, 상하위 동기화와 구현 원칙 |
 | `INDEX.md` | Active | 전체 문서 위치와 상태 |
 
@@ -53,7 +53,8 @@ AGENTS.md
 | `design/WORLD_NAVIGATION.md` | Confirmed · Living | 로비, 선형 스테이지, 문, 웨이브 초기화와 텔레포터 |
 | `design/LEVEL_DESIGN.md` | Confirmed · Living | 5개 지역, 15개 스테이지, 5웨이브와 생성 예산 |
 | `design/STAGE_BOSSES.md` | Confirmed · Living | 각 스테이지 5웨이브 보스와 반복 주기 |
-| `design/COMBAT.md` | Confirmed · Living | 추종 자동 전투, 역할과 Engage 전환 |
+| `design/COMBAT.md` | Confirmed · Living | 추종 자동 전투, 역할, Engage와 전투 타격감 |
+| `design/PRESENTATION_FEEL.md` | Confirmed · Living | UI·굴리기·전투의 과장된 움직임과 피드백 완료 기준 |
 | `design/TOWER_BEHAVIOR.md` | Confirmed · Living | 타겟, 이동, 행동 루틴과 전달 방식 |
 | `design/TOWER_EXTENSIONS.md` | Confirmed · Living | 고유 능력, 사건 반응과 플레이어 조작 |
 | `design/FORMATION.md` | Confirmed · Living | 전체·역할 슬롯, 자동 편성과 퀵 편성 HUD |
@@ -67,7 +68,8 @@ AGENTS.md
 | `design/CURRENCY.md` | Confirmed · Living | 코인 드롭·수집, 문 구매와 연금 정수 |
 | `design/OFFLINE_PROGRESS.md` | Confirmed · Living | 제한된 오프라인 코인 효율과 시간 상한 |
 | `design/POTIONS.md` | Confirmed · Living | 포션 효과, 지속시간과 중첩 |
-| `design/UI_FLOW.md` | Confirmed · Living | HUD, 퀵 편성, 인벤토리와 주요 메뉴 |
+| `design/UI_FLOW.md` | Confirmed · Living | HUD, 퀵 편성, 인벤토리와 즉각적인 클릭 피드백 |
+| `design/MONETIZATION.md` | Draft · Research Pending | RNG 게임 벤치마크 기준, 잠정 상품 방향과 금지선 |
 
 ### 추가 콘텐츠
 
@@ -117,6 +119,7 @@ spec/WORLD_NAVIGATION.md
 spec/LEVEL_DESIGN.md
 spec/STAGE_BOSSES.md
 spec/COMBAT.md
+spec/PRESENTATION_FEEL.md
 spec/TOWER_BEHAVIOR.md
 spec/TOWER_EXTENSIONS.md
 spec/FORMATION.md
@@ -126,6 +129,7 @@ spec/CURRENCY.md
 spec/OFFLINE_PROGRESS.md
 spec/POTIONS.md
 spec/UI_FLOW.md
+spec/MONETIZATION.md
 spec/LIVE_WAVE.md
 ```
 
@@ -135,7 +139,7 @@ spec/LIVE_WAVE.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `technical/TOWER_MODELING.md` | Confirmed · Living | Basic 모델, 자유 이름 모션과 시각 상태 규약 |
+| `technical/TOWER_MODELING.md` | Confirmed · Living | Basic 모델, 자유 이름 모션, 과장된 준비·공격·반동 규약 |
 | `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 이동, 행동 루틴, 전달과 자원 프로필 |
 | `technical/TOWER_EXTENSION_FRAMEWORK.md` | Confirmed · Living | 확장 모듈, 훅, 고유 능력과 조작 세션 |
 | `technical/MONSTER_MODELING.md` | Confirmed · Living | 공유 모션 엔진을 사용하는 몬스터 제작 규약 |
@@ -151,11 +155,13 @@ spec/LIVE_WAVE.md
 ## 현재 우선순위
 
 ```text
-1. STAGE_CATALOG에서 지역 1의 3개 스테이지 작성
-2. MONSTER_CATALOG에서 지역 1 몬스터와 보스 작성
-3. TOWER_CATALOG에서 초기 타워 풀 작성
-4. STAT_TREE_CATALOG에서 첫 환생 전 노드 작성
-5. 웨이브·환생·경제 밸런스 시뮬레이션
-6. 핵심 시스템 명세 작성
-7. 지역 1 수직 슬라이스 구현
+1. RNG 게임 과금 벤치마크 재조사와 MONETIZATION 검증
+2. 공통 UI·전투 피드백 토큰과 Preview 기준 정의
+3. STAGE_CATALOG에서 지역 1의 3개 스테이지 작성
+4. MONSTER_CATALOG에서 지역 1 몬스터와 보스 작성
+5. TOWER_CATALOG에서 초기 타워 풀 작성
+6. STAT_TREE_CATALOG에서 첫 환생 전 노드 작성
+7. 웨이브·환생·경제 밸런스 시뮬레이션
+8. 핵심 시스템 명세 작성
+9. 지역 1 수직 슬라이스 구현
 ```
