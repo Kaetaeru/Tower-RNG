@@ -103,6 +103,7 @@ AGENTS.md
 | `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 몬스터와 보스 |
 | `reference/STAGE_CATALOG.md` | Active Catalog | 최초 전투·스테이지 1·문 가격 |
 | `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 15개 혼합 편성의 5웨이브 검증 |
+| `reference/STAGE15_WAVE_BENCHMARK.md` | Active Benchmark | 15h P10/P50·30h P10의 스테이지 15 직접 클리어 검증 |
 | `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | Active Benchmark | 첫 7,000 XP 도달 |
 | `reference/STAT_TREE_CATALOG.md` | Active Catalog | 초기 코인 노드·좌표·가격 |
 
@@ -124,6 +125,7 @@ AGENTS.md
 |---|---|
 | `../tools/balance/tower_baseline.py` | 최저급 6종 기여도 |
 | `../tools/balance/stage1_wave_sim.py` | 스테이지 1 웨이브 1~5 |
+| `../tools/balance/stage15_wave_sim.py` | 스테이지 15 집계 EC 직접 클리어 검증 |
 | `../tools/balance/first_rebirth_economy.py` | 첫 환생 임계점 경제 |
 | `../tools/balance/v1_probability_ladder.py` | 50슬롯·정확한 확률 합 |
 | `../tools/balance/v1_luck_compression.py` | 초기 독립 행운 계수 기록 |
@@ -182,9 +184,12 @@ AGENTS.md
 → design/V1_COMPLETION_PACING.md
 → reference/V1_FORMATION_SLOT_BENCHMARK.md
 → reference/V1_COIN_COMBAT_BENCHMARK.md
+→ reference/STAGE15_WAVE_BENCHMARK.md
 
 웨이브 시간
 → design/WAVE_PACING.md
+→ reference/STAGE1_WAVE_BENCHMARK.md
+→ reference/STAGE15_WAVE_BENCHMARK.md
 ```
 
 ---
@@ -211,6 +216,7 @@ AGENTS.md
 - 코인 전투 성장 15시간 ×4.50, 20시간 이후 ×5.00
 - 균형형 15h 통합 Final EC P10/P50/P90 = 10,188/19,665/54,374
 - 균형형 30h 통합 Final EC P10/P50/P90 = 60,575/115,335/190,905
+- 스테이지 15 직접 검증: 15h P10 112.24초, P50 57.54초, 30h P10 35.35초, 누수 0
 ```
 
 ---
@@ -218,14 +224,14 @@ AGENTS.md
 ## 다음 우선순위
 
 ```text
-1. 스테이지 15 실제 5웨이브·보스와 15h/30h 직접 클리어 시뮬레이션
-2. 스테이지 2 실제 몬스터·웨이브·보스
-3. 스테이지 2 진입·파밍 시간과 실제 XP율 검증
-4. 스테이지 4~15 문 가격과 전체 12~15시간 경제
-5. 중간 희귀도 실제 타워 작성
-6. 변종·합체의 시간대별 전투력 기여
-7. 실제 지원·제어 중첩과 자동 편성 평가
-8. 환생 스탯 배분·재분배 UI 상세 명세
-9. 지역 1 수직 슬라이스 구현
+1. 스테이지 2 실제 몬스터·웨이브·보스
+2. 스테이지 2 진입·파밍 시간과 실제 XP율 검증
+3. 스테이지 4~15 문 가격과 전체 12~15시간 경제
+4. 중간 희귀도 실제 타워 작성
+5. 변종·합체의 시간대별 전투력 기여
+6. 실제 지원·제어 중첩과 자동 편성 평가
+7. 환생 스탯 배분·재분배 UI 상세 명세
+8. 지역 1 수직 슬라이스 구현
+9. 스테이지 15 집계 모델을 실제 타워 행동 시뮬레이션으로 교체
 10. 실제 데이터로 계획 XP 주기 교체 후 50종·15스테이지 확장
 ```
