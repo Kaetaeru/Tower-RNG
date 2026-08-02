@@ -3,15 +3,13 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `TOWERS.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `STAT_TREE.md`, `POTIONS.md`, `LEVEL_DESIGN.md`, `REBIRTH.md`, `TUTORIAL.md`, `PROGRESSION.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
+- 관련 문서: `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `TOWERS.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `STAT_TREE.md`, `POTIONS.md`, `LEVEL_DESIGN.md`, `REBIRTH.md`, `TUTORIAL.md`, `PROGRESSION.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`, `../reference/V1_REBIRTH_XP_BENCHMARK.md`
 - 하위 문서 예정: `../spec/ROLLING.md`
 - 마지막 정리: 2026-08-02
 
 ## 요약
 
 굴리기는 일정 간격마다 무료로 타워 한 개를 획득하는 핵심 시스템입니다. 전투와 동시에 진행하며 빈 결과가 없습니다.
-
-첫 수직 슬라이스:
 
 ```text
 기본 굴리기 간격: 4.0초
@@ -61,7 +59,7 @@ FinalRollInterval
 ```
 
 - `S`: `REBIRTH_ROLL_SPEED` 포인트
-- 첫 25포인트는 포인트당 굴림 속도 약 +1%
+- 첫 25포인트는 포인트당 굴리기 속도 약 +1%
 - 이후는 포인트당 약 +0.25%
 - V1 최소 간격 2.0초
 - 속도 증가는 실제 굴림 수와 황금·다이아몬드 도달 속도를 함께 높임
@@ -166,8 +164,8 @@ FinalRollInterval
 
 ```text
 LuckCompressionBonus(L)
-= 0.0315 × min(L, 25)
-+ 0.0090 × max(L - 25, 0)
+= 0.0340 × min(L, 25)
++ 0.0040 × max(L - 25, 0)
 ```
 
 ### ROL-012: 기본 공식
@@ -204,7 +202,7 @@ clamp(BaseCompression, 1.00, 5.40)
 스테이지 15 = 4.430
 ```
 
-높은 스테이지에서 행운만 받고 낮은 스테이지로 복귀하는 전략을 허용합니다.
+높은 스테이지에서 행운만 받고 낮은 스테이지로 복귀하는 전략을 허용합니다. 이 행동은 Defense XP를 얻지 않는 한 환생 XP 기준 스테이지를 올리지 않습니다.
 
 ### ROL-014: 순서 보존
 
@@ -217,19 +215,19 @@ clamp(BaseCompression, 1.00, 5.40)
 
 ---
 
-## 6. 누적 굴림·획득 체감 검증
+## 6. 실제 환생 곡선과 통합한 검증
 
-환생 1회당 4토큰, 매 환생 네 스탯에 한 개씩 투자하는 균형형 기준입니다. 계획용 환생 시점은 첫 10분, 두 번째 30분, 이후 평균 40분 간격입니다.
+환생 1회당 4토큰, 매 환생 네 스탯에 한 개씩 투자하는 균형형 기준입니다.
 
-| 활성 플레이 | 주사위 속도 포인트 | 누적 굴림 | 최고 타워 누적 확률 |
-|---:|---:|---:|---:|
-| 5시간 | 8 | 5,221 | 0.011% |
-| 13.5시간 | 21 | 14,964 | 3.028% |
-| 15시간 | 23 | 16,795 | 4.683% |
-| 25시간 | 38 | 29,432 | 17.738% |
-| 30시간 | 46 | 35,893 | 24.618% |
+| 활성 플레이 | 환생 | 속도 포인트 | 누적 굴림 | 최고 타워 누적 확률 |
+|---:|---:|---:|---:|---:|
+| 5시간 | 8 | 8 | 5,210 | 0.011% |
+| 13.5시간 | 20 | 20 | 14,859 | 3.005% |
+| 15시간 | 22 | 22 | 16,672 | 4.680% |
+| 25시간 | 38 | 38 | 29,277 | 18.146% |
+| 30시간 | 46 | 46 | 35,742 | 24.799% |
 
-속도 포인트가 없는 기본 경로의 30시간 굴림 수는 약 29,996회입니다. 균형형은 속도 성장 때문에 약 35,893회가 됩니다.
+속도 포인트가 없는 기본 경로의 30시간 굴림 수는 약 29,996회입니다. 균형형은 약 35,742회입니다.
 
 V1 완주 13.5~15시간의 3~5%, 숙련 25~30시간의 15~25% 목표를 통과합니다.
 
@@ -287,7 +285,6 @@ V1 완주 13.5~15시간의 3~5%, 숙련 25~30시간의 15~25% 목표를 통과�
 
 ## 10. 남은 검증
 
-- 실제 두 번째 이후 환생 간격
 - TemporaryCompressionBonus 값
 - 후속 코인 굴리기 속도 노드와 중첩 순서
 - 전체 50종 최고 보유·편성 전투력 분포
