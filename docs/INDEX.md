@@ -56,6 +56,7 @@ docs/INDEX.md
 |---|---|---|
 | `design/COMBAT.md` | Confirmed | 자동 전투, 역할, 전투 스탯과 상태 효과 |
 | `design/TOWER_BEHAVIOR.md` | Confirmed · Living | 타겟, 이동, 행동 루틴, 전달 방식과 Engage 타이밍의 조합 규칙 |
+| `design/TOWER_EXTENSIONS.md` | Confirmed · Living | 타워별 사건 반응, 고유 능력, 플레이어 조작과 확장 간 연동 원칙 |
 | `design/FORMATION.md` | Confirmed | 추종 편대, 전체·역할 슬롯과 편성 UI |
 | `design/TARGETING.md` | Confirmed | 타겟 우선순위, 경로 진행도와 실제 거리 판정 |
 | `design/MONSTERS.md` | Confirmed | 몬스터 능력치, 이동, 도달 피해와 변종 몬스터 |
@@ -89,6 +90,7 @@ spec/TOWER_VARIANTS.md
 spec/STAT_TREE.md
 spec/COMBAT.md
 spec/TOWER_BEHAVIOR.md
+spec/TOWER_EXTENSIONS.md
 spec/FORMATION.md
 spec/TARGETING.md
 spec/MONSTERS.md
@@ -109,8 +111,9 @@ spec/LIVE_WAVE.md
 |---|---|---|
 | `technical/TOWER_MODELING.md` | Confirmed · Living | Basic 3D 모델, 자유 이름 모션, 이름·경로 대응과 전체 시각 상태 규약 |
 | `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 이동, 타겟, 행동 루틴, 전달, 생성물과 자원 프로필의 제작 양식 |
+| `technical/TOWER_EXTENSION_FRAMEWORK.md` | Confirmed · Living | 타워별 확장 모듈, 이벤트 훅, 고유 능력, 조작 세션과 확장 간 신호 구조 |
 
-두 문서는 함께 읽습니다.
+세 문서는 함께 읽습니다.
 
 ```text
 TOWER_MODELING.md
@@ -118,6 +121,9 @@ TOWER_MODELING.md
 
 TOWER_BEHAVIOR_GRAMMAR.md
 - 제작한 모션을 이동·공격 함수와 어떻게 조합하는가
+
+TOWER_EXTENSION_FRAMEWORK.md
+- 일반 양식 밖의 고유 능력과 플레이어 조작을 코어 수정 없이 어떻게 추가하는가
 ```
 
 다른 시스템의 기술 설계는 시스템 명세가 확정된 뒤 다음 경로에 작성합니다.
@@ -175,6 +181,7 @@ implementation/<SYSTEM>.md
 - PathProgress와 WorldPosition 이중 판정
 - 회복형 베이스와 과부하 복구
 - Engage 이동 시간이 실제 공격 타이밍에 영향을 주는 구조
+- 일반 행동 문법과 선택적 고유 확장을 분리하는 구조
 
 ADR 작성 전에는 결정의 범위와 필요성을 사용자에게 확인합니다.
 
@@ -198,6 +205,7 @@ ADR 작성 전에는 결정의 범위와 필요성을 사용자에게 확인합�
 4. 편성
 5. 타겟팅
 6. 타워 행동
-7. 재화
+7. 타워 고유 확장
+8. 재화
 
 개인 보스, 라이브 웨이브와 전체 스탯 트리는 사용자 승인이 필요한 세부 결정이 남아 있으므로 먼저 질문하고 확정합니다.
