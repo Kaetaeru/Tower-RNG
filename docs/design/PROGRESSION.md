@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `V1_COMPLETION_PACING.md`, `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `TOWERS.md`, `STAT_TREE.md`, `LEVEL_DESIGN.md`, `WAVE_PACING.md`, `STAGE_BOSSES.md`, `REBIRTH.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `TUTORIAL.md`, `SOCIAL.md`, `SETTINGS.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`
+- 관련 문서: `V1_COMPLETION_PACING.md`, `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `TOWERS.md`, `STAT_TREE.md`, `LEVEL_DESIGN.md`, `WAVE_PACING.md`, `STAGE_BOSSES.md`, `REBIRTH.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `TUTORIAL.md`, `SOCIAL.md`, `SETTINGS.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
 - 하위 문서 예정: `../spec/PROGRESSION.md`
 - 마지막 정리: 2026-08-02
 
@@ -21,7 +21,7 @@ V1 숙련·스테이지 15 안정 파밍: 20~30시간
 전체 수집: 완료 시간 없음
 ```
 
-환생은 코인과 월드 진행을 초기화하지 않습니다. Defense XP만 0으로 만들고 영구 스탯 토큰을 지급합니다.
+환생은 코인과 월드 진행을 초기화하지 않습니다. Defense XP만 0으로 만들고 영구 스탯 토큰 4개를 지급합니다.
 
 ---
 
@@ -38,8 +38,8 @@ V1 숙련·스테이지 15 안정 파밍: 20~30시간
 → 높은 스테이지의 수치·보상·행운
 → Defense XP 축적
 → 환생
-→ Defense XP 0 + 스탯 토큰 획득
-→ 토큰을 원하는 영구 스탯에 배분
+→ Defense XP 0 + 스탯 토큰 4개
+→ 행운·성능·재화·주사위 속도에 배분
 → 같은 월드 진행에서 계속 전투
 ```
 
@@ -113,7 +113,7 @@ V1 숙련·스테이지 15 안정 파밍: 20~30시간
 트리 우선: 9.63~12.70분
 ```
 
-첫 환생까지의 계산은 유지됩니다. 환생 후 코인과 문이 남으므로 이후 진행은 더 이상 동일한 경제 주기를 반복하지 않습니다.
+첫 환생까지의 계산은 유지됩니다. 첫 환생은 진행 초기화가 아니라 첫 환생 토큰 4개를 받는 시점입니다.
 
 ---
 
@@ -183,12 +183,13 @@ StageScale(S) = 10 ^ ((S - 1) / 3)
 
 ---
 
-## 8. 환생과 스탯 토큰
+## 8. 환생과 네 스탯
 
 ### 첫 환생
 
 ```text
 요구량: 7,000 Defense XP
+보상: 환생 스탯 토큰 4개
 ```
 
 ### 실행
@@ -196,7 +197,7 @@ StageScale(S) = 10 ^ ((S - 1) / 3)
 ```text
 Defense XP 요구량 충족
 → RebirthCount +1
-→ 스탯 토큰 지급
+→ 스탯 토큰 4개 지급
 → Defense XP 0
 → 현재 전투 계속
 ```
@@ -209,61 +210,86 @@ Defense XP 요구량 충족
 - 타워·스탯·도감·합체·변종
 - 굴림 카운터·포션·설정
 
-### 토큰
-
-- 영구 보유
-- 미사용분 이월
-- 플레이어가 원하는 스탯에 배분
-- 환생 횟수만으로 자동 배율 지급 없음
-- 환생당 지급량과 재분배 규칙은 미확정
-
-행운 배분의 첫 잠정 계수:
+### 배분처
 
 ```text
-행운 토큰 1개
-→ Compression +0.040
+REBIRTH_LUCK
+- 희귀도 로그 압축
+
+REBIRTH_PERFORMANCE
+- 모든 역할 EquivalentContribution
+
+REBIRTH_CURRENCY
+- 접속 중·오프라인 코인
+
+REBIRTH_ROLL_SPEED
+- 실제 굴리기 간격
 ```
+
+모든 분야는 첫 25포인트 이후 감소 효율을 사용합니다. 성능 최대 ×2.50, 재화 최대 ×4.00, 굴리기 최소 2.0초이며 행운은 굴림 종류별 Compression 상한을 사용합니다.
 
 ---
 
-## 9. 행운 진행
+## 9. 토큰 배분과 재분배
 
-잠정 공식:
+- 각 포인트는 토큰 1개
+- 미사용 토큰 영구 이월
+- 자동 균등 배분 없음
+- 새 미사용 토큰은 언제든 투자 가능
+- 기존 배분 전체 재분배는 환생 직후 무료 1회
+- 재분배하지 않으면 기존 배분 유지
+- 다음 환생까지 기존 투자 고정
+
+상시 재분배를 허용하지 않아 공격·처치·굴림 직전마다 분야를 교체하는 행동을 막습니다.
+
+---
+
+## 10. 행운·속도 진행
+
+행운 공식:
 
 ```text
+LuckCompressionBonus(L)
+= 0.0315 × min(L, 25)
++ 0.0090 × max(L - 25, 0)
+
 BaseCompression
 = 1
 + 0.245 × (CurrentStage - 1)
-+ 0.040 × AllocatedLuckTokens
++ LuckCompressionBonus(L)
 + TemporaryCompressionBonus
 ```
 
-상한:
+주사위 속도 공식:
 
 ```text
-일반 5.40
-황금 5.65
-다이아몬드 6.05
+RollRateMultiplier(S)
+= 1
++ 0.010 × min(S, 25)
++ 0.0025 × max(S - 25, 0)
+
+FinalRollInterval
+= max(2.00초, BaseRollInterval / RollRateMultiplier(S))
 ```
 
-균형적인 행운 토큰 배분 시뮬레이션:
+균형형은 매 환생 네 분야에 한 개씩 배분합니다. 계획용 환생 간격을 적용한 최고 타워 누적 획득률:
 
 ```text
-13.5시간 최고 타워 누적 획득률: 약 3.01%
-15시간: 약 4.66%
-25시간: 약 17.06%
-30시간: 약 22.71%
+13.5시간: 3.028%
+15시간: 4.683%
+25시간: 17.738%
+30시간: 24.618%
 ```
 
 최고 타워는 메인 완주에 필요하지 않습니다.
 
 ---
 
-## 10. 기능 등장 순서
+## 11. 기능 등장 순서
 
 ```text
 0~30분
-- 자동 굴리기·자동 편성·자석·첫 환생
+- 자동 굴리기·자동 편성·자석·첫 환생·첫 토큰 배분
 
 1~2시간
 - 오프라인 코인·기초 타겟 설정
@@ -278,18 +304,18 @@ BaseCompression
 - V1 핵심 시스템 전체 해금
 
 7~15시간
-- 해금한 시스템을 조합해 후반 지역 공략
+- 해금한 시스템과 환생 빌드를 조합해 후반 지역 공략
 ```
 
 자동 합체는 만들지 않습니다.
 
 ---
 
-## 11. 재접속
+## 12. 재접속
 
 유지:
 
-- 코인·Defense XP·환생 토큰
+- 코인·Defense XP·환생 토큰·배분
 - 영구적으로 열린 문
 - 마지막 활동 스테이지
 - 타워·편성·스탯·설정
@@ -303,7 +329,7 @@ BaseCompression
 
 ---
 
-## 12. 출시 범위
+## 13. 출시 범위
 
 - 일반 굴리기 타워 최소 50종
 - 역할별 약 8~10종
@@ -312,7 +338,7 @@ BaseCompression
 - 변종 4개 공통 계열
 - 수동 합체
 - 코인 스탯 트리
-- 환생 스탯 토큰 배분
+- 네 분야 환생 스탯 배분
 - 오프라인 코인
 - 희귀 타워 리더보드
 - 설정·접근성
@@ -321,13 +347,13 @@ BaseCompression
 
 ---
 
-## 13. 핵심 원칙
+## 14. 핵심 원칙
 
 - 공식 분모가 큰 타워는 반드시 더 강함
 - 모든 굴림은 진행 가치를 가짐
 - 높은 스테이지는 강한 인플레이션과 큰 보상
 - 코인·문 진행은 영구 누적
-- 환생은 XP를 토큰으로 바꾸는 선택
+- 환생은 XP를 4토큰으로 바꾸는 선택
 - 특정 극희귀 없이 V1 완주 가능
 - 전투시간은 대기시간이 아니라 성장의 척도
 - 자동 합체와 거래 없음
@@ -335,11 +361,11 @@ BaseCompression
 
 ---
 
-## 14. 남은 검증
+## 15. 남은 검증
 
-- 환생당 토큰 지급량과 토큰 스탯 목록
-- 두 번째 이후 환생 요구량
+- 코인·문 유지 상태의 두 번째 이후 환생 요구량
 - 50종 확률표의 시간대별 최고 보유·편성 전투력 분포
 - 지역별 문 가격과 실제 전투 데이터
-- 후속 굴리기 속도 노드
+- 후속 코인 굴리기 속도 노드
 - 빠른·중앙·느린 스테이지 15 도달 시뮬레이션
+- 환생 배분·재분배 UI 구현 검증
