@@ -38,29 +38,6 @@ docs/INDEX.md
 
 ---
 
-## 임시 작업 문서
-
-아직 문서 계층에 승격할 만큼 확정되지 않았지만 후속 논의를 위해 보존해야 하는 내용입니다.
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `drafts/TOWER_MODELING.md` | Working Draft | Basic 3D 모델, 자유 이름 모션 견본, 이름·경로 대응과 전체 시각 상태 기반 모션의 임시 규약 |
-| `drafts/TOWER_BEHAVIOR_GRAMMAR.md` | Working Draft | 이동 방식, 행동 루틴, 공격 전달 방식의 조합과 새 타워 ModuleScript 제작 양식 |
-
-두 문서는 함께 읽습니다.
-
-```text
-TOWER_MODELING.md
-- 3D 모델과 모션 견본을 어떻게 만드는가
-
-TOWER_BEHAVIOR_GRAMMAR.md
-- 제작한 모션을 이동·공격 함수와 어떻게 조합하는가
-```
-
-두 문서 모두 최종 규약이나 구현 계약이 아닙니다. 새 타워 유형, 근접 교전, 연속 사격, 충전, 설치와 소환 등의 세부 동작을 논의하면서 반드시 수정합니다.
-
----
-
 ## 게임 기획 문서
 
 ### 핵심 루프
@@ -78,6 +55,7 @@ TOWER_BEHAVIOR_GRAMMAR.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `design/COMBAT.md` | Confirmed | 자동 전투, 역할, 전투 스탯과 상태 효과 |
+| `design/TOWER_BEHAVIOR.md` | Confirmed · Living | 타겟, 이동, 행동 루틴, 전달 방식과 Engage 타이밍의 조합 규칙 |
 | `design/FORMATION.md` | Confirmed | 추종 편대, 전체·역할 슬롯과 편성 UI |
 | `design/TARGETING.md` | Confirmed | 타겟 우선순위, 경로 진행도와 실제 거리 판정 |
 | `design/MONSTERS.md` | Confirmed | 몬스터 능력치, 이동, 도달 피해와 변종 몬스터 |
@@ -110,6 +88,7 @@ spec/FUSION.md
 spec/TOWER_VARIANTS.md
 spec/STAT_TREE.md
 spec/COMBAT.md
+spec/TOWER_BEHAVIOR.md
 spec/FORMATION.md
 spec/TARGETING.md
 spec/MONSTERS.md
@@ -126,7 +105,22 @@ spec/LIVE_WAVE.md
 
 ## 기술 설계
 
-아직 작성 전입니다. 시스템 명세가 확정된 뒤 다음 경로에 작성합니다.
+| 문서 | 상태 | 책임 |
+|---|---|---|
+| `technical/TOWER_MODELING.md` | Confirmed · Living | Basic 3D 모델, 자유 이름 모션, 이름·경로 대응과 전체 시각 상태 규약 |
+| `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 이동, 타겟, 행동 루틴, 전달, 생성물과 자원 프로필의 제작 양식 |
+
+두 문서는 함께 읽습니다.
+
+```text
+TOWER_MODELING.md
+- 3D 모델과 모션 견본을 어떻게 만드는가
+
+TOWER_BEHAVIOR_GRAMMAR.md
+- 제작한 모션을 이동·공격 함수와 어떻게 조합하는가
+```
+
+다른 시스템의 기술 설계는 시스템 명세가 확정된 뒤 다음 경로에 작성합니다.
 
 ```text
 technical/<SYSTEM>.md
@@ -180,6 +174,7 @@ implementation/<SYSTEM>.md
 - 일반 스테이지 공격 사거리 제거
 - PathProgress와 WorldPosition 이중 판정
 - 회복형 베이스와 과부하 복구
+- Engage 이동 시간이 실제 공격 타이밍에 영향을 주는 구조
 
 ADR 작성 전에는 결정의 범위와 필요성을 사용자에게 확인합니다.
 
@@ -188,9 +183,9 @@ ADR 작성 전에는 결정의 범위와 필요성을 사용자에게 확인합�
 ## 현재 우선순위
 
 ```text
-1. Draft 기획의 Open Questions 해결
+1. Confirmed Living 문서의 미확정 세부 계약 해결
 2. 핵심 루프 시스템 명세 작성
-3. 기술 설계 작성
+3. 기술 설계 보완
 4. 구현 명세 작성
 5. 실제 코드 구현 및 검증
 ```
@@ -202,6 +197,7 @@ ADR 작성 전에는 결정의 범위와 필요성을 사용자에게 확인합�
 3. 합체
 4. 편성
 5. 타겟팅
-6. 재화
+6. 타워 행동
+7. 재화
 
 개인 보스, 라이브 웨이브와 전체 스탯 트리는 사용자 승인이 필요한 세부 결정이 남아 있으므로 먼저 질문하고 확정합니다.
