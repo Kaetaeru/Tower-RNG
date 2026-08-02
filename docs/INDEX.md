@@ -82,12 +82,6 @@ AGENTS.md
 |---|---|---|
 | `design/LIVE_WAVE.md` | Draft | 로비 진입 서버 공동 전투 |
 
-### 호환 별칭
-
-| 문서 | 상태 | 책임 |
-|---|---|---|
-| `design/FEEL_AND_FEEDBACK.md` | Deprecated Alias | 공식 문서 `PRESENTATION_FEEL.md`로 연결 |
-
 ---
 
 ## 콘텐츠 참조
