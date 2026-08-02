@@ -17,8 +17,8 @@
 현재 준비도:
 
 ```text
-전체 V1 약 35%
-기획·밸런스 약 76%
+전체 V1 약 36%
+기획·밸런스 약 77%
 콘텐츠 카탈로그 약 12%
 Roblox 구현·QA는 저장소 기준 초기 단계
 ```
@@ -139,13 +139,14 @@ balance가 값을 추천
 | `balance/STAGE9_WAVE_BENCHMARK.md` | 완전 완료 |
 | `balance/STAGE10_11_LIGHT_BENCHMARK.md` | 경량 완료 |
 | `balance/STAGE12_WAVE_BENCHMARK.md` | 완전 완료 |
-| `reference/STAGE15_WAVE_BENCHMARK.md` | 집계 완료·행동형 예정 |
+| `reference/STAGE15_WAVE_BENCHMARK.md` | 초기 집계 역산 기록 |
+| `balance/STAGE15_ACTION_WAVE_BENCHMARK.md` | 행동형 완전 완료·현재 우선 기준 |
 
 현재:
 
 ```text
-행동형 검증 완료: 스테이지 1~12
-집계 검증 완료: 스테이지 15
+행동형 검증 완료: 스테이지 1~12, 15
+남은 실제 웨이브: 스테이지 13·14
 수치상 완료: 13 / 15
 ```
 
@@ -164,7 +165,7 @@ balance가 값을 추천
 | `rebirth_stat_tokens.py` | 환생 스탯·굴림 통합 |
 | `v1_roster_power_distribution.py` | 보유 전력 분포 |
 | `v1_formation_slot_economy.py` | 슬롯 경제 |
-| `v1_coin_combat_curve.py` | 독립 코인 전투 성장 |
+| `v1_coin_combat_curve.py` | 독립 전투 성장 |
 | `v1_gate_economy.py` | 문·슬롯·전투 통합 경제 |
 | `stage1_wave_sim.py` | 스테이지 1 |
 | `stage2_wave_sim.py` | 스테이지 2 |
@@ -175,7 +176,8 @@ balance가 값을 추천
 | `stage9_wave_sim.py` | 스테이지 9 |
 | `stage10_11_light_sim.py` | 스테이지 10·11 |
 | `stage12_wave_sim.py` | 스테이지 12 |
-| `stage15_wave_sim.py` | 스테이지 15 집계 검증 |
+| `stage15_wave_sim.py` | 스테이지 15 집계 역산 |
+| `stage15_action_wave_sim.py` | 스테이지 15 행동형 완전 검증 |
 | `stage_validation_plan.py` | 검증 정책과 계획 주기 |
 
 ---
@@ -199,10 +201,10 @@ balance가 값을 추천
 ```text
 확률·행운·환생·슬롯·코인 성장 계산 완료
 문 가격과 12~15시간 통합 경제 계산 완료
-스테이지 1~12 행동형 전투 검증 완료
-스테이지 15 집계 클리어 검증 완료
+스테이지 1~12와 15 행동형 전투 검증 완료
+스테이지 15: 15h P10 평균 113.20초, 1,266편성 누수 0
 실제 타워 콘텐츠는 기준 6종 중심
-용암 행동·변종·합체·런타임 계산 미완료
+스테이지 13·14, 변종·합체·런타임 계산 미완료
 가격 권고안은 카탈로그 채택 전
 Roblox 수직 슬라이스는 저장소 기준 미완료
 ```
@@ -212,15 +214,16 @@ Roblox 수직 슬라이스는 저장소 기준 미완료
 # 현재 다음 작업
 
 ```text
-BAL-NEXT-006
-스테이지 15 용암지대 실제 행동형 완전 검증
+BAL-NEXT-007
+스테이지 13·14 용암지대 경량 검증
 ```
 
 이후:
 
 ```text
-스테이지 13·14 경량 검증
-→ 지원·제어·변종·합체
+지원·제어 중첩
+→ 변종·합체
+→ 런타임 손실
 → 최종 통합
 → 카탈로그 채택
 → 지역 1 수직 슬라이스
