@@ -1,8 +1,8 @@
-"""Deterministic Stage 1 wave benchmark for Tower RNG.
+"""Deterministic Stage 1 full-cycle benchmark for Tower RNG.
 
 The model validates provisional catalog values before the runtime combat system
 exists. It simulates all 15 four-slot lineups made from the six baseline tower
-roles, one tower per role, against the canonical Stage 1 wave schedules.
+roles, one tower per role, against the canonical Stage 1 waves 1 through 5.
 """
 
 from __future__ import annotations
@@ -13,10 +13,15 @@ from statistics import mean, median
 from typing import Optional
 
 TICK_SECONDS = 0.01
-MAX_SIMULATION_SECONDS = 30.0
-AVERAGE_MIN_SECONDS = 9.0
-AVERAGE_MAX_SECONDS = 11.0
-WORST_MAX_SECONDS = 12.5
+MAX_SIMULATION_SECONDS = 60.0
+NORMAL_AVERAGE_MIN_SECONDS = 9.0
+NORMAL_AVERAGE_MAX_SECONDS = 11.0
+NORMAL_WORST_MAX_SECONDS = 12.5
+BOSS_AVERAGE_MIN_SECONDS = 15.0
+BOSS_AVERAGE_MAX_SECONDS = 20.0
+BOSS_WORST_MAX_SECONDS = 20.0
+CYCLE_MIN_SECONDS = 55.0
+CYCLE_MAX_SECONDS = 70.0
 
 
 @dataclass(frozen=True)
@@ -89,6 +94,15 @@ YOUNG_BOAR = MonsterSpec(
     tags=frozenset({"thick"}),
 )
 
+PRAIRIE_BOAR_ALPHA = MonsterSpec(
+    monster_id="BOSS_PRAIRIE_BOAR_ALPHA",
+    hp=55.0,
+    time_to_base=22.0,
+    spawn_cost=100,
+    base_damage=5,
+    tags=frozenset({"boss", "elite", "thick"}),
+)
+
 TOWER_IDS = (
     "archer",
     "slinger",
@@ -118,6 +132,11 @@ WAVES: dict[int, list[SpawnEntry]] = {
         SpawnEntry(2.25, YOUNG_BOAR),
         SpawnEntry(3.00, PRAIRIE_SLIME),
         SpawnEntry(3.75, FIELD_RAT),
+    ],
+    5: [
+        SpawnEntry(0.00, PRAIRIE_BOAR_ALPHA),
+        SpawnEntry(0.75, FIELD_RAT),
+        SpawnEntry(1.50, FIELD_RAT),
     ],
 }
 
@@ -308,10 +327,10 @@ def main() -> None:
     lineups = list(combinations(TOWER_IDS, 4))
     all_results: dict[int, list[tuple[tuple[str, ...], SimulationResult]]] = {}
 
-    print("Stage 1 deterministic wave benchmark")
+    print("Stage 1 deterministic full-cycle benchmark")
     print(f"Lineups: {len(lineups)} unique four-role combinations")
 
-    for wave_number in range(1, 5):
+    for wave_number in range(1, 6):
         results = [
             (lineup, simulate(lineup, wave_number)) for lineup in lineups
         ]
@@ -332,34 +351,99 @@ def main() -> None:
 
         if total_leaks:
             raise SystemExit(f"Wave {wave_number} leaked in benchmark")
-        if not AVERAGE_MIN_SECONDS <= mean(times) <= AVERAGE_MAX_SECONDS:
-            raise SystemExit(
-                f"Wave {wave_number} average clear time is outside target band"
-            )
-        if times[-1] > WORST_MAX_SECONDS:
-            raise SystemExit(
-                f"Wave {wave_number} worst clear time exceeds safety limit"
-            )
+
+        if wave_number < 5:
+            if not (
+                NORMAL_AVERAGE_MIN_SECONDS
+                <= mean(times)
+                <= NORMAL_AVERAGE_MAX_SECONDS
+            ):
+                raise SystemExit(
+                    f"Wave {wave_number} average clear time is outside target band"
+                )
+            if times[-1] > NORMAL_WORST_MAX_SECONDS:
+                raise SystemExit(
+                    f"Wave {wave_number} worst clear time exceeds safety limit"
+                )
+        else:
+            if not (
+                BOSS_AVERAGE_MIN_SECONDS
+                <= mean(times)
+                <= BOSS_AVERAGE_MAX_SECONDS
+            ):
+                raise SystemExit(
+                    "Boss wave average clear time is outside target band"
+                )
+            if times[-1] > BOSS_WORST_MAX_SECONDS + 1e-9:
+                raise SystemExit(
+                    "Boss wave worst clear time exceeds safety limit"
+                )
 
     cycle_rows: list[tuple[tuple[str, ...], list[float]]] = []
     for lineup in lineups:
         times = [
             dict(all_results[wave_number])[lineup].clear_time
-            for wave_number in range(1, 5)
+            for wave_number in range(1, 6)
         ]
         cycle_rows.append((lineup, times))
 
-    cycle_rows.sort(key=lambda row: mean(row[1]))
-    cycle_means = [mean(times) for _, times in cycle_rows]
+    cycle_rows.sort(key=lambda row: sum(row[1]))
+    cycle_totals = [sum(times) for _, times in cycle_rows]
 
     print(
-        f"Cycle: avg={mean(cycle_means):.2f}s "
-        f"median_lineup={median(cycle_means):.2f}s "
-        f"best_lineup={cycle_means[0]:.2f}s "
-        f"worst_lineup={cycle_means[-1]:.2f}s"
+        f"Cycle: avg={mean(cycle_totals):.2f}s "
+        f"median_lineup={median(cycle_totals):.2f}s "
+        f"best_lineup={cycle_totals[0]:.2f}s "
+        f"worst_lineup={cycle_totals[-1]:.2f}s"
     )
     print(f"Best lineup: {', '.join(cycle_rows[0][0])}")
     print(f"Worst lineup: {', '.join(cycle_rows[-1][0])}")
+
+    if not CYCLE_MIN_SECONDS <= mean(cycle_totals) <= CYCLE_MAX_SECONDS:
+        raise SystemExit("Full-cycle average is outside target band")
+
+    boss_results = dict(all_results[5])
+    hunter_boss_times = [
+        boss_results[lineup].clear_time
+        for lineup in lineups
+        if "hunter" in lineup
+    ]
+    non_hunter_boss_times = [
+        boss_results[lineup].clear_time
+        for lineup in lineups
+        if "hunter" not in lineup
+    ]
+    hunter_cycle_times = [
+        sum(times)
+        for lineup, times in cycle_rows
+        if "hunter" in lineup
+    ]
+    non_hunter_cycle_times = [
+        sum(times)
+        for lineup, times in cycle_rows
+        if "hunter" not in lineup
+    ]
+
+    print(
+        f"Boss hunter comparison: with={mean(hunter_boss_times):.2f}s "
+        f"without={mean(non_hunter_boss_times):.2f}s"
+    )
+    print(
+        f"Cycle hunter comparison: with={mean(hunter_cycle_times):.2f}s "
+        f"without={mean(non_hunter_cycle_times):.2f}s"
+    )
+
+    normal_average_budget = mean(wave_budget(wave) for wave in range(1, 5))
+    boss_reward_ratio = wave_budget(5) / normal_average_budget
+    total_cycle_reward = sum(wave_budget(wave) for wave in range(1, 6))
+    defense_xp_per_minute = total_cycle_reward / mean(cycle_totals) * 60.0
+
+    print(
+        f"Rewards: normal_avg={normal_average_budget:.2f} "
+        f"boss={wave_budget(5)} ratio={boss_reward_ratio:.2f}x "
+        f"cycle={total_cycle_reward} "
+        f"defense_xp_per_minute={defense_xp_per_minute:.2f}"
+    )
 
 
 if __name__ == "__main__":
