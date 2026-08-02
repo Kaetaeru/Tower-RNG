@@ -9,7 +9,7 @@
 | 문서 | 책임 |
 |---|---|
 | `PROJECT_STATUS.md` | 전체 진행률·마스터 체크리스트·현재 다음 작업 |
-| `balance/FINAL_BALANCE_BATCH.md` | 남은 계산 6단계의 완료·조건부 상태 |
+| `balance/FINAL_BALANCE_BATCH.md` | 최종 계산 6단계의 완료·실측 대기 상태 |
 | `balance/FINAL_RECOMMENDATION.md` | 카탈로그로 넘길 계산 권고값 묶음 |
 | `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
 | `balance/INDEX.md` | 공식·가정·시뮬레이션·재현 도구 |
@@ -19,8 +19,8 @@
 현재 준비도:
 
 ```text
-전체 V1 약 40%
-기획·밸런스 약 87%
+전체 V1 약 41%
+기획·밸런스 약 90%
 콘텐츠 카탈로그 약 12%
 Roblox 구현·QA는 저장소 기준 초기 단계
 ```
@@ -68,6 +68,7 @@ balance가 값을 추천
 | `design/REBIRTH.md` | 진행 유지 환생과 네 스탯 |
 | `design/STAT_TREE.md` | 코인 트리와 환생 스탯 |
 | `design/OFFLINE_PROGRESS.md` | 오프라인 코인 공식·효율·상한 |
+| `design/MASTERY_CONTROL_ROOM.md` | 후반 편의·수집·표현 숙련 가지 |
 
 ## 타워·전투
 
@@ -130,10 +131,11 @@ balance가 값을 추천
 
 | 문서 | 상태 |
 |---|---|
-| `balance/FINAL_BALANCE_BATCH.md` | 계산 수행 6/6·완전 4·조건부 2 |
+| `balance/FINAL_BALANCE_BATCH.md` | 계산 수행 6/6·완전 5·실측 대기 1 |
 | `balance/FINAL_RECOMMENDATION.md` | 카탈로그 채택 후보값 정리 완료 |
 | `balance/FINAL_ACCOUNT_PATHS.md` | 빠른·중앙·느린 10,000계정 경로 완료 |
-| `balance/FINAL_ECONOMY_INTEGRATION.md` | 선택 경제 통합·추가 싱크 15~25B 산출 |
+| `balance/FINAL_ECONOMY_INTEGRATION.md` | 후반 선택 경제 통합 완료 |
+| `balance/MASTERY_UTILITY_SINK_BENCHMARK.md` | 숙련 제어실 25.2B와 30시간 잔여 검사 완료 |
 | `balance/RUNTIME_LOSS_BUDGET.md` | 계산 예산 완료·실제 Roblox 측정 대기 |
 
 ## 확률·경제·편성
@@ -152,18 +154,20 @@ balance가 값을 추천
 | `balance/V1_TOWER_VARIANT_BENCHMARK.md` | 변종 확률·전투력·코인 가지 |
 | `balance/V1_FUSION_BENCHMARK.md` | 합체 재료·전투력·코인 가지 |
 | `balance/OFFLINE_COIN_BENCHMARK.md` | 오프라인 민감도 |
+| `balance/MASTERY_UTILITY_SINK_BENCHMARK.md` | 후반 숙련 편의 싱크 |
 
-현재 계산된 영구 코인 싱크:
+최종 영구 코인 싱크:
 
 ```text
-문·슬롯·전투 36.397B
-변종          25.019B
-합체           2.750B
-오프라인       3.120B
-합계          67.286B
+문·슬롯·전투 36.3968252B
+변종          25.0185B
+합체           2.75025B
+오프라인       3.1201B
+숙련 제어실   25.2000B
+합계          92.4856752B
 ```
 
-추가 선택형 숙련 싱크 `15~25B`의 콘텐츠 정체성은 아직 결정 전입니다.
+30시간 잔여는 모든 검사 전략에서 5B 이하입니다.
 
 ## 스테이지 전투
 
@@ -199,20 +203,13 @@ Stage15 StableFarmEC = 12,200
 중앙 안정 파밍 약 13.5h
 ```
 
-합체:
+숙련 제어실:
 
 ```text
-기본형 3개 → 1단계 ×1.45
-기본형 총 9개 → 2단계 ×2.1025
-V1 최대 2단계
-```
-
-오프라인:
-
-```text
-효율 25→40%
-저장 8→24h
-가지 총가격 3.1201B
+앞 10노드 20B
+전체 11노드 25.2B
+균형형 10노드 약 29.99h
+균형형 최종 노드 약 31.02h
 ```
 
 런타임 목표:
@@ -249,6 +246,7 @@ Stage15 >= 0.986
 | `offline_coin_benchmark.py` | 오프라인 코인 |
 | `runtime_loss_budget.py` | 런타임 손실 예산 |
 | `final_economy_integration.py` | 후반 경제 통합 |
+| `mastery_utility_sink.py` | 숙련 제어실 가격·시간·잔여 |
 | `final_account_paths.py` | 전체 계정 경로 |
 
 ## 스테이지
@@ -275,15 +273,12 @@ Stage15 >= 0.986
 
 ```text
 CAT-NEXT-001
-문·슬롯·전투·변종·합체·오프라인 권고값의 카탈로그 채택 검토
+문·슬롯·전투·변종·합체·오프라인·숙련 제어실 권고값의 카탈로그 채택 검토
 ```
 
 별도 미완료:
 
 ```text
-DES-NEXT-001
-추가 15~25B 숙련 코인 싱크 정체성 결정
-
 RUN-NEXT-001
 지역 1 수직 슬라이스에서 실제 RuntimeEfficiency 측정
 ```
