@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `COMBAT.md`, `FORMATION.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `STAT_TREE.md`, `TOWER_BEHAVIOR.md`, `TOWER_EXTENSIONS.md`, `PRESENTATION_FEEL.md`, `../reference/TOWER_CATALOG.md`
+- 관련 문서: `RNG_PROBABILITY.md`, `BALANCE_MODEL.md`, `ROLLING.md`, `COMBAT.md`, `FORMATION.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `STAT_TREE.md`, `TOWER_BEHAVIOR.md`, `TOWER_EXTENSIONS.md`, `PRESENTATION_FEEL.md`, `V1_COMPLETION_PACING.md`, `../reference/TOWER_CATALOG.md`, `../reference/V1_TOP_TOWER_BENCHMARK.md`
 - 하위 문서 예정: `../spec/TOWERS.md`
 - 마지막 정리: 2026-08-02
 
@@ -12,6 +12,8 @@
 타워는 굴리기로 획득하고 ID별 수량으로 보유하는 고정 데이터 개체입니다. 같은 ID는 언제나 같은 능력·행동·외형을 가지며 개별 레벨과 무작위 옵션을 사용하지 않습니다.
 
 첫 출시 일반 굴리기 타워는 최소 50종, 여섯 역할마다 약 8~10종을 목표로 합니다. 공식 기본 분모가 큰 타워는 반드시 더 높은 전투 예산을 가집니다.
+
+V1 일반 굴리기의 최고 기준점은 공식 `1 / 10^20`, 순수 단일 화력 환산 `EquivalentContribution 약 6,309.57`입니다. 변종과 합체 결과는 이 일반 굴리기 상한을 넘을 수 있습니다.
 
 ---
 
@@ -116,6 +118,29 @@ RawPowerBudget(N) = (N / 10) ^ 0.20
 특정 순간의 상성 때문에 결과가 달라질 수 있지만 기준 전투들의 가중 평균에서는 희귀도 순서를 뒤집지 않습니다.
 
 세부 공식은 `BALANCE_MODEL.md`에서 관리합니다.
+
+### TWR-008A: V1 일반 굴리기 최고 기준점
+
+```text
+BaseOddsN: "100000000000000000000"
+공식 기본 확률: 1 / 10^20
+보조 표현: 1해분의 1
+RawPowerBudget: 약 6,309.573445
+EquivalentContribution: 약 6,309.57
+순수 단일 화력 환산 DPS: 약 6,310
+```
+
+이 값은 최종 이름·외형·특수 능력을 확정한 실제 타워가 아니라 V1 확률·전투력 사다리의 상한 기준입니다.
+
+- 메인 완주에 필수로 요구하지 않음
+- 스테이지 15는 이 타워 없이 클리어 가능해야 함
+- 변종과 합체 전용 결과는 이 상한보다 강할 수 있음
+- 계정 성장·치명타·지원·포션을 적용하기 전 타워 자체 기준
+- 스테이지 15 최초 클리어 시 누적 획득률 목표 3~5%
+- V1 숙련 20~30시간 시점 누적 획득률 목표 15~25%
+- 누적 획득률은 전체 확률표와 행운 곡선 작성 뒤 검증
+
+세부 산정과 건전성 검사는 `../reference/V1_TOP_TOWER_BENCHMARK.md`를 따릅니다.
 
 ---
 
@@ -252,14 +277,16 @@ ProtectedCount
 - 환생 시 타워 소실
 - 거래를 통한 타워 이전
 - 움직임과 피격 반응 없는 피해 숫자만의 공격
+- 최고 극희귀 타워를 메인 완주의 필수 관문으로 사용
 
 ---
 
 ## 11. 미확정 사항
 
-- 최초 50종 목록과 공식 분모
+- 최고 기준점을 제외한 일반 굴리기 타워 목록과 공식 분모
 - 역할별 기준 전투 시나리오
 - 보조 등급 명칭
 - 자동 편성 평가용 최종 필드
 - 도감 공개 정보 범위
 - 각 타워의 실제 피드백 등급
+- 최고 기준 타워의 이름·외형·특수 능력
