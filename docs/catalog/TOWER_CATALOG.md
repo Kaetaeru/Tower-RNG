@@ -2,10 +2,9 @@
 
 - 계층: 콘텐츠 카탈로그
 - 상태: **Confirmed Gameplay Identity · Confirmed Probability and Power Budget · Runtime Parameters Pending**
-- 카탈로그 버전: `V1-2026-08-03`
+- 카탈로그 버전: `V1-2026-08-03-R2`
 - 확률 근거: `../reference/V1_TOWER_PROBABILITY_LADDER.md`
 - 공통 시스템: `TOWER_SYSTEM_CATALOG.md`
-- 스테이지 테마: `STAGE_CATALOG.md`
 - 상위 기획: `../design/TOWERS.md`, `../design/COMBAT.md`, `../design/TOWER_BEHAVIOR.md`, `../design/EFFECT_STACKING.md`
 - 구현 상태: **Not Implemented**
 - 마지막 정리: 2026-08-03
@@ -20,7 +19,7 @@ TowerId
 공식 BaseOddsN
 역할
 RawPowerBudget
-ThemeStageId
+FantasyTier
 전투 행동 정체성
 교체 가능한 VisualProfileId
 ```
@@ -48,7 +47,6 @@ RawPowerBudget(N) = (N / 10)^0.20
 - 50종의 공식 단위분수 합은 정확히 1입니다.
 - 기존 중·고희귀 분모를 변경하지 않습니다.
 - 공식 UI는 기본 `1 / N`과 현재 Luck만 표시합니다.
-- 현재 압축 후 개별 획득 확률은 카탈로그에 표시하지 않습니다.
 - 같은 역할 안에서는 순위가 높을수록 PowerBudget이 반드시 증가합니다.
 
 ## 역할 수
@@ -63,17 +61,31 @@ RawPowerBudget(N) = (N / 10)^0.20
 | 대형 사냥 | 8 |
 | 합계 | **50** |
 
-## ThemeStageId
+## 세계관 규모 상승
 
-`ThemeStageId`는 타워의 외형·설정·공격 연출이 어느 스테이지에서 영감을 받았는지를 나타냅니다.
+타워를 스테이지 테마에 대응시키지 않습니다. 모든 타워는 어느 스테이지에서나 획득하고 편성할 수 있습니다.
+
+희귀도에 따라 설정과 연출의 규모가 상승합니다.
 
 ```text
-ThemeStageId는 획득 조건이 아님
-ThemeStageId는 편성 제한이 아님
-ThemeStageId는 원소 상성이 아님
+FantasyTier I   생활인·견습병·초보 모험가
+FantasyTier II  숙련병·전문 사냥꾼·초급 마법 사용자
+FantasyTier III 고위 마도사·기사단장·영웅
+FantasyTier IV  전설적 영웅·용과 거인을 다루는 존재
+FantasyTier V   신화·천상·운명·종말급 존재
 ```
 
-모든 일반 타워는 어느 스테이지에서나 획득하고 편성할 수 있습니다.
+권장 구간:
+
+| 슬롯 | FantasyTier | 방향 |
+|---:|---|---|
+| 1~12 | I | 소박하고 이해하기 쉬운 병사·모험가 |
+| 13~24 | II | 전문 기술과 제한적인 마법 |
+| 25~36 | III | 명확한 초자연 능력과 영웅적 연출 |
+| 37~44 | IV | 전설·용·세계수·시간을 다루는 존재 |
+| 45~50 | V | 운명·심판·천상·신수·종말·영원 |
+
+FantasyTier는 전투 배율이 아닙니다. 실제 전투력은 공식 PowerBudget으로만 결정합니다.
 
 ## 모델 교체
 
@@ -86,312 +98,212 @@ TowerId
 - `TowerId`와 `ActionProfileId`는 전투 정체성을 유지합니다.
 - `VisualProfileId`는 모델·리그·애니메이션·재질·VFX·SFX 묶음입니다.
 - 모델 제작이 어렵다면 같은 VisualFamily의 단순 모델로 교체합니다.
-- 모델 교체만으로 확률·전투력·행동·합체 계보를 바꾸지 않습니다.
 - 공격 판정은 애니메이션 길이나 특정 Bone 이름에 의존하지 않습니다.
-
-시각 복잡도:
-
-```text
-Simple   단일 메시·소형 소환체·단순 도구
-Standard 공통 휴머노이드·4족·마법사 리그
-Complex  대형 공성병기·고희귀 영웅 연출
-```
+- 신화 타워도 공통 휴머노이드 리그와 대형 VFX만으로 대체할 수 있습니다.
 
 ---
 
 # 2. 일반 타워 50종
 
-| # | TowerId | 표시 이름 | 역할 | 공식 확률 | PowerBudget | ThemeStageId | ActionProfileId | 핵심 행동 | VisualProfileId / 난이도 |
-|---:|---|---|---|---:|---:|---|---|---|---|
-| 1 | `TWR_APPRENTICE_ARCHER` | 견습 궁수 | 단일 화력 | `1 / 10` | 1.000000 | `STAGE_01` | `ACTION_STEADY_ARROW` | 선두 적에게 일정한 단일 화살을 발사하는 기준 타워 | `VIS_HUMANOID_ARCHER_BASIC` / Standard |
-| 2 | `TWR_STONE_SLINGER` | 돌팔매꾼 | 광역 화력 | `1 / 10` | 1.000000 | `STAGE_01` | `ACTION_STONE_SPLASH` | 가장 밀집된 지점에 돌을 던져 최대 3대상을 타격 | `VIS_HUMANOID_SLINGER_BASIC` / Standard |
-| 3 | `TWR_FROST_NOVICE` | 서리 견습생 | 제어 | `1 / 10` | 1.000000 | `STAGE_10` | `ACTION_NOVICE_FROSTBOLT` | 선두 적에게 약한 피해와 짧은 감속을 적용 | `VIS_HUMANOID_FROST_MAGE_BASIC` / Standard |
-| 4 | `TWR_ALLEY_CUTPURSE` | 골목 도적 | 마무리 | `1 / 10` | 1.000000 | `STAGE_02` | `ACTION_CUTPURSE_FINISH` | 체력 비율이 가장 낮은 적을 노리고 30% 이하에서 피해 증가 | `VIS_HUMANOID_ROGUE_BASIC` / Standard |
-| 5 | `TWR_ROOKIE_DRUMMER` | 신참 북잡이 | 지원 | `1 / 10` | 1.000000 | `STAGE_01` | `ACTION_ROOKIE_RHYTHM` | 약한 직접 공격과 함께 아직 강화되지 않은 아군 최대 3명을 지원 | `VIS_HUMANOID_DRUMMER_BASIC` / Standard |
-| 6 | `TWR_BOAR_HUNTER` | 멧돼지 사냥꾼 | 대형 사냥 | `1 / 10` | 1.000000 | `STAGE_01` | `ACTION_BOAR_HUNTER_SHOT` | 최대 체력이 높은 적을 우선하며 정예·보스·대형에게 추가 피해 | `VIS_HUMANOID_HUNTER_BASIC` / Standard |
-| 7 | `TWR_MOSSWOOD_RANGER` | 이끼숲 순찰자 | 단일 화력 | `1 / 20` | 1.148698 | `STAGE_02` | `ACTION_MOSS_MARK` | 같은 대상 연속 명중 시 이끼 표식이 쌓여 다음 화살이 강화됨 | `VIS_HUMANOID_RANGER_MOSS` / Standard |
-| 8 | `TWR_PINECONE_BOMBER` | 솔방울 폭격수 | 광역 화력 | `1 / 20` | 1.148698 | `STAGE_02` | `ACTION_PINECONE_BURST` | 밀집 지점에 솔방울탄을 던져 충돌과 짧은 후속 파열로 피해 | `VIS_HUMANOID_THROWER_FOREST` / Standard |
-| 9 | `TWR_ROOT_SNARER` | 뿌리 덫꾼 | 제어 | `1 / 20` | 1.148698 | `STAGE_03` | `ACTION_ROOT_SNARE_ZONE` | 선두 구간에 짧게 유지되는 뿌리 감속 지대를 생성 | `VIS_HUMANOID_TRAPPER_ROOT` / Standard |
-| 10 | `TWR_THORNBLADE_DUELIST` | 가시검 결투가 | 마무리 | `1 / 20` | 1.148698 | `STAGE_03` | `ACTION_THORNBLADE_DUEL` | 가장 약해진 적에게 접근해 낮은 체력일수록 강해지는 단일 참격 | `VIS_HUMANOID_DUELIST_THORN` / Standard |
-| 11 | `TWR_ANCIENTWOOD_PIPER` | 고목 피리꾼 | 지원 | `1 / 20` | 1.148698 | `STAGE_03` | `ACTION_ANCIENTWOOD_TEMPO` | 피리 선율로 최대 3명의 다음 행동 주기를 단축하는 예산형 지원 | `VIS_HUMANOID_PIPER_WOOD` / Standard |
-| 12 | `TWR_DUNE_SPEAR_HUNTER` | 사막 창사냥꾼 | 대형 사냥 | `1 / 20` | 1.148698 | `STAGE_04` | `ACTION_DUNE_HARPOON` | 대형 적을 갈고리창으로 지정하고 자신의 후속 공격을 강화 | `VIS_HUMANOID_SPEAR_DESERT` / Standard |
-| 13 | `TWR_SUNSTONE_CROSSBOWMAN` | 태양석 쇠뇌수 | 단일 화력 | `1 / 100` | 1.584893 | `STAGE_04` | `ACTION_SUNSTONE_BOLT` | 긴 준비 뒤 하나의 적에게 강한 태양석 볼트를 발사 | `VIS_HUMANOID_CROSSBOW_DESERT` / Standard |
-| 14 | `TWR_SANDJAR_THROWER` | 모래항아리 투척수 | 광역 화력 | `1 / 100` | 1.584893 | `STAGE_04` | `ACTION_SANDJAR_FIELD` | 항아리 충돌 지점에 짧은 지속 피해 구역을 남김 | `VIS_HUMANOID_JAR_THROWER` / Standard |
-| 15 | `TWR_SANDSTORM_SHAMAN` | 모래바람 주술사 | 제어 | `1 / 100` | 1.584893 | `STAGE_04` | `ACTION_SANDSTORM_PULSE` | 전방 군집에 반복 감속 파동을 발생시키며 같은 감속은 중첩하지 않음 | `VIS_HUMANOID_SHAMAN_SAND` / Standard |
-| 16 | `TWR_TOMB_BLADE` | 묘실 단검사 | 마무리 | `1 / 100` | 1.584893 | `STAGE_05` | `ACTION_TOMB_BLADE_EXECUTE` | 약해진 적을 우선 공격하고 처치 시 한 번의 제한된 빠른 후속 행동 획득 | `VIS_HUMANOID_ROGUE_RELIC` / Standard |
-| 17 | `TWR_RELIC_ACOLYTE` | 유물 시종 | 지원 | `1 / 100` | 1.584893 | `STAGE_05` | `ACTION_RELIC_BLESSING` | 최대 3명의 공격에 유물 축복을 부여해 보호막 대상 기여를 높임 | `VIS_HUMANOID_ACOLYTE_RELIC` / Standard |
-| 18 | `TWR_RUIN_BREAKER` | 유적 파쇄자 | 대형 사냥 | `1 / 100` | 1.584893 | `STAGE_05` | `ACTION_RUIN_BREAKER_SMASH` | 보호막·대형 적에게 강한 느린 망치 타격 | `VIS_HUMANOID_HAMMER_RUIN` / Standard |
-| 19 | `TWR_GLASS_NEEDLE_MARKSMAN` | 유리침 사수 | 단일 화력 | `1 / 200` | 1.820564 | `STAGE_06` | `ACTION_GLASS_NEEDLE_MARK` | 같은 대상에 유리침 표식을 축적하고 일정 횟수마다 파열 | `VIS_HUMANOID_MARKSMAN_GLASS` / Standard |
-| 20 | `TWR_VENOM_SAC_BOMBARDIER` | 독낭 폭격수 | 광역 화력 | `1 / 200` | 1.820564 | `STAGE_06` | `ACTION_VENOM_SAC_BOMB` | 밀집 지역에 독낭을 투척해 여러 적에게 제한된 지속 피해 | `VIS_HUMANOID_BOMBARDIER_VENOM` / Standard |
-| 21 | `TWR_MIRAGE_BINDER` | 신기루 결박사 | 제어 | `1 / 200` | 1.820564 | `STAGE_06` | `ACTION_MIRAGE_HESITATION` | 아직 영향을 받지 않은 적에게 우선적으로 짧은 망설임과 감속 적용 | `VIS_HUMANOID_MAGE_MIRAGE` / Standard |
-| 22 | `TWR_SPOREKNIFE_STALKER` | 포자칼 추적자 | 마무리 | `1 / 200` | 1.820564 | `STAGE_07` | `ACTION_SPOREKNIFE_HUNT` | 체력이 낮은 적에게 포자칼을 던지고 처치 시 다음 표적 전환 손실 감소 | `VIS_HUMANOID_STALKER_SPORE` / Standard |
-| 23 | `TWR_MYCELIUM_SINGER` | 균사 노래꾼 | 지원 | `1 / 200` | 1.820564 | `STAGE_07` | `ACTION_MYCELIUM_LINK` | 균사로 최대 3명의 기여도를 연결하고 중복되지 않은 아군을 우선 지원 | `VIS_HUMANOID_SINGER_MYCELIUM` / Standard |
-| 24 | `TWR_MARSH_HARPOONER` | 늪지 작살꾼 | 대형 사냥 | `1 / 200` | 1.820564 | `STAGE_07` | `ACTION_MARSH_HARPOON` | 대형·정예 적을 작살로 고정 표적화하고 연속 타격 보너스 획득 | `VIS_HUMANOID_HARPOON_MARSH` / Standard |
-| 25 | `TWR_SPORE_MORTAR` | 포자 박격포수 | 광역 화력 | `1 / 256` | 1.912705 | `STAGE_07` | `ACTION_SPORE_MORTAR` | 긴 포물선으로 넓은 포자 폭발을 일으키는 느린 고범위 공격 | `VIS_SIEGE_MORTAR_SPORE` / Complex |
-| 26 | `TWR_VINEBOW_SENTINEL` | 덩굴활 파수꾼 | 단일 화력 | `1 / 1,000` | 2.511886 | `STAGE_08` | `ACTION_VINEBOW_FOCUS` | 같은 대상에 활시위를 유지할수록 단일 피해가 단계적으로 증가 | `VIS_HUMANOID_ARCHER_VINE` / Standard |
-| 27 | `TWR_THORNWHEEL_THROWER` | 가시바퀴 투척수 | 광역 화력 | `1 / 1,000` | 2.511886 | `STAGE_08` | `ACTION_THORNWHEEL_RICOCHET` | 가시바퀴가 가까운 적 사이를 순차적으로 튕기며 피해가 감소 | `VIS_HUMANOID_THROWER_THORN` / Standard |
-| 28 | `TWR_CREEPING_VINE_SHAMAN` | 포복덩굴 주술사 | 제어 | `1 / 1,000` | 2.511886 | `STAGE_08` | `ACTION_CREEPING_VINE_FIELD` | 군집 구간에 이동하는 덩굴 지대를 만들고 미제어 적을 우선 포획 | `VIS_HUMANOID_SHAMAN_VINE` / Standard |
-| 29 | `TWR_MAWFLOWER_REAPER` | 아귀꽃 수확자 | 마무리 | `1 / 1,000` | 2.511886 | `STAGE_09` | `ACTION_MAWFLOWER_HARVEST` | 낮은 체력의 적을 수확하고 처치 성공 시 다음 공격 하나를 강화 | `VIS_HUMANOID_REAPER_PLANT` / Standard |
-| 30 | `TWR_BLOOM_CANTOR` | 개화 성가대장 | 지원 | `1 / 1,000` | 2.511886 | `STAGE_09` | `ACTION_BLOOM_CHORUS` | 최대 3명의 서로 다른 역할을 우선해 공격·효과 기여를 지원 | `VIS_HUMANOID_CANTOR_BLOOM` / Standard |
-| 31 | `TWR_GIANTBLOOM_HUNTER` | 거대꽃 사냥꾼 | 대형 사냥 | `1 / 1,000` | 2.511886 | `STAGE_09` | `ACTION_GIANTBLOOM_CLEAVER` | 대형·재생 태그 적에게 강한 벌목도끼 타격 | `VIS_HUMANOID_CLEAVER_JUNGLE` / Standard |
-| 32 | `TWR_SNOWFIELD_LONGBOW` | 설원 장궁수 | 단일 화력 | `1 / 12,500` | 4.162766 | `STAGE_10` | `ACTION_SNOWFIELD_PRECISION` | 가장 전진한 적에게 긴 조준 후 높은 정확도의 단일 사격 | `VIS_HUMANOID_LONGBOW_SNOW` / Standard |
-| 33 | `TWR_WHITEWIND_SEER` | 백풍 예언자 | 제어 | `1 / 78,125` | 6.005622 | `STAGE_10` | `ACTION_WHITEWIND_CONE` | 전방 구간에 부채꼴 백풍을 보내 다수 적을 감속 | `VIS_HUMANOID_SEER_WHITEWIND` / Standard |
-| 34 | `TWR_SNOW_LYNX_STALKER` | 설표 추적자 | 마무리 | `1 / 1,250,000` | 10.456396 | `STAGE_10` | `ACTION_LYNX_POUNCE` | 가장 약해진 적을 덮치고 처치하면 한 번만 빠르게 원위치 복귀·재공격 | `VIS_BEAST_LYNX_STALKER` / Standard |
-| 35 | `TWR_GLACIER_HORNBLOWER` | 빙하 뿔피리꾼 | 지원 | `1 / 7,812,500` | 15.085441 | `STAGE_11` | `ACTION_GLACIER_HORN` | 긴 주기의 뿔피리로 최대 3명의 다음 강한 행동을 증폭 | `VIS_HUMANOID_HORN_GLACIER` / Standard |
-| 36 | `TWR_CREVASSE_BALLISTA` | 협곡 쇠뇌대 | 대형 사냥 | `1 / 48,828,125` | 21.763764 | `STAGE_11` | `ACTION_CREVASSE_BALLISTA` | 최고 유효 체력의 대형 적을 향해 매우 강한 중쇠뇌 볼트 발사 | `VIS_SIEGE_BALLISTA_ICE` / Complex |
-| 37 | `TWR_AVALANCHE_CALLER` | 눈사태 소환사 | 광역 화력 | `1 / 781,250,000` | 37.892914 | `STAGE_11` | `ACTION_AVALANCHE_LINE` | 경로의 한 구간을 따라 눈사태를 굴려 제한 수의 적을 연속 타격 | `VIS_HUMANOID_CALLER_AVALANCHE` / Complex |
-| 38 | `TWR_ICEGATE_ARBALEST` | 빙문 석궁병 | 단일 화력 | `1 / 4,882,812,500` | 54.668104 | `STAGE_12` | `ACTION_ICEGATE_SHATTER_BOLT` | 동일 대상에 명중 횟수를 쌓아 일정 주기마다 강한 파쇄 볼트 발사 | `VIS_HUMANOID_ARBALEST_ICEGATE` / Standard |
-| 39 | `TWR_PERMAFROST_WARDEN` | 영구동토 감시자 | 제어 | `1 / 30,517,578,125` | 78.869668 | `STAGE_12` | `ACTION_PERMAFROST_LOCK` | 강한 감속을 유지하고 일정 횟수마다 짧은 완전 제어를 적용하되 제어 예산 상한 준수 | `VIS_HUMANOID_WARDEN_PERMAFROST` / Complex |
-| 40 | `TWR_RIMEBLADE_EXECUTIONER` | 서리칼 집행자 | 마무리 | `1 / 488,281,250,000` | 137.320068 | `STAGE_12` | `ACTION_RIMEBLADE_SENTENCE` | 35% 이하 대상에게 큰 피해를 주는 느린 집행 참격 | `VIS_HUMANOID_EXECUTIONER_RIME` / Complex |
-| 41 | `TWR_EMBER_BELL_KEEPER` | 잿불 종지기 | 지원 | `1 / 3,051,757,812,500` | 198.111649 | `STAGE_13` | `ACTION_EMBER_BELL` | 종을 울려 최대 3명의 다음 공격에 잿불 추가 기여를 부여 | `VIS_HUMANOID_BELL_EMBER` / Complex |
-| 42 | `TWR_MAGMA_SPEAR_HUNTER` | 마그마 창사냥꾼 | 대형 사냥 | `1 / 19,073,486,328,125` | 285.815657 | `STAGE_13` | `ACTION_MAGMA_SPEAR` | 최대 체력이 높은 적을 추적하며 체력이 높을수록 강한 용융 창 투척 | `VIS_HUMANOID_SPEAR_MAGMA` / Complex |
-| 43 | `TWR_FURNACE_BOMB_THROWER` | 화로탄 투척수 | 광역 화력 | `1 / 305,175,781,250,000` | 497.633963 | `STAGE_13` | `ACTION_FURNACE_BOMB` | 충돌 폭발 뒤 짧은 용암 지대를 남기는 대형 화로탄 | `VIS_HUMANOID_BOMB_THROWER_FURNACE` / Complex |
-| 44 | `TWR_ASH_FALCONER` | 재매 조련사 | 단일 화력 | `1 / 1,953,125,000,000,000` | 721.349953 | `STAGE_13` | `ACTION_ASH_FALCON_DIVE` | 재로 이루어진 매가 같은 대상에게 반복 급강하하며 표식을 축적 | `VIS_HUMANOID_FALCONER_ASH` / Complex |
-| 45 | `TWR_OBSIDIAN_CHAINBINDER` | 흑요석 사슬술사 | 제어 | `1 / 10,000,000,000,000,000` | 1000.000000 | `STAGE_14` | `ACTION_OBSIDIAN_CHAIN` | 전방 정예를 사슬로 감속하고 대상당 한 번만 소폭 경로를 되감음 | `VIS_HUMANOID_CHAIN_MAGE_OBSIDIAN` / Complex |
-| 46 | `TWR_BLACKGLASS_ASSASSIN` | 흑유리 암살자 | 마무리 | `1 / 500,000,000,000,000,000` | 2186.724148 | `STAGE_14` | `ACTION_BLACKGLASS_FIRST_STRIKE` | 새로운 부상 대상에게 첫 공격이 크게 강화되고 처형 구간에서 추가 증폭 | `VIS_HUMANOID_ASSASSIN_BLACKGLASS` / Complex |
-| 47 | `TWR_MOLTEN_RUNE_SMITH` | 용융 룬대장장이 | 지원 | `1 / 3,125,000,000,000,000,000` | 3154.786722 | `STAGE_14` | `ACTION_MOLTEN_RUNE_FORGE` | 최대 3명의 무기에 용융 룬을 새겨 서로 다른 출력 채널을 지원 | `VIS_HUMANOID_RUNESMITH_MOLTEN` / Complex |
-| 48 | `TWR_CALDERA_GIANT_HUNTER` | 칼데라 거인사냥꾼 | 대형 사냥 | `1 / 20,000,000,000,000,000,000` | 4573.050519 | `STAGE_15` | `ACTION_CALDERA_ANCHOR_CANNON` | 보스·대형·단계 보호막 적에게 거대한 고정포를 발사 | `VIS_SIEGE_ANCHOR_CANNON_CALDERA` / Complex |
-| 49 | `TWR_ERUPTION_HERALD` | 분화의 전령 | 광역 화력 | `1 / 50,000,000,000,000,000,000` | 5492.802717 | `STAGE_15` | `ACTION_ERUPTION_SEQUENCE` | 가장 밀집된 구간에 예고 표식을 남긴 뒤 두 단계 분화를 발생 | `VIS_HUMANOID_HERALD_ERUPTION` / Complex |
-| 50 | `TWR_SUNLANCE_KNIGHT` | 태양창 기사 | 단일 화력 | `1 / 100,000,000,000,000,000,000` | 6309.573445 | `STAGE_15` | `ACTION_SUNLANCE_LOCK` | 최고 유효 체력의 한 대상에 조준을 고정하고 충전할수록 강해지는 태양창을 발사 | `VIS_HUMANOID_KNIGHT_SUNLANCE` / Complex |
+| # | TowerId | 표시 이름 | 역할 | 공식 확률 | PowerBudget | Tier | ActionProfileId | 핵심 행동 | VisualProfileId / 난이도 |
+|---:|---|---|---|---:|---:|---:|---|---|---|
+| 1 | `TWR_APPRENTICE_ARCHER` | 견습 궁수 | 단일 화력 | `1 / 10` | 1.000000 | I | `ACTION_STEADY_ARROW` | 선두 적에게 일정한 단일 화살을 발사하는 기준 타워 | `VIS_HUMANOID_ARCHER_BASIC` / Standard |
+| 2 | `TWR_STONE_SLINGER` | 돌팔매꾼 | 광역 화력 | `1 / 10` | 1.000000 | I | `ACTION_STONE_SPLASH` | 가장 밀집된 지점에 돌을 던져 최대 3대상을 타격 | `VIS_HUMANOID_SLINGER_BASIC` / Standard |
+| 3 | `TWR_FROST_NOVICE` | 서리 견습생 | 제어 | `1 / 10` | 1.000000 | I | `ACTION_NOVICE_FROSTBOLT` | 선두 적에게 약한 피해와 짧은 감속 적용 | `VIS_HUMANOID_FROST_MAGE_BASIC` / Standard |
+| 4 | `TWR_ALLEY_CUTPURSE` | 골목 도적 | 마무리 | `1 / 10` | 1.000000 | I | `ACTION_CUTPURSE_FINISH` | 체력 비율이 가장 낮은 적을 노리고 30% 이하에서 피해 증가 | `VIS_HUMANOID_ROGUE_BASIC` / Standard |
+| 5 | `TWR_ROOKIE_DRUMMER` | 신참 북잡이 | 지원 | `1 / 10` | 1.000000 | I | `ACTION_ROOKIE_RHYTHM` | 약한 직접 공격과 최대 3명의 비중첩 지원 | `VIS_HUMANOID_DRUMMER_BASIC` / Standard |
+| 6 | `TWR_BOAR_HUNTER` | 멧돼지 사냥꾼 | 대형 사냥 | `1 / 10` | 1.000000 | I | `ACTION_BOAR_HUNTER_SHOT` | 최대 체력이 높은 적을 우선하고 정예·보스·대형에게 추가 피해 | `VIS_HUMANOID_HUNTER_BASIC` / Standard |
+| 7 | `TWR_VETERAN_CROSSBOWMAN` | 숙련 쇠뇌수 | 단일 화력 | `1 / 20` | 1.148698 | I | `ACTION_VETERAN_BOLT` | 같은 대상에 연속 사격하면 다음 볼트의 관통력이 증가 | `VIS_HUMANOID_CROSSBOW_VETERAN` / Standard |
+| 8 | `TWR_POWDER_GRENADIER` | 화약 투척수 | 광역 화력 | `1 / 20` | 1.148698 | I | `ACTION_POWDER_GRENADE` | 밀집 지점에 짧은 지연 뒤 폭발하는 화약탄 투척 | `VIS_HUMANOID_GRENADIER_BASIC` / Standard |
+| 9 | `TWR_CHAIN_TRAPPER` | 사슬 덫꾼 | 제어 | `1 / 20` | 1.148698 | I | `ACTION_CHAIN_TRAP` | 아직 제어되지 않은 선두 적에게 사슬 덫을 걸어 감속 | `VIS_HUMANOID_TRAPPER_CHAIN` / Standard |
+| 10 | `TWR_BOUNTY_DUELIST` | 현상금 결투가 | 마무리 | `1 / 20` | 1.148698 | I | `ACTION_BOUNTY_DUEL` | 가장 약해진 적을 표식하고 낮은 체력에서 강한 찌르기 | `VIS_HUMANOID_DUELIST_BASIC` / Standard |
+| 11 | `TWR_BANNER_SQUIRE` | 군기 수행원 | 지원 | `1 / 20` | 1.148698 | I | `ACTION_SQUIRE_BANNER` | 아직 강화되지 않은 아군 최대 3명의 다음 공격을 보조 | `VIS_HUMANOID_BANNER_SQUIRE` / Standard |
+| 12 | `TWR_PIKE_HUNTER` | 장창 사냥꾼 | 대형 사냥 | `1 / 20` | 1.148698 | I | `ACTION_PIKE_WOUND` | 대형 적에게 깊은 상처 표식을 남겨 자신의 후속 공격 강화 | `VIS_HUMANOID_PIKE_HUNTER` / Standard |
+| 13 | `TWR_RUNEBOLT_MARKSMAN` | 룬탄 사수 | 단일 화력 | `1 / 100` | 1.584893 | II | `ACTION_RUNEBOLT_MARK` | 같은 대상에 룬을 쌓고 일정 횟수마다 추가 파열 | `VIS_HUMANOID_RUNE_MARKSMAN` / Standard |
+| 14 | `TWR_ALCHEMY_BOMBARDIER` | 연금 폭격수 | 광역 화력 | `1 / 100` | 1.584893 | II | `ACTION_ALCHEMY_BARRAGE` | 화염·산성·충격 병을 정해진 순서로 투척해 군집 타격 | `VIS_HUMANOID_ALCHEMIST_BOMBER` / Standard |
+| 15 | `TWR_GALE_BINDER` | 바람 결박사 | 제어 | `1 / 100` | 1.584893 | II | `ACTION_GALE_BIND` | 짧은 회오리로 적을 모으고 감속하되 경로 이동은 제한적으로만 변경 | `VIS_HUMANOID_WIND_MAGE` / Standard |
+| 16 | `TWR_SHADOW_PURSUER` | 그림자 추격자 | 마무리 | `1 / 100` | 1.584893 | II | `ACTION_SHADOW_PURSUIT` | 낮은 체력의 적을 추적하고 처치 시 다음 재타겟 손실 감소 | `VIS_HUMANOID_SHADOW_ROGUE` / Standard |
+| 17 | `TWR_BATTLE_CHAPLAIN` | 전투 사제 | 지원 | `1 / 100` | 1.584893 | II | `ACTION_BATTLE_BLESSING` | 최대 3명의 공격에 축복을 부여하고 약한 성광탄으로 직접 기여 | `VIS_HUMANOID_BATTLE_PRIEST` / Standard |
+| 18 | `TWR_GIANTBREAKER_LANCER` | 거인파쇄 창기병 | 대형 사냥 | `1 / 100` | 1.584893 | II | `ACTION_GIANTBREAKER_THRUST` | 대형·보호막 적에게 강한 느린 돌격창 공격 | `VIS_HUMANOID_HEAVY_LANCER` / Standard |
+| 19 | `TWR_SPELLSHOT_MUSKETEER` | 마탄 총사 | 단일 화력 | `1 / 200` | 1.820564 | II | `ACTION_SPELLSHOT_CYCLE` | 세 종류의 마탄을 순환 발사하며 세 번째 탄환이 강화 | `VIS_HUMANOID_MAGIC_MUSKETEER` / Standard |
+| 20 | `TWR_THUNDER_ARTILLERIST` | 천둥 포병 | 광역 화력 | `1 / 200` | 1.820564 | II | `ACTION_THUNDER_SHELL` | 충돌 지점에서 주변 적에게 제한된 연쇄 번개 발생 | `VIS_HUMANOID_THUNDER_GUNNER` / Standard |
+| 21 | `TWR_TIME_SNARER` | 시간 덫술사 | 제어 | `1 / 200` | 1.820564 | II | `ACTION_TIME_SNARE` | 미제어 대상을 우선해 시간 덫을 설치하고 이동을 늦춤 | `VIS_HUMANOID_TIME_MAGE_MINOR` / Standard |
+| 22 | `TWR_SOUL_REAPER` | 영혼 수확자 | 마무리 | `1 / 200` | 1.820564 | II | `ACTION_SOUL_REAP` | 낮은 체력의 적을 베고 처치 초과 피해 일부를 다음 대상에 전달 | `VIS_HUMANOID_REAPER_MINOR` / Standard |
+| 23 | `TWR_BATTLE_ORACLE` | 전장의 예언자 | 지원 | `1 / 200` | 1.820564 | II | `ACTION_FORESEEN_STRIKE` | 최대 3명의 다음 공격을 예견해 준비시간과 명중 손실을 감소 | `VIS_HUMANOID_ORACLE_BATTLE` / Standard |
+| 24 | `TWR_WYRM_HUNTER_CAPTAIN` | 용사냥 석궁대장 | 대형 사냥 | `1 / 200` | 1.820564 | II | `ACTION_WYRM_HUNTER_MARK` | 정예·보스에 사냥 표식을 축적하고 반복 명중 보너스 획득 | `VIS_HUMANOID_WYRM_HUNTER` / Standard |
+| 25 | `TWR_ARCANE_MORTAR` | 비전 박격포 | 광역 화력 | `1 / 256` | 1.912705 | III | `ACTION_ARCANE_MORTAR` | 가장 밀집된 예측 지점에 큰 비전탄을 낙하시킴 | `VIS_ARCANE_MORTAR_PLATFORM` / Standard |
+| 26 | `TWR_DAWN_KNIGHT` | 여명 기사 | 단일 화력 | `1 / 1,000` | 2.511886 | III | `ACTION_DAWN_SEAL` | 하나의 적에 태양 인장을 쌓아 마지막 일격을 강화 | `VIS_HUMANOID_DAWN_KNIGHT` / Standard |
+| 27 | `TWR_METEOR_SCHOLAR` | 유성학자 | 광역 화력 | `1 / 1,000` | 2.511886 | III | `ACTION_MINOR_METEOR_CLUSTER` | 여러 작은 유성을 밀집 구간에 순차 낙하시킴 | `VIS_HUMANOID_METEOR_MAGE` / Standard |
+| 28 | `TWR_GRAVITY_WEAVER` | 중력 직조자 | 제어 | `1 / 1,000` | 2.511886 | III | `ACTION_GRAVITY_WELL` | 주변 적을 한 지점으로 끌어모으고 감속 상한 내에서 묶음 | `VIS_HUMANOID_GRAVITY_MAGE` / Standard |
+| 29 | `TWR_PHANTOM_BLADE` | 환영검객 | 마무리 | `1 / 1,000` | 2.511886 | III | `ACTION_PHANTOM_EXECUTION` | 약해진 적에게 순간이동해 참격하고 처치 시 원위치 복귀 손실 감소 | `VIS_HUMANOID_PHANTOM_SWORD` / Standard |
+| 30 | `TWR_STAR_CANTOR` | 별의 성가대장 | 지원 | `1 / 1,000` | 2.511886 | III | `ACTION_STAR_CHORUS` | 최대 3명의 다음 행동 주기와 공격 효율을 예산형으로 강화 | `VIS_HUMANOID_STAR_CANTOR` / Standard |
+| 31 | `TWR_COLOSSUS_STALKER` | 거상 추적자 | 대형 사냥 | `1 / 1,000` | 2.511886 | III | `ACTION_COLOSSUS_WEAKPOINT` | 가장 큰 적의 약점을 지정하고 대형 대상 반복 공격 강화 | `VIS_HUMANOID_COLOSSUS_HUNTER` / Standard |
+| 32 | `TWR_MOONLIGHT_SNIPER` | 월광 저격수 | 단일 화력 | `1 / 12,500` | 4.162766 | III | `ACTION_MOONLIGHT_SNIPE` | 긴 조준 후 하나의 적에게 강한 월광탄 발사 | `VIS_HUMANOID_MOON_SNIPER` / Standard |
+| 33 | `TWR_DREAM_WARDEN` | 꿈의 간수 | 제어 | `1 / 78,125` | 6.005622 | III | `ACTION_DREAM_PRISON` | 적 무리를 꿈의 장막에 가두고 대상별 정지시간 상한 적용 | `VIS_HUMANOID_DREAM_WARDEN` / Standard |
+| 34 | `TWR_DEATH_EXECUTIONER` | 죽음의 집행관 | 마무리 | `1 / 1,250,000` | 10.456396 | III | `ACTION_DEATH_SENTENCE` | 체력이 낮을수록 강해지는 판결을 내리고 처치 시 힘 일부 보존 | `VIS_HUMANOID_DARK_EXECUTIONER` / Standard |
+| 35 | `TWR_PHOENIX_HERALD` | 불사조 전령 | 지원 | `1 / 7,812,500` | 15.085441 | III | `ACTION_PHOENIX_BLESSING` | 최대 3명에게 재점화 축복을 부여해 다음 공격에 추가 불꽃 발생 | `VIS_HUMANOID_PHOENIX_HERALD` / Complex |
+| 36 | `TWR_TITANSPEAR_SAINT` | 티탄창 성인 | 대형 사냥 | `1 / 48,828,125` | 21.763764 | III | `ACTION_TITANSPEAR_ASCENT` | 같은 대형 적을 찌를수록 티탄파쇄 단계가 상승 | `VIS_HUMANOID_SPEAR_SAINT` / Complex |
+| 37 | `TWR_STORM_DRAGON_CALLER` | 폭풍룡 소환사 | 광역 화력 | `1 / 781,250,000` | 37.892914 | IV | `ACTION_STORM_DRAGON_BREATH` | 소형 폭풍룡이 군집을 가로지르며 번개 숨결과 연쇄 타격 | `VIS_DRAGON_CALLER_WITH_VFX` / Complex |
+| 38 | `TWR_SUN_KING_ARCHER` | 태양왕의 궁수 | 단일 화력 | `1 / 4,882,812,500` | 54.668104 | IV | `ACTION_SOLAR_CROWN_ARROW` | 한 대상 주위에 태양 화살을 축적한 뒤 동시에 관통 | `VIS_HUMANOID_SOLAR_ARCHER` / Complex |
+| 39 | `TWR_CHRONOS_JAILER` | 크로노스의 간수 | 제어 | `1 / 30,517,578,125` | 78.869668 | IV | `ACTION_CHRONOS_CELL` | 강한 적을 시간 감옥에 가두며 보스 정지시간 상한을 준수 | `VIS_HUMANOID_CHRONOS_JAILER` / Complex |
+| 40 | `TWR_RED_MOON_SWORD_SAINT` | 적월의 검성 | 마무리 | `1 / 488,281,250,000` | 137.320068 | IV | `ACTION_RED_MOON_CRESCENT` | 낮은 체력의 적을 초승달 참격으로 마무리하고 다음 대상으로 이어짐 | `VIS_HUMANOID_RED_MOON_SAINT` / Complex |
+| 41 | `TWR_WORLDTREE_HIGH_PRIEST` | 세계수의 대사제 | 지원 | `1 / 3,051,757,812,500` | 198.111649 | IV | `ACTION_WORLDTREE_BENEDICTION` | 최대 3명에게 서로 다른 성장 축복을 배분하고 같은 채널 상한 적용 | `VIS_HUMANOID_WORLDTREE_PRIEST` / Complex |
+| 42 | `TWR_LEVIATHAN_HARPOON_KING` | 레비아탄 작살왕 | 대형 사냥 | `1 / 19,073,486,328,125` | 285.815657 | IV | `ACTION_LEVIATHAN_HARPOON` | 거대한 적에게 심해 작살을 고정하고 반복 타격과 제한된 이동 억제 | `VIS_HUMANOID_LEVIATHAN_HUNTER` / Complex |
+| 43 | `TWR_CELESTIAL_METEOR_LORD` | 천공 유성군주 | 광역 화력 | `1 / 305,175,781,250,000` | 497.633963 | IV | `ACTION_CELESTIAL_METEOR_COURT` | 여러 예측 지점에 대형 유성을 순차 낙하시켜 넓은 구역 장악 | `VIS_CELESTIAL_METEOR_LORD` / Complex |
+| 44 | `TWR_VALHALLA_GODSPEAR` | 발할라의 신창 | 단일 화력 | `1 / 1,953,125,000,000,000` | 721.349953 | IV | `ACTION_VALHALLA_GODSPEAR` | 하늘에서 하나의 적을 지정해 반복 관통하는 신창 소환 | `VIS_VALHALLA_SPEAR_HERO` / Complex |
+| 45 | `TWR_FATE_WEAVER` | 운명 직조자 | 제어 | `1 / 10,000,000,000,000,000` | 1000.000000 | V | `ACTION_FATE_THREADS` | 여러 적의 운명 실을 묶어 감속·정지 상한 안에서 행동 순서를 지연 | `VIS_MYTHIC_FATE_WEAVER` / Complex |
+| 46 | `TWR_LAST_JUDGE` | 최후의 심판자 | 마무리 | `1 / 500,000,000,000,000,000` | 2186.724148 | V | `ACTION_LAST_JUDGMENT` | 가장 약해진 적에게 심판을 내리고 남은 힘을 다음 판결에 이전 | `VIS_MYTHIC_LAST_JUDGE` / Complex |
+| 47 | `TWR_SERAPH_COMMANDER` | 치천사 군단장 | 지원 | `1 / 3,125,000,000,000,000,000` | 3154.786722 | V | `ACTION_SERAPH_HOST` | 최대 3명의 아군에 천상 군기를 배분하고 공격마다 성광 후속타 생성 | `VIS_MYTHIC_SERAPH_COMMANDER` / Complex |
+| 48 | `TWR_GODBEAST_SLAYER` | 신수 멸절자 | 대형 사냥 | `1 / 20,000,000,000,000,000,000` | 4573.050519 | V | `ACTION_GODBEAST_ANNIHILATION` | 보스·대형 적의 체력 구간이 바뀔 때마다 새로운 사냥 태세로 강화 | `VIS_MYTHIC_GODBEAST_SLAYER` / Complex |
+| 49 | `TWR_APOCALYPSE_NEBULA` | 묵시의 성운 | 광역 화력 | `1 / 50,000,000,000,000,000,000` | 5492.802717 | V | `ACTION_APOCALYPSE_NEBULA` | 전장 여러 밀집 구역에 성운 균열과 종말성 낙하물을 순차 생성 | `VIS_MYTHIC_APOCALYPSE_NEBULA` / Complex |
+| 50 | `TWR_ETERNAL_SUNLANCE_KNIGHT` | 영원의 태양창 기사 | 단일 화력 | `1 / 100,000,000,000,000,000,000` | 6309.573445 | V | `ACTION_ETERNAL_SUNLANCE` | 하나의 적에게 조준을 유지할수록 태양창의 위력이 상승하는 최고 단일 공격 | `VIS_MYTHIC_ETERNAL_SUNLANCE` / Complex |
 
 ---
 
-# 3. 역할별 희귀도 사다리
+# 3. 희귀도 연출 원칙
 
-## 단일 화력 9종
+## Tier I
+
+- 소박한 무기와 명확한 실루엣
+- 활·돌·북·덫·창처럼 즉시 이해되는 행동
+- 짧고 가벼운 타격 효과
+
+## Tier II
+
+- 룬·연금술·초급 시간술 같은 전문 기술
+- 일반 휴머노이드 리그를 유지하면서 장비와 VFX 강화
+- 한 가지 분명한 전투 기믹
+
+## Tier III
+
+- 유성·중력·꿈·불사조·티탄 같은 영웅적 능력
+- 소환물이나 대형 마법진을 사용할 수 있음
+- 전투 판정은 여전히 공통 행동 문법으로 처리
+
+## Tier IV
+
+- 폭풍룡·태양왕·크로노스·세계수·레비아탄 같은 전설적 상징
+- 화면에서 즉시 희귀함이 드러나는 등장·공격 연출
+- 지속 카메라 흔들림이나 전투 시야 방해는 금지
+
+## Tier V
+
+- 운명·심판·천상 군단·신수·종말·영원
+- 모델보다 오라·후광·소환체·하늘 연출로 신화성을 표현
+- 모델링 부담이 크면 공통 영웅 리그와 전용 VFX로 대체
+- 희귀함은 크고 선명하게 표현하되 다른 플레이어의 화면을 장시간 가리지 않음
+
+---
+
+# 4. 역할별 희귀도 순서
+
+## 단일 화력
 
 ```text
 견습 궁수
-→ 이끼숲 순찰자
-→ 태양석 쇠뇌수
-→ 유리침 사수
-→ 덩굴활 파수꾼
-→ 설원 장궁수
-→ 빙문 석궁병
-→ 재매 조련사
-→ 태양창 기사
+→ 숙련 쇠뇌수
+→ 룬탄 사수
+→ 마탄 총사
+→ 여명 기사
+→ 월광 저격수
+→ 태양왕의 궁수
+→ 발할라의 신창
+→ 영원의 태양창 기사
 ```
 
-전투 정체성:
-
-- 하나의 대상에 지속 또는 충전 피해 집중
-- 광역 피해는 핵심 예산으로 사용하지 않음
-- 대상 변경 시 일부 누적이 초기화될 수 있음
-- 최고점 `태양창 기사`는 V1 공식 일반 타워 최고 단일 화력
-
-## 광역 화력 9종
+## 광역 화력
 
 ```text
 돌팔매꾼
-→ 솔방울 폭격수
-→ 모래항아리 투척수
-→ 독낭 폭격수
-→ 포자 박격포수
-→ 가시바퀴 투척수
-→ 눈사태 소환사
-→ 화로탄 투척수
-→ 분화의 전령
+→ 화약 투척수
+→ 연금 폭격수
+→ 천둥 포병
+→ 비전 박격포
+→ 유성학자
+→ 폭풍룡 소환사
+→ 천공 유성군주
+→ 묵시의 성운
 ```
 
-전투 정체성:
-
-- 밀집도와 경로 구간을 평가
-- 대상 수·범위·지속 피해를 PowerBudget 안에서 교환
-- 타겟이 사라져도 이미 발사한 범위 공격은 지정 위치에서 마무리 가능
-- 무제한 대상 타격을 사용하지 않고 각 행동에 최대 대상 수를 둠
-
-## 제어 8종
+## 제어
 
 ```text
 서리 견습생
-→ 뿌리 덫꾼
-→ 모래바람 주술사
-→ 신기루 결박사
-→ 포복덩굴 주술사
-→ 백풍 예언자
-→ 영구동토 감시자
-→ 흑요석 사슬술사
+→ 사슬 덫꾼
+→ 바람 결박사
+→ 시간 덫술사
+→ 중력 직조자
+→ 꿈의 간수
+→ 크로노스의 간수
+→ 운명 직조자
 ```
 
-공통 중첩:
-
-- 같은 ControlGroup 감속은 최강값만 적용하고 지속시간 갱신
-- 다른 감속은 곱연산 뒤 일반 60%, 정예 45%, 보스 35% 상한
-- 최근 5초 완전 제어 예산은 일반 3.00초, 정예 2.00초, 보스 1.25초
-- 경로 되감기·정지는 타워별 횟수 제한을 둠
-
-## 마무리 8종
+## 마무리
 
 ```text
 골목 도적
-→ 가시검 결투가
-→ 묘실 단검사
-→ 포자칼 추적자
-→ 아귀꽃 수확자
-→ 설표 추적자
-→ 서리칼 집행자
-→ 흑유리 암살자
+→ 현상금 결투가
+→ 그림자 추격자
+→ 영혼 수확자
+→ 환영검객
+→ 죽음의 집행관
+→ 적월의 검성
+→ 최후의 심판자
 ```
 
-전투 정체성:
-
-- 낮은 체력 비율을 우선 평가
-- 처형 배율과 처치 후 후속 행동을 PowerBudget 안에서 교환
-- 처치 실패 시 일반 단일 화력보다 손실이 생길 수 있음
-- 무한 처치 연쇄를 막기 위해 즉시 재행동 횟수를 제한
-
-## 지원 8종
+## 지원
 
 ```text
 신참 북잡이
-→ 고목 피리꾼
-→ 유물 시종
-→ 균사 노래꾼
-→ 개화 성가대장
-→ 빙하 뿔피리꾼
-→ 잿불 종지기
-→ 용융 룬대장장이
+→ 군기 수행원
+→ 전투 사제
+→ 전장의 예언자
+→ 별의 성가대장
+→ 불사조 전령
+→ 세계수의 대사제
+→ 치천사 군단장
 ```
 
-공통 지원 예산:
-
-```text
-직접 기여 = SourceEC × 0.55
-지원 예산 = SourceEC × 0.45
-기준 최대 대상 = 3
-대상당 기준 상한 = 대상 전력 15%와 출처 전력 15% 중 작은 값
-```
-
-- 같은 StackGroup은 대상별 최강값만 적용
-- 이미 강화된 대상보다 미강화 대상을 우선
-- 같은 StatChannel 누적 +50% 상한
-- 여러 지원 채널의 최종 출력 배율 ×1.75 상한
-
-## 대형 사냥 8종
+## 대형 사냥
 
 ```text
 멧돼지 사냥꾼
-→ 사막 창사냥꾼
-→ 유적 파쇄자
-→ 늪지 작살꾼
-→ 거대꽃 사냥꾼
-→ 협곡 쇠뇌대
-→ 마그마 창사냥꾼
-→ 칼데라 거인사냥꾼
+→ 장창 사냥꾼
+→ 거인파쇄 창기병
+→ 용사냥 석궁대장
+→ 거상 추적자
+→ 티탄창 성인
+→ 레비아탄 작살왕
+→ 신수 멸절자
 ```
 
-전투 정체성:
+---
 
-- 최대 체력·유효 체력·보스·정예·대형 태그를 평가
-- 일반 군집에서는 같은 희귀도의 단일 화력보다 효율이 낮을 수 있음
-- 보스전과 고체력 웨이브에서 높은 기여도를 제공
-- 보호막·회복·단계 체력을 별도 무제한 배율로 중복 계산하지 않음
+# 5. 구현 안전선
+
+- 신화적 이름과 연출은 직접적인 추가 전투 배율이 아닙니다.
+- 모든 행동은 예약 피해·재타겟·지원 예산·제어 상한 규칙을 따릅니다.
+- 광역 타워는 전장 전체를 무조건 타격하지 않고 대상 수·범위·행동 주기로 PowerBudget을 맞춥니다.
+- 마무리 타워는 즉사 면역 적을 우회하지 않으며, 처형 효과도 EquivalentContribution으로 환산합니다.
+- 지원 타워는 최대 3대상 예산형 규칙과 최종 지원 배율 상한을 지킵니다.
+- 제어 타워는 일반·정예·보스별 감속·정지 상한을 지킵니다.
+- 대형 사냥 타워의 추가 피해는 대형·정예·보스 태그에만 적용하고 일반 적 상대 최소 기여를 유지합니다.
+- 50번 최고 타워도 스테이지 15 완주 필수 조건이 아닙니다.
 
 ---
 
-# 4. 기존 1 / 10 기준 타워 수치
-
-아래 여섯 타워는 기존 검증값을 유지합니다.
-
-| TowerId | 기준 행동 |
-|---|---|
-| `TWR_APPRENTICE_ARCHER` | 피해 1.00, 주기 1.00초, 단일 선두 표적 |
-| `TWR_STONE_SLINGER` | 대상당 피해 0.60, 최대 3대상, 주기 1.00초 |
-| `TWR_FROST_NOVICE` | 피해 0.55, 감속 15%, 지속 1.25초, 주기 1.00초 |
-| `TWR_ALLEY_CUTPURSE` | 피해 0.80, HP 30% 이하 ×2.00, 표적 변경 0.25초 |
-| `TWR_ROOKIE_DRUMMER` | 직접 기여 0.55와 지원 예산 0.45, 최대 3대상 |
-| `TWR_BOAR_HUNTER` | 피해 1.60, 주기 2.00초, 정예·보스·대형 ×1.80 |
-
-지원 타워의 과거 편성 전체 +15% 단순 모델은 폐기하고 `docs/design/EFFECT_STACKING.md`와 지원 예산형 규칙을 사용합니다.
-
----
-
-# 5. 스테이지 테마 분포
-
-| ThemeStageId | 테마 | 타워 수 | 타워 |
-|---|---|---:|---|
-| `STAGE_01` | 초원 입구 | 4 | 견습 궁수, 돌팔매꾼, 신참 북잡이, 멧돼지 사냥꾼 |
-| `STAGE_02` | 이끼숲 오솔길 | 3 | 골목 도적, 이끼숲 순찰자, 솔방울 폭격수 |
-| `STAGE_03` | 고목의 심장 | 3 | 뿌리 덫꾼, 가시검 결투가, 고목 피리꾼 |
-| `STAGE_04` | 바람모래 협곡 | 4 | 사막 창사냥꾼, 태양석 쇠뇌수, 모래항아리 투척수, 모래바람 주술사 |
-| `STAGE_05` | 매몰된 신전 | 3 | 묘실 단검사, 유물 시종, 유적 파쇄자 |
-| `STAGE_06` | 유리전갈 둥지 | 3 | 유리침 사수, 독낭 폭격수, 신기루 결박사 |
-| `STAGE_07` | 포자 습지 | 4 | 포자칼 추적자, 균사 노래꾼, 늪지 작살꾼, 포자 박격포수 |
-| `STAGE_08` | 덩굴 심층 | 3 | 덩굴활 파수꾼, 가시바퀴 투척수, 포복덩굴 주술사 |
-| `STAGE_09` | 식인화 정원 | 3 | 아귀꽃 수확자, 개화 성가대장, 거대꽃 사냥꾼 |
-| `STAGE_10` | 서리 들판 | 4 | 서리 견습생, 설원 장궁수, 백풍 예언자, 설표 추적자 |
-| `STAGE_11` | 빙결 협곡 | 3 | 빙하 뿔피리꾼, 협곡 쇠뇌대, 눈사태 소환사 |
-| `STAGE_12` | 빙하 성문 | 3 | 빙문 석궁병, 영구동토 감시자, 서리칼 집행자 |
-| `STAGE_13` | 잿불 비탈 | 4 | 잿불 종지기, 마그마 창사냥꾼, 화로탄 투척수, 재매 조련사 |
-| `STAGE_14` | 흑요석 심부 | 3 | 흑요석 사슬술사, 흑유리 암살자, 용융 룬대장장이 |
-| `STAGE_15` | 칼데라 심장부 | 3 | 칼데라 거인사냥꾼, 분화의 전령, 태양창 기사 |
-
-분포 합계는 50종입니다.
-
----
-
-# 6. 제작 우선순위와 대체 규칙
-
-## 지역 1 수직 슬라이스 우선 제작
-
-먼저 구현할 타워:
-
-```text
-TWR_APPRENTICE_ARCHER
-TWR_STONE_SLINGER
-TWR_FROST_NOVICE
-TWR_ALLEY_CUTPURSE
-TWR_ROOKIE_DRUMMER
-TWR_BOAR_HUNTER
-```
-
-이 여섯 타워는 공통 휴머노이드 리그와 교체 가능한 장비 파츠로 제작할 수 있습니다.
-
-## 공통 리그 재사용
-
-```text
-ARCHER / CROSSBOW / HUNTER
-THROWER / BOMBARDIER
-MAGE / SHAMAN / SEER
-ROGUE / DUELIST / EXECUTIONER
-MUSICIAN / ACOLYTE / SMITH
-SIEGE_WEAPON
-BEAST_COMPANION
-```
-
-한 리그에 장비·재질·실루엣 파츠를 교체해 여러 타워를 표현할 수 있습니다. 고희귀 타워도 복잡한 전용 리그가 없으면 공통 리그에 큰 VFX와 장비를 결합합니다.
-
-## VisualProfile 교체
-
-교체 가능:
-
-- 캐릭터 종족·성별·체형
-- 장비 메시
-- 리그와 애니메이션
-- 투사체·Trail·폭발·음향
-- 표시 크기와 재질
-
-교체 불가:
-
-- `TowerId`
-- 역할
-- 공식 확률
-- PowerBudget
-- 핵심 ActionProfile
-- 합체 계보
-
-핵심 행동을 표현하기 어려우면 먼저 애니메이션을 단순화하고 공통 VFX로 대체합니다. 전투 정체성을 바꾸는 것은 마지막 선택입니다.
-
----
-
-# 7. 후속 카탈로그 작업
+# 6. 다음 작업 연결
 
 ```text
 CAT-NEXT-004
-50종의 AllowedVariantFamilies와 개별 변종 정체성
-
-CAT-NEXT-005
-기본형·변종 합체 계보와 결과 TowerId
+50종 AllowedVariantFamilies와 개별 변종 정체성
 ```
 
-7~50번의 정확한 전투 수치는 기술 명세와 구현 데이터 작성 시 역할별 PowerBudget 변환표로 확정합니다. 해당 수치가 기존 완주 전력 분포를 5% 이상 바꾸면 관련 스테이지와 전체 계정 경로를 다시 검증합니다.
+후속 수치 작업:
+
+```text
+CAT-NEXT-007
+7~50번 피해·주기·범위·투사체·지원·제어 수치 변환
+```
+
+변종과 합체는 이 문서의 `TowerId`와 `ActionProfileId`를 기준으로 파생하며, 모델은 `VisualProfileId`만 교체할 수 있습니다.
