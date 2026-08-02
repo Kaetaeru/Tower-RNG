@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `RNG_PROBABILITY.md`, `TOWERS.md`, `MONSTERS.md`, `LEVEL_DESIGN.md`, `STAGE_BOSSES.md`, `ECONOMY_PACING.md`, `REBIRTH.md`, `CURRENCY.md`, `../reference/TOWER_CATALOG.md`, `../reference/MONSTER_CATALOG.md`, `../reference/STAGE_CATALOG.md`
+- 관련 문서: `RNG_PROBABILITY.md`, `TOWERS.md`, `MONSTERS.md`, `LEVEL_DESIGN.md`, `STAGE_BOSSES.md`, `ECONOMY_PACING.md`, `REBIRTH.md`, `CURRENCY.md`, `V1_COMPLETION_PACING.md`, `../reference/TOWER_CATALOG.md`, `../reference/V1_TOP_TOWER_BENCHMARK.md`, `../reference/MONSTER_CATALOG.md`, `../reference/STAGE_CATALOG.md`
 - 하위 문서 예정: `../spec/BALANCE_MODEL.md`
 - 마지막 정리: 2026-08-02
 
@@ -16,6 +16,7 @@ Tower RNG는 희귀도, 타워 성능, 몬스터 체력, 웨이브 예산과 보
 - 공식 분모가 큰 타워일수록 더 강함
 - 같은 역할에서는 `1 / 999` 타워가 `1 / 998` 타워보다 반드시 강함
 - 서로 다른 역할도 공통 기여도 기준에서 더 희귀한 타워가 더 높은 전투 예산을 가짐
+- V1 일반 굴리기 최고 기준점은 공식 `1 / 10^20`, EquivalentContribution 약 `6,309.57`
 - 스테이지가 올라가면 몬스터 능력치가 기하급수적으로 상승
 - 스테이지 1의 표준 일반 몬스터 체력 5를 기준으로 스테이지 4에서는 50
 - 높은 스테이지는 더 큰 코인과 방어 경험치를 지급
@@ -98,6 +99,7 @@ log10(RawPowerBudget)
 | 1 / 1,000,000 | 10.00 |
 | 1 / 100,000,000,000 | 100.00 |
 | 1 / 10^16 | 1,000.00 |
+| 1 / 10^20 | 약 6,309.57 |
 
 분모가 매우 커져도 로그 계산으로 처리합니다. 분모 전체를 부동소수점으로 변환할 필요가 없습니다.
 
@@ -162,6 +164,27 @@ FinalPowerBudget[i]
 - 피크 피해와 안정 피해
 
 하지만 개성 때문에 희귀도 순서가 뒤집히지는 않습니다. 특정 상황의 순간 수치가 아니라 여러 기준 전투의 가중 평균 기여도로 검증합니다.
+
+### BAL-006A: V1 일반 굴리기 상한
+
+```text
+BaseOddsN = 10^20
+공식 기본 확률 = 1 / 100,000,000,000,000,000,000
+RawPowerBudget = 10^3.8
+RawPowerBudget ≈ 6,309.573445
+```
+
+순수 단일 화력 기준에서는 기본 지속 DPS 약 `6,310`으로 환산합니다. 제작 기준 공격 후보는 피해 약 `12,620`, 행동 주기 `2.00초`입니다.
+
+이 상한은 다음을 의미합니다.
+
+- V1 일반 굴리기 타워의 최고 기준점
+- 계정 성장·치명타·지원·포션 적용 전 수치
+- 변종과 합체 전용 결과는 상한 초과 가능
+- 스테이지 15 메인 완주에 필수로 요구하지 않음
+- 전체 50종 확률표와 행운 곡선 작성 전 누적 획득률은 목표값일 뿐 미검증
+
+세부 검사는 `../reference/V1_TOP_TOWER_BENCHMARK.md`를 따릅니다.
 
 ---
 
@@ -411,6 +434,8 @@ DefenseXP
 - 공통 기여도 예산 역전 없음
 - 행동 주기와 대상 수 반영
 - 정수 반올림 뒤에도 차이 보존
+- 일반 굴리기 상한이 `1 / 10^20`, 약 6,309.57 기여도와 일치
+- 최고 타워 없이도 V1 메인 완주 가능
 
 ### 몬스터 검증
 
@@ -439,6 +464,7 @@ DefenseXP
 - 같은 스테이지 반복마다 무한 예산 증가
 - 무한 회복·보호막·분열
 - 각 시스템마다 별도의 큰 수 자료형 사용
+- 최고 극희귀 타워를 메인 완주 필수 조건으로 사용
 
 ---
 
@@ -447,6 +473,7 @@ DefenseXP
 - 역할별 기준 전투 시나리오와 가중치
 - `0.20` 희귀도 지수의 최종 조정
 - 최소 희귀도 간 기여도 차이 `0.1%`의 최종값
+- 최고점을 제외한 50종 공식 분모 사다리
 - 웨이브별 능력치 보정
 - 스테이지별 `TargetWaveSeconds`
 - `StageRewardScale`의 추가 효율 계수
