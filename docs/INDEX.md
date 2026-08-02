@@ -37,15 +37,16 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `design/PROGRESSION.md` | Confirmed · Living | 전역 풀, 첫 15분, Defense XP 환생과 기능 순서 |
+| `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, 첫 15분, Defense XP 환생과 기능 순서 |
 | `design/RNG_PROBABILITY.md` | Confirmed · Living | 임의 정밀도 `1/N`, 확률표, 숨겨진 유효 확률과 행운 |
 | `design/BALANCE_MODEL.md` | Confirmed · Living | 희귀도 PowerBudget, StageScale, SpawnCost, 보상 인플레이션 |
 | `design/ECONOMY_PACING.md` | Confirmed · Living | 초기 가격, 문·스탯·환생 시간과 경제 검증 지표 |
+| `design/WAVE_PACING.md` | Confirmed · Living | 진입·파밍 목표 시간, 후반 상한과 보스 시간 비중 |
 | `design/ROLLING.md` | Confirmed · Living | 4.0초 무료 굴리기, 전역 풀과 특수 주사위 |
 | `design/TOWERS.md` | Confirmed · Living | 최소 50종, 역할 분포, 희귀도별 엄격한 성능 증가 |
 | `design/STAT_TREE.md` | Confirmed · Living | 하나의 거대한 트리와 첫 환생 전 중심 노드 |
-| `design/REBIRTH.md` | Confirmed · Living | 첫 6,500 XP, 증가하는 환생 주기와 초기화 범위 |
-| `design/TUTORIAL.md` | Confirmed · Living | 첫 굴리기·코인·중심 노드·첫 환생 안내 |
+| `design/REBIRTH.md` | Confirmed · Living | 첫 7,000 XP, 증가하는 환생 주기와 초기화 범위 |
+| `design/TUTORIAL.md` | Confirmed · Living | 최초 슬라임·4슬롯 준비·첫 굴리기·환생 안내 |
 | `design/FUSION.md` | Confirmed · Living | 수동 합체, 보호·편성 수량과 원자적 처리 |
 | `design/TOWER_VARIANTS.md` | Confirmed · Living | 인화성·독성·공허·거대 변종과 최종 공식 분모 |
 
@@ -55,12 +56,12 @@ AGENTS.md
 |---|---|---|
 | `design/WORLD_NAVIGATION.md` | Confirmed · Living | 로비, 물리적 문, 재접속 빠른 복귀, 텔레포터 |
 | `design/LEVEL_DESIGN.md` | Confirmed · Living | 15스테이지, 5웨이브, StageScale과 예산 |
-| `design/STAGE_BOSSES.md` | Confirmed · Living | 지역별 보스 계열, 비율 예산과 Defense XP 보상 |
+| `design/STAGE_BOSSES.md` | Confirmed · Living | 지역별 보스 계열, 비율 예산과 보상 |
 | `design/COMBAT.md` | Confirmed · Living | 추종 자동 전투, 역할, Engage와 타격감 |
 | `design/PRESENTATION_FEEL.md` | Confirmed · Living | 과장된 움직임, 일반 화면 흔들림 금지와 완료 기준 |
 | `design/TOWER_BEHAVIOR.md` | Confirmed · Living | 타겟·이동·행동 루틴·전달 방식 |
 | `design/TOWER_EXTENSIONS.md` | Confirmed · Living | 고유 능력·사건 반응·조작 |
-| `design/FORMATION.md` | Confirmed · Living | 전체·역할 슬롯, 자동 편성과 퀵 HUD |
+| `design/FORMATION.md` | Confirmed · Living | 빈 슬롯 채움, 전체·역할 슬롯, 자동 편성과 퀵 HUD |
 | `design/TARGETING.md` | Confirmed | 경로 진행도, 실제 거리와 예약 피해 |
 | `design/MONSTERS.md` | Confirmed · Living | StageScale 몬스터, SpawnCost와 정체 방지 |
 
@@ -68,7 +69,7 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `design/CURRENCY.md` | Confirmed · Living | StageCoinUnit 1, 초기 가격, 코인·정수·Defense XP |
+| `design/CURRENCY.md` | Confirmed · Living | StageCoinUnit 1, 보스 1.15배, 코인·정수·Defense XP |
 | `design/OFFLINE_PROGRESS.md` | Confirmed · Living | 제한된 오프라인 코인 |
 | `design/POTIONS.md` | Confirmed · Living | 포션 효과·시간·중첩 |
 | `design/UI_FLOW.md` | Confirmed · Living | HUD, 인벤토리, 수동 합체, Defense XP와 설정 진입 |
@@ -91,9 +92,9 @@ AGENTS.md
 | `reference/TOWER_CATALOG.md` | Active Catalog | 공식 분모, PowerBudget, 행동·수치·타격감과 기준 타워 |
 | `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6종의 솔로·혼합·보스 주기 역할 기여도 검증 |
 | `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 일반 몬스터 3종과 우두머리 멧돼지 보스 |
-| `reference/STAGE_CATALOG.md` | Active Catalog | 스테이지 1 전투·보상, 문 가격과 이후 템플릿 |
+| `reference/STAGE_CATALOG.md` | Active Catalog | 최초 준비 전투, 스테이지 1 전투·보상과 문 가격 |
 | `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 15개 4역할 편성의 전체 5웨이브·보상 검증 |
-| `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | Active Benchmark | 초기 노드·문·6,500 XP와 7~15분 첫 환생 검증 |
+| `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | Active Benchmark | 초기 노드·문·7,000 XP와 첫 환생 7.80~14.34분 검증 |
 | `reference/STAT_TREE_CATALOG.md` | Active Catalog | 첫 환생 전 중심 노드 10개, 좌표·가격·효과 |
 
 지역:
@@ -113,8 +114,8 @@ AGENTS.md
 | 경로 | 상태 | 책임 |
 |---|---|---|
 | `../tools/balance/tower_baseline.py` | Active | 최저급 기준 타워 6종의 솔로·EquivalentContribution 재현 |
-| `../tools/balance/stage1_wave_sim.py` | Active | 스테이지 1 웨이브 1~5, 보상과 15개 혼합 편성 재현 |
-| `../tools/balance/first_rebirth_economy.py` | Active | 소비 성향·전투 준비별 첫 7~15분 경제 재현 |
+| `../tools/balance/stage1_wave_sim.py` | Active | 스테이지 1 웨이브 1~5와 15개 혼합 편성 재현 |
+| `../tools/balance/first_rebirth_economy.py` | Active | 튜토리얼·소비 성향·전투 준비별 첫 환생 경제 재현 |
 
 도구 결과는 기획 계약을 대체하지 않습니다. 가정과 허용 범위는 대응하는 reference 문서에 기록합니다.
 
@@ -127,6 +128,7 @@ spec/PROGRESSION.md
 spec/RNG_PROBABILITY.md
 spec/BALANCE_MODEL.md
 spec/ECONOMY_PACING.md
+spec/WAVE_PACING.md
 spec/ROLLING.md
 spec/TOWERS.md
 spec/STAT_TREE.md
@@ -158,7 +160,7 @@ spec/LIVE_WAVE.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `technical/STATE_LIFECYCLE.md` | Confirmed · Living | 서버 권위 프로필, 초기화·재접속·원자성·마이그레이션 |
+| `technical/STATE_LIFECYCLE.md` | Confirmed · Living | 프로필, 최초 튜토리얼, 초기화·재접속·원자성·마이그레이션 |
 | `technical/TOWER_MODELING.md` | Confirmed · Living | Basic 모델과 자유 이름 모션 |
 | `technical/TOWER_BEHAVIOR_GRAMMAR.md` | Confirmed · Living | 이동·행동·전달·자원 문법 |
 | `technical/TOWER_EXTENSION_FRAMEWORK.md` | Confirmed · Living | 확장 모듈·훅·조작 세션 |
@@ -175,11 +177,14 @@ spec/LIVE_WAVE.md
 타워·몬스터·스테이지 수치
 → design/BALANCE_MODEL.md
 
+웨이브 목표시간
+→ design/WAVE_PACING.md
+
 첫 환생 가격·시간
 → design/ECONOMY_PACING.md
 → reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md
 
-저장·초기화·재접속
+저장·최초 튜토리얼·재접속
 → technical/STATE_LIFECYCLE.md
 
 효과·카메라·접근성
@@ -195,28 +200,30 @@ spec/LIVE_WAVE.md
 완료
 - 역할별 최저급 기준 타워 6종
 - 스테이지 1 일반 몬스터 3종과 기준 보스
+- 최초 슬라임 전투와 4슬롯 준비 규칙
 - 15개 혼합 편성 전체 5웨이브 검증
 - 일반 웨이브 약 10초, 보스 평균 16초
 - 전체 주기 56.28초, 누수 0
+- 보스 시간 비중 28.4%, 보스 보상 1.15배
 - StageCoinUnit 1
 - 중심 스탯 노드 10개와 가격·좌표
 - 스테이지 2 문 750, 스테이지 3 문 3,200
-- 첫 환생 6,500 Defense XP
-- 소비 성향별 첫 환생 7.67~13.86분 검증
+- 첫 환생 7,000 Defense XP
+- 소비 성향별 첫 환생 7.80~14.34분 검증
+- 최초 튜토리얼·빈 슬롯 채움 저장 계약
 
 다음
-1. 역할별 `1 / 100` 기준 타워 6종 작성
-2. 초기 확률 사다리와 4초 굴림의 전투력 분포 시뮬레이션
-3. 시나리오로 둔 스테이지 2 전투 준비 시간을 실제 분포로 교체
-4. 스테이지 2 몬스터·웨이브·보스 작성
-5. 스테이지 1 Min·MaxBudget 변형 검증
-6. 첫 40초 베이스 체력과 과부하 안전성 검증
+1. 스테이지 2 실제 몬스터·웨이브·보스 작성
+2. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
+3. 역할별 `1 / 100` 기준 타워 6종 작성
+4. 초기 확률 사다리와 4초 굴림의 전투력 분포 시뮬레이션
+5. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
+6. 스테이지 1 Min·MaxBudget 변형 검증
 7. 두 번째 환생과 환생 영구 보상 시뮬레이션
 8. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
-9. STATE_LIFECYCLE 시스템 명세와 프로필 스키마 작성
-10. UI·전투 피드백 토큰과 설정 Preview 기준 작성
-11. 지역 1 수직 슬라이스 구현
-12. 검증 후 타워 50종·15스테이지 확장
+9. UI·전투 피드백 토큰과 설정 Preview 기준 작성
+10. 지역 1 수직 슬라이스 구현
+11. 검증 후 타워 50종·15스테이지 확장
 ```
 
 라이브 웨이브는 기본 수직 슬라이스와 저장·밸런스 계약 검증 뒤 진행합니다.
