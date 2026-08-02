@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
-"""Reproduce the provisional V1 rebirth-stat token benchmark.
-
-The model combines:
-- four stat tokens per rebirth,
-- the provisional rebirth schedule used only for milestone balancing,
-- stage luck, luck-stat compression, golden/diamond rolls,
-- roll-speed stat effects,
-- simple performance and currency multipliers.
-
-It does not replace the future Defense XP curve simulation.
-"""
+"""Reproduce the integrated V1 rebirth-stat and Defense XP benchmark."""
 
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+
+from v1_rebirth_xp_curve import (
+    RebirthScenario,
+    TOKENS_PER_REBIRTH,
+    performance_multiplier,
+    simulate_rebirths,
+)
 
 DENOMINATORS: list[int] = (
     [10] * 6
@@ -45,11 +42,6 @@ DENOMINATORS: list[int] = (
         100_000_000_000_000_000_000,
     ]
 )
-
-TOKENS_PER_REBIRTH = 4
-FIRST_REBIRTH_HOURS = 1.0 / 6.0
-SECOND_REBIRTH_HOURS = 0.5
-LATER_REBIRTH_INTERVAL_HOURS = 2.0 / 3.0
 
 STAGE_COEFFICIENT = 0.245
 NORMAL_COMPRESSION_CAP = 5.40
@@ -111,35 +103,8 @@ SCENARIOS = [
 ]
 
 
-def rebirth_count(active_hours: float) -> int:
-    if active_hours < FIRST_REBIRTH_HOURS:
-        return 0
-    if active_hours < SECOND_REBIRTH_HOURS:
-        return 1
-    return 2 + int(
-        (active_hours - SECOND_REBIRTH_HOURS) / LATER_REBIRTH_INTERVAL_HOURS
-        + 1e-9
-    )
-
-
-def points(active_hours: float, scenario: AllocationScenario, stat: str) -> int:
-    count = rebirth_count(active_hours)
-    per_rebirth = {
-        "luck": scenario.luck_per_rebirth,
-        "performance": scenario.performance_per_rebirth,
-        "currency": scenario.currency_per_rebirth,
-        "roll_speed": scenario.roll_speed_per_rebirth,
-    }[stat]
-    return count * per_rebirth
-
-
 def luck_compression_bonus(level: int) -> float:
-    return 0.0315 * min(level, 25) + 0.0090 * max(level - 25, 0)
-
-
-def performance_multiplier(level: int) -> float:
-    value = 1.0 + 0.025 * min(level, 25) + 0.005 * max(level - 25, 0)
-    return min(value, 2.50)
+    return 0.0340 * min(level, 25) + 0.0040 * max(level - 25, 0)
 
 
 def currency_multiplier(level: int) -> float:
@@ -165,6 +130,40 @@ def stage_at(active_hours: float) -> int:
     raise AssertionError("unreachable")
 
 
+def rebirth_events(scenario: AllocationScenario) -> list[dict[str, float | int]]:
+    return simulate_rebirths(
+        RebirthScenario(
+            scenario.name,
+            scenario.performance_per_rebirth,
+        )
+    )
+
+
+def rebirth_count_at(
+    events: list[dict[str, float | int]],
+    active_hours: float,
+) -> int:
+    return sum(
+        float(event["active_minutes"]) <= active_hours * 60.0
+        for event in events
+    )
+
+
+def points(
+    events: list[dict[str, float | int]],
+    active_hours: float,
+    scenario: AllocationScenario,
+    stat: str,
+) -> int:
+    per_rebirth = {
+        "luck": scenario.luck_per_rebirth,
+        "performance": scenario.performance_per_rebirth,
+        "currency": scenario.currency_per_rebirth,
+        "roll_speed": scenario.roll_speed_per_rebirth,
+    }[stat]
+    return rebirth_count_at(events, active_hours) * per_rebirth
+
+
 def final_weights(compression: float) -> list[float]:
     raw_weights = []
     for denominator in DENOMINATORS:
@@ -183,9 +182,10 @@ def compression_for_roll(
     active_hours: float,
     total_roll_number: int,
     scenario: AllocationScenario,
+    events: list[dict[str, float | int]],
 ) -> float:
     stage = stage_at(active_hours)
-    luck_level = points(active_hours, scenario, "luck")
+    luck_level = points(events, active_hours, scenario, "luck")
     base = (
         1.0
         + STAGE_COEFFICIENT * (stage - 1)
@@ -208,8 +208,13 @@ def compression_for_roll(
 def simulate_scenario(
     scenario: AllocationScenario,
     end_hours: float = 30.0,
-) -> tuple[dict[float, int], dict[float, float]]:
+) -> tuple[
+    list[dict[str, float | int]],
+    dict[float, int],
+    dict[float, float],
+]:
     scenario.validate()
+    events = rebirth_events(scenario)
 
     roll_counts: dict[float, int] = {}
     cumulative_chances: dict[float, float] = {}
@@ -217,14 +222,19 @@ def simulate_scenario(
 
     roll_number = 1
     survival = 1.0 - top_tower_probability(
-        compression_for_roll(0.0, roll_number, scenario)
+        compression_for_roll(0.0, roll_number, scenario, events)
     )
 
     next_roll_seconds = 12.0
     while next_roll_seconds <= end_hours * 3_600.0:
         roll_number += 1
         active_hours = next_roll_seconds / 3_600.0
-        compression = compression_for_roll(active_hours, roll_number, scenario)
+        compression = compression_for_roll(
+            active_hours,
+            roll_number,
+            scenario,
+            events,
+        )
         survival *= 1.0 - top_tower_probability(compression)
 
         while (
@@ -241,7 +251,12 @@ def simulate_scenario(
             if next_roll_seconds < 79.0
             else COIN_SPEED_NODE_INTERVAL
         )
-        speed_level = points(active_hours, scenario, "roll_speed")
+        speed_level = points(
+            events,
+            active_hours,
+            scenario,
+            "roll_speed",
+        )
         next_roll_seconds += final_roll_interval(base_interval, speed_level)
 
     while milestone_index < len(MILESTONES_HOURS):
@@ -250,25 +265,40 @@ def simulate_scenario(
         cumulative_chances[milestone] = 1.0 - survival
         milestone_index += 1
 
-    return roll_counts, cumulative_chances
+    return events, roll_counts, cumulative_chances
 
 
 def print_report() -> None:
-    print("REBIRTH AND TOKEN MILESTONES")
-    for hours in MILESTONES_HOURS:
-        count = rebirth_count(hours)
-        print(
-            f"{hours:>5.2f} h: rebirths={count:>2}, "
-            f"earned_tokens={count * TOKENS_PER_REBIRTH:>3}"
+    print("REBIRTH/TOKEN MILESTONES BY SCENARIO")
+    results = {}
+    for scenario in SCENARIOS:
+        events, roll_counts, chances = simulate_scenario(scenario)
+        results[scenario.name] = (events, roll_counts, chances)
+        rendered = ", ".join(
+            f"{hours:g}h={rebirth_count_at(events, hours)}R/"
+            f"{rebirth_count_at(events, hours) * TOKENS_PER_REBIRTH}T"
+            for hours in [0.25, 0.50, 2.0, 5.0, 12.0, 13.5, 15.0, 25.0, 30.0]
         )
+        print(f"{scenario.name:>13}: {rendered}")
 
     print("\nBALANCED BRANCH EFFECTS")
-    balanced = SCENARIOS[1]
+    balanced_scenario = SCENARIOS[1]
+    balanced_events = results["balanced"][0]
     for hours in [0.25, 2.0, 5.0, 13.5, 15.0, 30.0]:
-        level = points(hours, balanced, "luck")
+        level = points(
+            balanced_events,
+            hours,
+            balanced_scenario,
+            "luck",
+        )
         interval = final_roll_interval(
             COIN_SPEED_NODE_INTERVAL,
-            points(hours, balanced, "roll_speed"),
+            points(
+                balanced_events,
+                hours,
+                balanced_scenario,
+                "roll_speed",
+            ),
         )
         print(
             f"{hours:>5.2f} h: level={level:>2}, "
@@ -279,17 +309,16 @@ def print_report() -> None:
         )
 
     print("\nTOP-TOWER ACQUISITION CHANCE")
-    scenario_results = {}
     for scenario in SCENARIOS:
-        roll_counts, chances = simulate_scenario(scenario)
-        scenario_results[scenario.name] = (roll_counts, chances)
+        _, roll_counts, chances = results[scenario.name]
         rendered = ", ".join(
-            f"{hours:g}h={chances[hours] * 100:.3f}%/{roll_counts[hours]:,}rolls"
+            f"{hours:g}h={chances[hours] * 100:.3f}%/"
+            f"{roll_counts[hours]:,}rolls"
             for hours in [5.0, 13.5, 15.0, 25.0, 30.0]
         )
         print(f"{scenario.name:>13}: {rendered}")
 
-    balanced_chances = scenario_results["balanced"][1]
+    balanced_chances = results["balanced"][2]
     assert 0.03 <= balanced_chances[13.5] <= 0.05
     assert 0.03 <= balanced_chances[15.0] <= 0.05
     assert 0.15 <= balanced_chances[25.0] <= 0.25
