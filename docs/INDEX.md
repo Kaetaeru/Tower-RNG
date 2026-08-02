@@ -45,8 +45,19 @@ docs/INDEX.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `drafts/TOWER_MODELING.md` | Working Draft | Basic 3D 모델, 자유 이름 모션 견본, 이름·경로 대응과 전체 시각 상태 기반 모션의 임시 규약 |
+| `drafts/TOWER_BEHAVIOR_GRAMMAR.md` | Working Draft | 이동 방식, 행동 루틴, 공격 전달 방식의 조합과 새 타워 ModuleScript 제작 양식 |
 
-`drafts/TOWER_MODELING.md`는 최종 규약이나 구현 계약이 아닙니다. 검투사와 미니거너처럼 같은 전투 역할 안에서도 다른 움직임을 가지는 타워를 위한 애니메이션 하위클래스 분류를 논의한 뒤 반드시 수정합니다.
+두 문서는 함께 읽습니다.
+
+```text
+TOWER_MODELING.md
+- 3D 모델과 모션 견본을 어떻게 만드는가
+
+TOWER_BEHAVIOR_GRAMMAR.md
+- 제작한 모션을 이동·공격 함수와 어떻게 조합하는가
+```
+
+두 문서 모두 최종 규약이나 구현 계약이 아닙니다. 새 타워 유형, 근접 교전, 연속 사격, 충전, 설치와 소환 등의 세부 동작을 논의하면서 반드시 수정합니다.
 
 ---
 
