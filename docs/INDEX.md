@@ -38,7 +38,7 @@ AGENTS.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, V1 시간축, 스테이지 기준형 환생 |
-| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15 12~15시간, 실제 슬롯·P10~P90 완주 전력 |
+| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15 12~15시간, 실제 슬롯·코인 성장 완주 전력 |
 | `design/RNG_PROBABILITY.md` | Confirmed · Living | 임의 정밀도 `1/N`, 로그 압축과 환생 행운 공식 |
 | `design/ROLLING.md` | Confirmed · Living | 4.0→3.6초, 환생 속도와 2.0초 하한, 특수 굴림 |
 | `design/BALANCE_MODEL.md` | Confirmed · Living | PowerBudget, StageScale, SpawnCost, 보상 |
@@ -98,6 +98,7 @@ AGENTS.md
 | `reference/V1_REBIRTH_XP_BENCHMARK.md` | Active Benchmark | XP 기준 스테이지·진행률 보존·20/35/50분 곡선 |
 | `reference/V1_ROSTER_POWER_DISTRIBUTION.md` | Active Benchmark | 20,000계정 보유·무제한 Top-K 전투력 분포 |
 | `reference/V1_FORMATION_SLOT_BENCHMARK.md` | Active Benchmark | 슬롯 5~12 가격·해금 시각·역할 제한 편성 P10/P50/P90 |
+| `reference/V1_COIN_COMBAT_BENCHMARK.md` | Active Benchmark | 코인 전투 ×1.25→×5.00와 통합 15h·30h 전투력 |
 | `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6역할 기여도 |
 | `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 몬스터와 보스 |
 | `reference/STAGE_CATALOG.md` | Active Catalog | 최초 전투·스테이지 1·문 가격 |
@@ -130,6 +131,7 @@ AGENTS.md
 | `../tools/balance/rebirth_stat_tokens.py` | XP 곡선·네 스탯·굴림·최고 타워 통합 검증 |
 | `../tools/balance/v1_roster_power_distribution.py` | 20,000계정 보유 수량·무제한 Top-K 전투력 |
 | `../tools/balance/v1_formation_slot_economy.py` | 슬롯 가격·해금 시각·역할 제한 실제 편성 전투력 |
+| `../tools/balance/v1_coin_combat_curve.py` | 코인 전투 성장과 통합 Final EC |
 
 ---
 
@@ -158,9 +160,12 @@ AGENTS.md
 → design/FORMATION.md
 → reference/V1_FORMATION_SLOT_BENCHMARK.md
 
+코인 전투 성장
+→ design/STAT_TREE.md
+→ reference/V1_COIN_COMBAT_BENCHMARK.md
+
 환생 XP·스탯
 → design/REBIRTH.md
-→ design/STAT_TREE.md
 → reference/V1_REBIRTH_XP_BENCHMARK.md
 → reference/V1_REBIRTH_STAT_BENCHMARK.md
 
@@ -176,6 +181,7 @@ AGENTS.md
 완주 시간·완주 전력
 → design/V1_COMPLETION_PACING.md
 → reference/V1_FORMATION_SLOT_BENCHMARK.md
+→ reference/V1_COIN_COMBAT_BENCHMARK.md
 
 웨이브 시간
 → design/WAVE_PACING.md
@@ -194,19 +200,17 @@ AGENTS.md
 - 환생 1회당 스탯 토큰 4개
 - 행운·성능·재화·주사위 속도 네 분야
 - XP 기준 스테이지와 진행률 보존
-- 두 번째 20분, 세 번째 35분, 4~50번째 50분 기준 환생 곡선
+- 두 번째 20분, 세 번째 35분, 4~50번째 50분 환생 곡선
 - 균형형 30시간 약 46회 환생
-- 행운 0.0340/0.0040 Compression 계수
-- 성능 최대 ×2.50, 재화 최대 ×4.00, 굴리기 최소 2.0초
-- 환생 직후 무료 전체 재분배 1회
 - V1 완주 12~15시간
 - 최고 일반 타워 1 / 10^20, 기여도 약 6,309.57
 - 정확한 합 1의 50자리 공식 확률 사다리
-- 20,000계정 시간대별 보유·무제한 Top-K 전투력 분포
+- 20,000계정 시간대별 보유 전투력 분포
 - 슬롯 5~12 가격과 균형형 11분→13시간 31분 해금 곡선
 - 역할 상한 4~6슬롯 2개, 7~9슬롯 3개, 10~12슬롯 4개
-- 균형형 15h 실제 Final EC P10/P50/P90 = 2,264/4,370/12,083
-- 균형형 30h 실제 Final EC P10/P50/P90 = 12,115/23,067/38,181
+- 코인 전투 성장 15시간 ×4.50, 20시간 이후 ×5.00
+- 균형형 15h 통합 Final EC P10/P50/P90 = 10,188/19,665/54,374
+- 균형형 30h 통합 Final EC P10/P50/P90 = 60,575/115,335/190,905
 ```
 
 ---
@@ -214,10 +218,10 @@ AGENTS.md
 ## 다음 우선순위
 
 ```text
-1. 코인 전투 스탯의 15시간·30시간 배율
-2. 실제 슬롯·코인 성장·P10 전력을 합친 스테이지 15 권장 전투력 역산
-3. 스테이지 2 실제 몬스터·웨이브·보스
-4. 스테이지 2 진입·파밍 시간과 실제 XP율 검증
+1. 스테이지 15 실제 5웨이브·보스와 15h/30h 직접 클리어 시뮬레이션
+2. 스테이지 2 실제 몬스터·웨이브·보스
+3. 스테이지 2 진입·파밍 시간과 실제 XP율 검증
+4. 스테이지 4~15 문 가격과 전체 12~15시간 경제
 5. 중간 희귀도 실제 타워 작성
 6. 변종·합체의 시간대별 전투력 기여
 7. 실제 지원·제어 중첩과 자동 편성 평가
