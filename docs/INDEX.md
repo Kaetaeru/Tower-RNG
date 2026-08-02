@@ -89,10 +89,10 @@ AGENTS.md
 | 문서 | 상태 | 책임 |
 |---|---|---|
 | `reference/TOWER_CATALOG.md` | Active Catalog | 공식 분모, PowerBudget, 행동·수치·타격감과 기준 타워 |
-| `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6종의 솔로·역할 기여도와 혼합 편성 검증 |
-| `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 일반형·군집형·고체력형과 SpawnCost 기준 |
-| `reference/STAGE_CATALOG.md` | Active Catalog | 스테이지 1 일반 웨이브 수치·예산·생성 순서와 이후 템플릿 |
-| `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 15개 4역할 혼합 편성의 웨이브 1~4 처리시간 검증 |
+| `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6종의 솔로·혼합·보스 주기 역할 기여도 검증 |
+| `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 일반 몬스터 3종과 우두머리 멧돼지 보스 |
+| `reference/STAGE_CATALOG.md` | Active Catalog | 스테이지 1 웨이브 1~5 수치·예산·보상과 이후 템플릿 |
+| `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 15개 4역할 편성의 전체 5웨이브·보상 검증 |
 | `reference/STAT_TREE_CATALOG.md` | Active Template | 노드 좌표·연결·가격·환생 조건, 자동 합체 없음 |
 
 지역:
@@ -105,8 +105,6 @@ AGENTS.md
 5 용암지대
 ```
 
-스테이지·몬스터·타워·노드는 각 카탈로그 양식을 복제해 작성합니다.
-
 ---
 
 ## 밸런스 도구
@@ -114,7 +112,7 @@ AGENTS.md
 | 경로 | 상태 | 책임 |
 |---|---|---|
 | `../tools/balance/tower_baseline.py` | Active | 최저급 기준 타워 6종의 솔로·EquivalentContribution 재현 |
-| `../tools/balance/stage1_wave_sim.py` | Active | 스테이지 1 웨이브 1~4와 15개 혼합 편성 재현 |
+| `../tools/balance/stage1_wave_sim.py` | Active | 스테이지 1 웨이브 1~5, 보상과 15개 혼합 편성 재현 |
 
 도구 결과는 기획 계약을 대체하지 않습니다. 가정과 허용 범위는 대응하는 reference 문서에 기록합니다.
 
@@ -183,8 +181,6 @@ spec/LIVE_WAVE.md
 → design/SETTINGS.md
 ```
 
-하위 구현이 이 계약을 임의로 재정의할 수 없습니다.
-
 ---
 
 ## 현재 우선순위
@@ -192,21 +188,23 @@ spec/LIVE_WAVE.md
 ```text
 완료
 - 역할별 최저급 기준 타워 6종 등록
-- 1차 솔로·EquivalentContribution 벤치마크
-- 스테이지 1 일반형·군집형·고체력형 등록
-- 스테이지 1 웨이브 1~4 BaseBudget·비율·생성 순서 작성
-- 15개 4역할 혼합 편성 시뮬레이션
-- 일반 웨이브 전체 평균 10.07초, 누수 0 확인
+- 솔로·EquivalentContribution 벤치마크
+- 스테이지 1 일반 몬스터 3종과 기준 보스 등록
+- 웨이브 1~5 BaseBudget·비율·생성 순서 작성
+- 15개 4역할 혼합 편성 전체 주기 시뮬레이션
+- 일반 웨이브 평균 약 10초, 보스 웨이브 평균 16초 확인
+- 전체 주기 평균 56.28초, 누수 0 확인
+- 보스 보상 1.60배와 대형 사냥 전체 기여 균형 확인
 
 다음
-1. 스테이지 1 초·중반 보스 기본형 작성
-2. 웨이브 5 동반 비율·예산 작성
-3. 5웨이브 전체 주기와 대형 사냥 역할 재검증
-4. StageCoinUnit·보스 보상·첫 환생 Defense XP 역산
-5. Min·MaxBudget 변형 웨이브 검증
-6. 각 역할의 다음 희귀도 타워 작성
-7. 확률 컴파일러·PowerBudget·SpawnCost 시뮬레이터 설계
-8. STAT_TREE_CATALOG에 중심부와 첫 환생 전 노드 작성
+1. StageCoinUnit과 초기 코인 획득량 결정
+2. 자동 굴리기·중심 스탯 노드 가격 결정
+3. 스테이지 2 문 가격 결정
+4. 주기당 Defense XP 385를 기준으로 첫 환생 BaseXP 역산
+5. 첫 7~15분 경제 시뮬레이션
+6. Min·MaxBudget 변형 웨이브 검증
+7. 경제 기준 확정 후 역할별 다음 희귀도 타워 작성
+8. 확률 컴파일러·PowerBudget·SpawnCost 시뮬레이터 설계
 9. STATE_LIFECYCLE 시스템 명세와 프로필 스키마 작성
 10. UI·전투 피드백 토큰과 설정 Preview 기준 작성
 11. 지역 1 수직 슬라이스 구현
