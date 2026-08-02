@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `BALANCE_MODEL.md`, `CURRENCY.md`, `ROLLING.md`, `RNG_PROBABILITY.md`, `TOWERS.md`, `COMBAT.md`, `FORMATION.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `REBIRTH.md`, `TUTORIAL.md`, `PROGRESSION.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `WORLD_NAVIGATION.md`, `PRESENTATION_FEEL.md`, `../reference/STAT_TREE_CATALOG.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`
+- 관련 문서: `BALANCE_MODEL.md`, `CURRENCY.md`, `ROLLING.md`, `RNG_PROBABILITY.md`, `TOWERS.md`, `COMBAT.md`, `FORMATION.md`, `FUSION.md`, `TOWER_VARIANTS.md`, `REBIRTH.md`, `TUTORIAL.md`, `PROGRESSION.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `WORLD_NAVIGATION.md`, `PRESENTATION_FEEL.md`, `../reference/STAT_TREE_CATALOG.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
 - 하위 문서 예정: `../spec/STAT_TREE.md`
 - 마지막 정리: 2026-08-02
 
@@ -18,8 +18,8 @@
 - 하나의 거대한 연결 트리
 
 환생 스탯 배분
-- 환생으로 받은 스탯 토큰 사용
-- 플레이어가 영구 스탯에 직접 배분
+- 환생 1회당 토큰 4개
+- 행운·성능·재화·주사위 속도에 직접 배분
 - 코인 트리와 별도 자원·화면
 ```
 
@@ -36,6 +36,7 @@
 - Defense XP 직접 구매 없음
 - 상호 배타적 영구 함정은 피함
 - 자동 합체 없음
+- 환생 스탯은 첫 25포인트 이후 감소 효율
 
 ---
 
@@ -118,7 +119,7 @@
 - 굴리기 속도
 - 특수 주사위 관련 편의 후보
 
-영구 행운의 주 성장축은 환생 스탯 배분으로 이동합니다. 코인 트리에 추가 행운 노드를 넣을지는 미확정입니다. 중복 행운원을 무분별하게 늘리지 않습니다.
+영구 행운의 주 성장축은 환생 스탯 배분입니다. 코인 트리에 추가 행운 노드를 무분별하게 중복하지 않습니다.
 
 ### 수집·오프라인
 
@@ -170,14 +171,16 @@
 환생 성공
 → Defense XP 0
 → RebirthCount +1
-→ 스탯 토큰 지급
+→ 스탯 토큰 4개 지급
 ```
 
 - 토큰 영구 보유
 - 미사용분 이월
 - 코인과 교환 불가
 - 자동 균등 배분 없음
-- 환생당 지급량은 미확정
+- 각 포인트는 토큰 1개
+
+균형형은 매 환생 네 분야에 한 개씩, 집중형은 한 분야에 네 개를 투자할 수 있습니다.
 
 ---
 
@@ -187,6 +190,15 @@
 RebirthStatTokensEarned
 UnspentRebirthStatTokens
 RebirthStatAllocations[StatId]
+```
+
+허용 `StatId`:
+
+```text
+REBIRTH_LUCK
+REBIRTH_PERFORMANCE
+REBIRTH_CURRENCY
+REBIRTH_ROLL_SPEED
 ```
 
 불변조건:
@@ -199,54 +211,99 @@ RebirthStatAllocations[StatId]
 
 ---
 
-## 8. 확정된 첫 환생 스탯
+## 8. 네 가지 환생 스탯
 
-현재 계수가 계산된 항목은 행운뿐입니다.
+### 행운
 
 ```text
-행운 토큰 1개
-→ BaseCompression +0.040
+LuckCompressionBonus(L)
+= 0.0315 × min(L, 25)
++ 0.0090 × max(L - 25, 0)
 ```
 
-잠정 공식:
+- 로그 희귀도 압축 증가
+- 공식 `1 / N`은 유지
+- 일반·황금·다이아몬드 Compression 상한 적용
+
+### 성능
 
 ```text
-BaseCompression
+PerformanceMultiplier(P)
+= min(
+    2.50,
+    1
+    + 0.025 × min(P, 25)
+    + 0.005 × max(P - 25, 0)
+  )
+```
+
+- 모든 역할의 EquivalentContribution 강화
+- 역할별 피해·제어·지원 환산값에 적용
+
+### 재화
+
+```text
+CurrencyMultiplier(C)
+= min(
+    4.00,
+    1
+    + 0.040 × min(C, 25)
+    + 0.010 × max(C - 25, 0)
+  )
+```
+
+- 접속 중 코인과 오프라인 코인
+- Defense XP·스탯 토큰·연금 정수에는 적용하지 않음
+
+### 주사위 속도
+
+```text
+RollRateMultiplier(S)
 = 1
-+ 0.245 × (CurrentStage - 1)
-+ 0.040 × AllocatedLuckTokens
-+ TemporaryCompressionBonus
++ 0.010 × min(S, 25)
++ 0.0025 × max(S - 25, 0)
+
+FinalRollInterval
+= max(2.00초, BaseRollInterval / RollRateMultiplier(S))
 ```
 
-상한:
+- 실제 굴림 수 증가
+- 황금·다이아몬드 진행도도 빨라짐
+- V1 하한 2.0초
 
-```text
-일반 5.40
-황금 5.65
-다이아몬드 6.05
-```
-
-행운 외 토큰 스탯은 아직 확정하지 않습니다.
+세부 표는 `V1_REBIRTH_STAT_BENCHMARK.md`를 따릅니다.
 
 ---
 
-## 9. 배분 UI
+## 9. 재분배
+
+- 새 미사용 토큰은 언제든 투자 가능
+- 이미 투자한 포인트는 다음 환생까지 고정
+- 환생 직후 전체 무료 재분배 기회 1회
+- 재분배하지 않으면 기존 배분 유지
+- 코인·Robux·정수 비용 없음
+
+상시 재분배를 허용하지 않아 공격·처치·굴림 직전마다 분야를 교체하는 행동을 막습니다.
+
+---
+
+## 10. 배분 UI
 
 필수 정보:
 
 - 미사용 토큰
 - 각 StatId의 현재 투자량
 - 다음 토큰의 실제 효과
-- 소프트캡·하드캡
+- 25포인트 감소 효율 경계
+- 성능 ×2.50, 재화 ×4.00, 굴리기 2.0초와 행운 상한
+- 환생 직후 재분배 가능 여부
 - 서버 승인 결과
 
 환생 직후 배분 화면으로 이동할 수 있지만 강제하지 않습니다. 현재 전투와 굴리기는 계속됩니다.
 
-재분배 가능 여부와 비용은 미확정입니다.
-
 ---
 
-## 10. 저장과 피드백
+## 11. 저장과 피드백
 
 코인 노드 구매:
 
@@ -259,10 +316,19 @@ BaseCompression
 환생 토큰 배분:
 
 ```text
-미사용 토큰·상한 검증
+미사용 토큰 검증
 → 토큰 차감
 → 배분 단계 증가
-→ 파생 능력치·행운 캐시 재계산
+→ 파생 능력치·확률 캐시 재계산
+```
+
+전체 재분배:
+
+```text
+환생 직후 재분배 기회 검증
+→ 배분 합을 미사용 토큰으로 반환
+→ 새 배분 저장
+→ 재분배 기회 소모
 ```
 
 피드백:
@@ -275,27 +341,28 @@ BaseCompression
 
 ---
 
-## 11. 사용하지 않는 구조
+## 12. 사용하지 않는 구조
 
 - 환생 시 코인 트리 초기화
-- 환생 시 토큰 배분 초기화
+- 환생 시 토큰 배분 자동 초기화
 - 코인으로 환생 토큰 구매
 - Defense XP 구매
 - 개별 타워 레벨
 - 무작위 토큰 스탯
 - 자동 토큰 배분
+- 전투 중 무제한 재분배
 - 자동 합체
 - 텔레포터로 잠긴 문 우회
 - 환생 뒤 문 목적지 삭제
 
 ---
 
-## 12. 남은 검증
+## 13. 남은 검증
 
-- 환생당 토큰 지급량
-- 행운 외 토큰 스탯 목록·계수·상한
-- 재분배 규칙
-- 코인 트리 후속 좌표와 가격
+- 실제 두 번째 이후 환생 횟수와 토큰 속도
+- 성능의 역할별 런타임 적용
+- 코인 배율 중첩 순서
+- 후속 코인 굴리기 속도 노드
 - 공격속도·치명타 소프트캡
 - 역할 슬롯 성장 속도
 - 베이스 초기 체력
