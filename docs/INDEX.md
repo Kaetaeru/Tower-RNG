@@ -8,17 +8,19 @@
 
 | 문서 | 책임 |
 |---|---|
-| `PROJECT_STATUS.md` | 전체 진행률, 체크리스트, 현재 다음 작업 |
+| `PROJECT_STATUS.md` | 전체 진행률·마스터 체크리스트·현재 다음 작업 |
+| `balance/FINAL_BALANCE_BATCH.md` | 남은 계산 6단계의 완료·조건부 상태 |
+| `balance/FINAL_RECOMMENDATION.md` | 카탈로그로 넘길 계산 권고값 묶음 |
+| `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
+| `balance/INDEX.md` | 공식·가정·시뮬레이션·재현 도구 |
 | `../README.md` | 게임 루프와 V1 범위 |
 | `../AGENTS.md` | 승인·동기화·수치 작업 원칙 |
-| `catalog/INDEX.md` | 실제 콘텐츠 ID·이름·채택 수치 |
-| `balance/INDEX.md` | 수식·가정·시뮬레이션·검증 결과 |
 
 현재 준비도:
 
 ```text
-전체 V1 약 38%
-기획·밸런스 약 83%
+전체 V1 약 40%
+기획·밸런스 약 87%
 콘텐츠 카탈로그 약 12%
 Roblox 구현·QA는 저장소 기준 초기 단계
 ```
@@ -43,6 +45,7 @@ AGENTS.md
 balance가 값을 추천
 → catalog가 값을 채택
 → implementation이 동일 값을 사용
+→ Roblox 런타임에서 검증
 ```
 
 기존 `reference` 폴더는 링크 호환 영역이며 신규 문서는 추가하지 않습니다.
@@ -56,15 +59,15 @@ balance가 값을 추천
 | 문서 | 책임 |
 |---|---|
 | `design/PROGRESSION.md` | 최초 25초와 장기 진행 |
-| `design/V1_COMPLETION_PACING.md` | 12~15시간 중앙 완주 |
+| `design/V1_COMPLETION_PACING.md` | 빠른·중앙·느린 최종 완주 시간 |
 | `design/RNG_PROBABILITY.md` | 공식 `1/N`과 행운 압축 |
-| `design/ROLLING.md` | 굴리기 속도와 특수 굴림 |
+| `design/ROLLING.md` | 무료 굴리기·속도·특수 주사위 |
 | `design/BALANCE_MODEL.md` | 공통 수치 공식 |
 | `design/ECONOMY_PACING.md` | 코인·문·환생 경제 |
 | `design/CURRENCY.md` | 코인·정수·XP·토큰 |
 | `design/REBIRTH.md` | 진행 유지 환생과 네 스탯 |
 | `design/STAT_TREE.md` | 코인 트리와 환생 스탯 |
-| `design/OFFLINE_PROGRESS.md` | 제한된 오프라인 코인 |
+| `design/OFFLINE_PROGRESS.md` | 오프라인 코인 공식·효율·상한 |
 
 ## 타워·전투
 
@@ -73,12 +76,12 @@ balance가 값을 추천
 | `design/TOWERS.md` | 50종 이상과 역할·희귀도 |
 | `design/COMBAT.md` | 추종 자동 전투 |
 | `design/FORMATION.md` | 4→12슬롯과 역할 상한 |
-| `design/EFFECT_STACKING.md` | 지원 출처 예산, 감속·완전 제어 중첩 계약 |
+| `design/EFFECT_STACKING.md` | 지원·제어 중첩 계약 |
 | `design/TARGETING.md` | 타겟 선정과 예약 피해 |
 | `design/TOWER_BEHAVIOR.md` | 타워 행동 문법 |
 | `design/TOWER_EXTENSIONS.md` | 고유 능력 확장 |
-| `design/FUSION.md` | 수동 합체 |
-| `design/TOWER_VARIANTS.md` | 변종 티켓·계열·허용 범위·성능 예산 |
+| `design/TOWER_VARIANTS.md` | 변종 티켓·계열·허용 범위 |
+| `design/FUSION.md` | 수동 합체 3→1·최대 2단계 |
 
 ## 월드·스테이지
 
@@ -108,11 +111,30 @@ balance가 값을 추천
 
 새 카탈로그 문서는 `docs/catalog`에만 작성합니다.
 
+현재 실제 콘텐츠:
+
+```text
+공식 일반 확률 슬롯 50 / 50
+기준 타워 정체성 6 / 최소 50
+스테이지 1 상세 중심
+스테이지 2~15는 계산용 콘텐츠 중심
+```
+
 ---
 
 # 계산·검증
 
 권위 인덱스: `balance/INDEX.md`
+
+## 최종 배치
+
+| 문서 | 상태 |
+|---|---|
+| `balance/FINAL_BALANCE_BATCH.md` | 계산 수행 6/6·완전 4·조건부 2 |
+| `balance/FINAL_RECOMMENDATION.md` | 카탈로그 채택 후보값 정리 완료 |
+| `balance/FINAL_ACCOUNT_PATHS.md` | 빠른·중앙·느린 10,000계정 경로 완료 |
+| `balance/FINAL_ECONOMY_INTEGRATION.md` | 선택 경제 통합·추가 싱크 15~25B 산출 |
+| `balance/RUNTIME_LOSS_BUDGET.md` | 계산 예산 완료·실제 Roblox 측정 대기 |
 
 ## 확률·경제·편성
 
@@ -126,8 +148,22 @@ balance가 값을 추천
 | `reference/V1_FORMATION_SLOT_BENCHMARK.md` | 슬롯 가격과 역할 제한 |
 | `reference/V1_COIN_COMBAT_BENCHMARK.md` | 독립 전투 성장 |
 | `balance/V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투 통합 경제 |
-| `balance/SUPPORT_CONTROL_STACKING_BENCHMARK.md` | 지원·제어 중첩과 자동 편성 기여 |
-| `balance/V1_TOWER_VARIANT_BENCHMARK.md` | 변종 획득률·전투력·코인 가지 |
+| `balance/SUPPORT_CONTROL_STACKING_BENCHMARK.md` | 지원·제어 중첩 |
+| `balance/V1_TOWER_VARIANT_BENCHMARK.md` | 변종 확률·전투력·코인 가지 |
+| `balance/V1_FUSION_BENCHMARK.md` | 합체 재료·전투력·코인 가지 |
+| `balance/OFFLINE_COIN_BENCHMARK.md` | 오프라인 민감도 |
+
+현재 계산된 영구 코인 싱크:
+
+```text
+문·슬롯·전투 36.397B
+변종          25.019B
+합체           2.750B
+오프라인       3.120B
+합계          67.286B
+```
+
+추가 선택형 숙련 싱크 `15~25B`의 콘텐츠 정체성은 아직 결정 전입니다.
 
 ## 스테이지 전투
 
@@ -143,16 +179,49 @@ balance가 값을 추천
 | `balance/STAGE10_11_LIGHT_BENCHMARK.md` | 경량 완료 |
 | `balance/STAGE12_WAVE_BENCHMARK.md` | 완전 완료 |
 | `balance/STAGE13_14_LIGHT_BENCHMARK.md` | 경량 완료 |
-| `reference/STAGE15_WAVE_BENCHMARK.md` | 초기 집계 역산 기록 |
-| `balance/STAGE15_ACTION_WAVE_BENCHMARK.md` | 행동형 완전 완료·현재 우선 기준 |
-
-현재:
+| `balance/STAGE15_ACTION_WAVE_BENCHMARK.md` | 행동형 완전 완료 |
 
 ```text
-행동형 또는 경량 검증 완료: 스테이지 1~15
-미검증 스테이지: 없음
-지원·제어 중첩 계산 완료
-변종 획득·전투력·코인 가지 계산 완료
+스테이지 수치 검증 완료: 15 / 15
+```
+
+---
+
+# 최종 계산 결과
+
+```text
+Stage15 FirstClearEC = 10,050
+Stage15 StableFarmEC = 12,200
+
+빠른 완주 9.5~10h
+중앙 완주 12.5~15h
+느린 완주 18~21.5h
+중앙 안정 파밍 약 13.5h
+```
+
+합체:
+
+```text
+기본형 3개 → 1단계 ×1.45
+기본형 총 9개 → 2단계 ×2.1025
+V1 최대 2단계
+```
+
+오프라인:
+
+```text
+효율 25→40%
+저장 8→24h
+가지 총가격 3.1201B
+```
+
+런타임 목표:
+
+```text
+Stage1 >= 0.992
+Stage9 >= 0.990
+Stage12 >= 0.988
+Stage15 >= 0.986
 ```
 
 ---
@@ -172,28 +241,19 @@ balance가 값을 추천
 | `rebirth_stat_tokens.py` | 환생 스탯·굴림 통합 |
 | `v1_roster_power_distribution.py` | 보유 전력 분포 |
 | `v1_formation_slot_economy.py` | 슬롯 경제 |
-| `v1_coin_combat_curve.py` | 독립 전투 성장 |
+| `v1_coin_combat_curve.py` | 코인 전투 성장 |
 | `v1_gate_economy.py` | 문·슬롯·전투 통합 경제 |
-| `support_control_stacking.py` | 지원·제어 중첩과 감쇠 |
-| `v1_tower_variant_benchmark.py` | 변종 획득·전투력·코인 가지 |
+| `support_control_stacking.py` | 지원·제어 중첩 |
+| `v1_tower_variant_benchmark.py` | 변종 |
+| `v1_fusion_benchmark.py` | 합체 |
+| `offline_coin_benchmark.py` | 오프라인 코인 |
+| `runtime_loss_budget.py` | 런타임 손실 예산 |
+| `final_economy_integration.py` | 후반 경제 통합 |
+| `final_account_paths.py` | 전체 계정 경로 |
 
 ## 스테이지
 
-| 도구 | 책임 |
-|---|---|
-| `stage1_wave_sim.py` | 스테이지 1 |
-| `stage2_wave_sim.py` | 스테이지 2 |
-| `stage3_wave_sim.py` | 스테이지 3 |
-| `stage4_5_light_sim.py` | 스테이지 4·5 |
-| `stage6_wave_sim.py` | 스테이지 6 |
-| `stage7_8_light_sim.py` | 스테이지 7·8 |
-| `stage9_wave_sim.py` | 스테이지 9 |
-| `stage10_11_light_sim.py` | 스테이지 10·11 |
-| `stage12_wave_sim.py` | 스테이지 12 |
-| `stage13_14_light_sim.py` | 스테이지 13·14 |
-| `stage15_wave_sim.py` | 스테이지 15 집계 역산 |
-| `stage15_action_wave_sim.py` | 스테이지 15 행동형 완전 검증 |
-| `stage_validation_plan.py` | 검증 정책과 계획 주기 |
+`stage1_wave_sim.py`부터 `stage15_action_wave_sim.py`까지의 개별 재현 도구를 사용합니다.
 
 ---
 
@@ -211,37 +271,19 @@ balance가 값을 추천
 
 ---
 
-# 현재 완료 범위
-
-```text
-확률·행운·환생·슬롯·코인 성장 계산 완료
-문 가격과 12~15시간 통합 경제 계산 완료
-스테이지 1~15 웨이브 전투 검증 완료
-지원·제어 중첩 계산 완료
-변종 계열 확률, PowerBudget, 시간대별 획득량 계산 완료
-변종 가지 25.0185B, 약 24.5시간 전체 확장
-15시간 변종 중앙값 2개, 30시간 중앙값 9개
-실제 타워 콘텐츠는 기준 6종 중심
-합체·런타임 계산 미완료
-가격 권고안은 카탈로그 채택 전
-Roblox 수직 슬라이스는 저장소 기준 미완료
-```
-
----
-
 # 현재 다음 작업
 
 ```text
-BAL-NEXT-010
-수동 합체 비용·획득시간·전투력 벤치마크
+CAT-NEXT-001
+문·슬롯·전투·변종·합체·오프라인 권고값의 카탈로그 채택 검토
 ```
 
-이후:
+별도 미완료:
 
 ```text
-런타임 손실
-→ 오프라인·후반 코인 싱크
-→ 최종 통합
-→ 카탈로그 채택
-→ 지역 1 수직 슬라이스
+DES-NEXT-001
+추가 15~25B 숙련 코인 싱크 정체성 결정
+
+RUN-NEXT-001
+지역 1 수직 슬라이스에서 실제 RuntimeEfficiency 측정
 ```
