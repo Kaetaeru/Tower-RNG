@@ -90,7 +90,8 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `reference/TOWER_CATALOG.md` | Active Catalog | 공식 분모, PowerBudget, 행동·수치·타격감과 기준 타워 |
+| `reference/TOWER_CATALOG.md` | Active Catalog | 실제 TowerId, 행동·수치·타격감과 기준 타워 |
+| `reference/V1_TOWER_PROBABILITY_LADDER.md` | Active Benchmark | 50자리 공식 분모·역할 골격과 정확한 단위분수 합 |
 | `reference/TOWER_BALANCE_BENCHMARK.md` | Active Benchmark | 최저급 6종의 솔로·혼합·보스 주기 역할 기여도 검증 |
 | `reference/V1_TOP_TOWER_BENCHMARK.md` | Active Benchmark | 일반 굴리기 최고 `1/10^20`, 약 6,310 DPS와 획득 체감 목표 |
 | `reference/MONSTER_CATALOG.md` | Active Catalog | 스테이지 1 일반 몬스터 3종과 우두머리 멧돼지 보스 |
@@ -118,6 +119,7 @@ AGENTS.md
 | `../tools/balance/tower_baseline.py` | Active | 최저급 기준 타워 6종의 솔로·EquivalentContribution 재현 |
 | `../tools/balance/stage1_wave_sim.py` | Active | 스테이지 1 웨이브 1~5와 15개 혼합 편성 재현 |
 | `../tools/balance/first_rebirth_economy.py` | Active | 튜토리얼·소비 성향·전투 준비별 첫 환생 경제 재현 |
+| `../tools/balance/v1_probability_ladder.py` | Active | 50슬롯·역할 수량·정확한 확률 합·최고 분모 검증 |
 
 도구 결과는 기획 계약을 대체하지 않습니다. 가정과 허용 범위는 대응하는 reference 문서에 기록합니다.
 
@@ -176,6 +178,7 @@ spec/LIVE_WAVE.md
 ```text
 공식 확률과 행운
 → design/RNG_PROBABILITY.md
+→ reference/V1_TOWER_PROBABILITY_LADDER.md
 
 타워·몬스터·스테이지 수치
 → design/BALANCE_MODEL.md
@@ -222,23 +225,24 @@ V1 전체 완주 시간
 - 빠른 8~10시간, 느린 18~22시간, 숙련 20~30시간
 - V1 일반 굴리기 최고 공식 확률 1 / 10^20
 - 최고 순수 단일 화력 기준 EquivalentContribution 약 6,309.57
+- V1 50슬롯 공식 확률 사다리와 정확한 확률 합 1
+- 역할 분포 9, 9, 8, 8, 8, 8
 
 다음
-1. 50종 공식 분모 사다리 골격과 정확한 단위분수 합 작성
-2. 15분·30분·2시간·5시간·12~15시간·20~30시간 누적 굴림 수 설정
-3. 시간대별 최고 보유 타워·4~12슬롯 편성 전투력 분포 시뮬레이션
-4. 행운 압축 곡선과 최고 타워 누적 획득률 3~5%, 15~25% 검증
-5. 스테이지 15 권장 편성과 계정 성장 배율 역산
-6. 스테이지 2 실제 몬스터·웨이브·보스 작성
-7. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
-8. 확률 사다리 결과에 따른 중간 희귀도 실제 타워 작성
-9. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
-10. 스테이지 1 Min·MaxBudget 변형 검증
-11. 두 번째 환생과 환생 영구 보상 시뮬레이션
-12. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
-13. UI·전투 피드백 토큰과 설정 Preview 기준 작성
-14. 지역 1 수직 슬라이스 구현
-15. 검증 후 타워 50종·15스테이지 확장
+1. 15분·30분·2시간·5시간·12~15시간·20~30시간 누적 굴림 수 설정
+2. 행운 없음 상태의 최고 보유 타워·4~12슬롯 편성 전투력 분포 시뮬레이션
+3. 행운 압축 곡선과 최고 타워 누적 획득률 3~5%, 15~25% 검증
+4. 스테이지 15 권장 편성과 계정 성장 배율 역산
+5. 스테이지 2 실제 몬스터·웨이브·보스 작성
+6. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
+7. 확률 사다리 결과에 따른 중간 희귀도 실제 타워 작성
+8. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
+9. 스테이지 1 Min·MaxBudget 변형 검증
+10. 두 번째 환생과 환생 영구 보상 시뮬레이션
+11. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
+12. UI·전투 피드백 토큰과 설정 Preview 기준 작성
+13. 지역 1 수직 슬라이스 구현
+14. 검증 후 타워 50종·15스테이지 확장
 ```
 
 라이브 웨이브는 기본 수직 슬라이스와 저장·밸런스 계약 검증 뒤 진행합니다.
