@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `BALANCE_MODEL.md`, `POTIONS.md`, `LEVEL_DESIGN.md`, `STAT_TREE.md`, `REBIRTH.md`, `TUTORIAL.md`, `MONSTERS.md`, `PROGRESSION.md`, `WORLD_NAVIGATION.md`, `OFFLINE_PROGRESS.md`, `WAVE_PACING.md`, `RNG_PROBABILITY.md`, `../technical/STATE_LIFECYCLE.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`
+- 관련 문서: `BALANCE_MODEL.md`, `POTIONS.md`, `LEVEL_DESIGN.md`, `STAT_TREE.md`, `REBIRTH.md`, `TUTORIAL.md`, `MONSTERS.md`, `PROGRESSION.md`, `WORLD_NAVIGATION.md`, `OFFLINE_PROGRESS.md`, `WAVE_PACING.md`, `RNG_PROBABILITY.md`, `../technical/STATE_LIFECYCLE.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
 - 하위 문서 예정: `../spec/CURRENCY.md`
 - 마지막 정리: 2026-08-02
 
@@ -14,7 +14,7 @@ Tower RNG는 두 재화와 두 영구·주기 진행 자원을 사용합니다.
 - `코인`: 월드에 떨어지고 직접 수집하는 기본 성장 재화
 - `연금 정수`: 처치로 게이지가 자동 충전되는 포션 재화
 - `Defense XP`: 다음 환생까지 쌓이는 전투 진행도
-- `환생 스탯 토큰`: 환생으로 획득해 영구 스탯에 배분하는 포인트
+- `환생 스탯 토큰`: 환생으로 4개씩 획득해 영구 스탯에 배분하는 포인트
 
 환생은 Defense XP만 0으로 만듭니다. 코인과 열린 스테이지 문은 유지됩니다.
 
@@ -100,7 +100,7 @@ Tower RNG는 두 재화와 두 영구·주기 진행 자원을 사용합니다.
 
 ### CUR-007: 중후반 편의
 
-넓은 반경과 빠른 흡입은 스탯 트리 또는 환생 스탯의 후보가 될 수 있습니다. 완전 자동 수집을 과금 전용으로 제공하지 않습니다.
+넓은 반경과 빠른 흡입은 코인 스탯 트리에서 성장합니다. 환생 재화 스탯은 코인 가치만 높이며 직접 수집 동작을 제거하지 않습니다.
 
 ---
 
@@ -115,9 +115,27 @@ CoinValue
 × StageCoinUnit
 × VariantReward
 × BossReward
-× AccountCoinMultiplier
+× CoinTreeMultiplier
+× RebirthCurrencyMultiplier
 × TemporaryCoinMultiplier
 ```
+
+환생 재화 스탯:
+
+```text
+RebirthCurrencyMultiplier(C)
+= min(
+    4.00,
+    1
+    + 0.040 × min(C, 25)
+    + 0.010 × max(C - 25, 0)
+  )
+```
+
+- `C`: `REBIRTH_CURRENCY` 포인트
+- 1~25포인트는 포인트당 코인 약 +4%
+- 이후는 포인트당 약 +1%
+- 최대 ×4.00
 
 첫 수직 슬라이스 기준:
 
@@ -139,7 +157,20 @@ Stage 1 전체 주기 총 드롭 가치 = 400코인
 
 스테이지 2·3 경제 계획에서도 StageCoinUnit은 우선 1을 사용하고 `StageRewardScale`로 인플레이션합니다.
 
-### CUR-009: 초기 가격 기준
+### CUR-009: 환생 재화 포인트 예시
+
+| 포인트 | 코인 배율 |
+|---:|---:|
+| 0 | ×1.00 |
+| 4 | ×1.16 |
+| 10 | ×1.40 |
+| 25 | ×2.00 |
+| 50 | ×2.25 |
+| 100 | ×2.75 |
+
+균형형 계획에서는 15시간 약 23포인트로 ×1.92, 30시간 약 46포인트로 ×2.21입니다. 실제 포인트 수는 두 번째 이후 환생 요구량 검증에서 다시 계산합니다.
+
+### CUR-010: 초기 가격 기준
 
 ```text
 자동 굴리기 10
@@ -158,7 +189,7 @@ Stage 1 전체 주기 총 드롭 가치 = 400코인
 
 문은 계정당 한 번 구매하는 영구 월드 진행입니다. 환생 뒤 재구매하지 않습니다.
 
-### CUR-010: 보스와 변종
+### CUR-011: 보스와 변종
 
 - 변종은 더 큰 묶음 또는 추가 보상
 - 보스는 큰 코인 묶음
@@ -166,7 +197,7 @@ Stage 1 전체 주기 총 드롭 가치 = 400코인
 - 보스 시간당 효율은 일반 웨이브보다 약 15% 높게 시작
 - 베이스에 도달하면 보상 없음
 
-### CUR-011: 큰 수
+### CUR-012: 큰 수
 
 코인은 장기 인플레이션으로 안전 정수 범위를 넘을 수 있으므로 공통 `MagnitudeNumber` 형식으로 저장·표시합니다.
 
@@ -174,7 +205,7 @@ Stage 1 전체 주기 총 드롭 가치 = 400코인
 
 ## 5. Defense XP
 
-### CUR-012: 환생 진행도
+### CUR-013: 환생 진행도
 
 ```text
 DefenseXP
@@ -198,8 +229,9 @@ DefenseXP
 - 코인을 놓쳐도 획득
 - 베이스 도달 몬스터는 지급 없음
 - 오프라인 지급 없음
+- `REBIRTH_CURRENCY`의 영향을 받지 않음
 
-### CUR-013: 환생 처리
+### CUR-014: 환생 처리
 
 - 요구량 충족 시 환생 가능
 - 환생 시 Defense XP만 0
@@ -211,12 +243,12 @@ DefenseXP
 
 ## 6. 환생 스탯 토큰
 
-### CUR-014: 획득과 보유
+### CUR-015: 획득과 보유
 
 ```text
 환생 성공
 → RebirthCount 증가
-→ UnspentRebirthStatTokens 증가
+→ UnspentRebirthStatTokens +4
 → DefenseXP 0
 ```
 
@@ -226,18 +258,16 @@ DefenseXP
 - 코인·정수와 교환 불가
 - 미사용 토큰 이월
 
-환생당 지급량은 아직 미확정입니다.
-
-### CUR-015: 배분
-
-토큰은 별도 환생 스탯 배분 화면에서 사용합니다. 행운 배분의 첫 잠정값:
+### CUR-016: 배분처
 
 ```text
-토큰 1개
-→ 로그 희귀도 Compression +0.040
+REBIRTH_LUCK
+REBIRTH_PERFORMANCE
+REBIRTH_CURRENCY
+REBIRTH_ROLL_SPEED
 ```
 
-행운 외 스탯과 재분배 규칙은 후속 결정입니다.
+스탯 1포인트당 토큰 1개를 사용합니다. 기존 배분의 전체 재분배는 환생 직후에만 무료로 1회 가능합니다.
 
 ---
 
@@ -263,6 +293,7 @@ Defense XP 10
 
 - 굴리기·전투·정수·Defense XP·스탯 토큰 진행 없음
 - 최고 도달 기록, 오프라인 스탯과 계정 코인 배율 기준
+- `REBIRTH_CURRENCY`를 접속 중 코인과 동일하게 적용
 - 접속 시 서버 자동 지급
 
 초기 목표:
@@ -277,7 +308,7 @@ Defense XP 10
 
 ## 9. 문과 텔레포터
 
-### CUR-016: 문 해금
+### CUR-017: 문 해금
 
 - 이전 문 해금 필요
 - 코인 차감과 문 상태 갱신을 하나의 프로필 변경으로 처리
@@ -291,7 +322,7 @@ Defense XP 10
 스테이지 3: 3,200
 ```
 
-### CUR-017: 텔레포터
+### CUR-018: 텔레포터
 
 - 기능은 영구 해금
 - 영구적으로 열린 스테이지로 이동
@@ -302,11 +333,11 @@ Defense XP 10
 
 ## 10. 연금 정수
 
-### CUR-018: 사용처
+### CUR-019: 사용처
 
 연금 정수는 포션 구매에만 사용합니다.
 
-### CUR-019: 게이지
+### CUR-020: 게이지
 
 ```text
 몬스터 처치
@@ -316,6 +347,8 @@ Defense XP 10
 ```
 
 코인을 줍지 못해도 정수 게이지는 적용됩니다.
+
+V1에서는 `REBIRTH_CURRENCY`를 연금 정수에 적용하지 않습니다. 포션 경제를 별도로 검증한 뒤 확장 여부를 판단합니다.
 
 추가 획득 후보:
 
@@ -330,7 +363,8 @@ Defense XP 10
 - 코인·정수·Defense XP·스탯 토큰은 서버 권위
 - 문 구매와 코인 차감을 원자적으로 처리
 - 오프라인 지급과 지급 시각을 원자적으로 처리
-- 환생은 Defense XP 초기화·환생 횟수·토큰 지급만 원자적으로 처리
+- 환생은 Defense XP 초기화·환생 횟수·토큰 4개 지급만 원자적으로 처리
+- 토큰 배분·재분배는 서버 검증
 - 바닥 코인은 저장하지 않음
 
 세부 계약은 `../technical/STATE_LIFECYCLE.md`를 따릅니다.
@@ -343,6 +377,7 @@ Defense XP 10
 - 환생 시 코인 초기화
 - 환생 시 문 재잠금
 - Defense XP 상점·교환·유료 직접 판매
+- 재화 스탯으로 Defense XP·토큰 증가
 - 일반 처치 코인 자동 지급
 - 모든 재화를 월드 드롭
 - 베이스 도달 시 보유 코인 차감
@@ -356,10 +391,10 @@ Defense XP 10
 
 ## 13. 미확정 사항
 
-- 환생당 스탯 토큰 지급량
-- 행운 외 토큰 스탯과 재분배 규칙
+- 코인 포션과 환생 재화 배율의 최종 중첩 순서
 - 변종 보상 배율
 - 정수 게이지 요구량
 - 드롭 수명과 병합 반경
 - 스테이지 2·3 실제 StageCoinUnit 조정 필요 여부
+- 실제 두 번째 이후 환생 속도
 - 재화의 최종 표시 명칭과 아이콘
