@@ -4,9 +4,9 @@
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
 - 상위 문서: `BALANCE_MODEL.md`, `WAVE_PACING.md`, `LEVEL_DESIGN.md`, `ECONOMY_PACING.md`
-- 관련 문서: `../reference/STAGE1_WAVE_BENCHMARK.md`, `../reference/STAGE2_WAVE_BENCHMARK.md`, `../reference/STAGE3_WAVE_BENCHMARK.md`, `../reference/STAGE6_WAVE_BENCHMARK.md`, `../reference/STAGE15_WAVE_BENCHMARK.md`
+- 관련 문서: `../reference/STAGE1_WAVE_BENCHMARK.md`, `../reference/STAGE2_WAVE_BENCHMARK.md`, `../reference/STAGE3_WAVE_BENCHMARK.md`, `../reference/STAGE4_5_LIGHT_BENCHMARK.md`, `../reference/STAGE6_WAVE_BENCHMARK.md`, `../reference/STAGE15_WAVE_BENCHMARK.md`
 - 재현 도구: `../../tools/balance/stage_validation_plan.py`
-- 마지막 정리: 2026-08-02
+- 마지막 정리: 2026-08-03
 
 ## 요약
 
@@ -197,7 +197,7 @@ CoinValue 또는 DefenseXP
 | 5 | 110~150 |
 | 전체 | 360~440 |
 
-이 범위는 고정 공식이 아니라 현재 검증된 스테이지 1·2·3·6·15를 포함하는 제작 경계입니다.
+이 범위는 고정 공식이 아니라 현재 검증된 스테이지 1·2·3·4·5·6·15를 포함하는 제작 경계입니다.
 
 범위를 벗어날 수 있는 경우:
 
@@ -240,8 +240,8 @@ CoinValue 또는 DefenseXP
 | 1 | 56.28초 | 완전 검증 완료 |
 | 2 | 66초 | 추가 완전 검증 완료, 실측 65.90초 |
 | 3 | 78초 | 완전 검증 완료, 실측 78.00초 |
-| 4 | 62초 | 경량 검증 예정 |
-| 5 | 68초 | 경량 검증 예정 |
+| 4 | 62초 | 경량 검증 완료, 실측 61.23초 |
+| 5 | 68초 | 경량 검증 완료, 실측 67.71초 |
 | 6 | 75초 | 완전 검증 완료, 실측 75.00초 |
 | 7 | 68초 | 경량 검증 예정 |
 | 8 | 75초 | 경량 검증 예정 |
@@ -273,7 +273,7 @@ CoinValue 또는 DefenseXP
 
 ```text
 스테이지 6 완전 검증 완료
-→ 스테이지 4·5 경량 작성 및 검사
+→ 스테이지 4·5 경량 검증 완료
 
 스테이지 9 완전 검증
 → 스테이지 7·8 경량 작성 및 검사
@@ -305,6 +305,20 @@ CoinValue 또는 DefenseXP
 - 실제 파밍 주기 78.00초
 - 차이 없음
 
+스테이지 4
+- 계획 62초
+- 실제 파밍 주기 61.23초
+- 차이 -1.25%
+- 6개 대표 편성 진입·파밍 누수 0
+- 가장 느린 파밍 편성은 균형형보다 약 7.1% 느림
+
+스테이지 5
+- 계획 68초
+- 실제 파밍 주기 67.71초
+- 차이 -0.42%
+- 6개 대표 편성 진입·파밍 누수 0
+- 가장 느린 파밍 편성은 균형형보다 약 7.1% 느림
+
 스테이지 6
 - 계획 75초
 - 실제 파밍 주기 75.00초
@@ -313,7 +327,7 @@ CoinValue 또는 DefenseXP
 - 보스 시간 비중 32.7%
 ```
 
-스테이지 1·2·3·6이 기존 경제 프록시를 그대로 재현했으므로 중간 스테이지를 공식으로 생성하고 대표 편성으로 검사하는 방식의 근거가 확보됐습니다.
+스테이지 1~6이 기존 경제 프록시를 1.25% 이내에서 재현했습니다. 지역 최종전은 완전 검증하고 그 사이 스테이지는 검증된 행동을 재조합해 경량 검사하는 방식이 현재까지 안정적으로 작동합니다.
 
 ---
 
