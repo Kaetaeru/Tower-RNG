@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `ROLLING.md`, `TOWERS.md`, `TOWER_VARIANTS.md`, `POTIONS.md`, `REBIRTH.md`, `MONETIZATION.md`, `SOCIAL.md`, `BALANCE_MODEL.md`, `../reference/V1_TOWER_PROBABILITY_LADDER.md`, `../reference/V1_TOP_TOWER_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
+- 관련 문서: `ROLLING.md`, `TOWERS.md`, `TOWER_VARIANTS.md`, `POTIONS.md`, `REBIRTH.md`, `MONETIZATION.md`, `SOCIAL.md`, `BALANCE_MODEL.md`, `../reference/V1_TOWER_PROBABILITY_LADDER.md`, `../reference/V1_TOP_TOWER_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`, `../reference/V1_REBIRTH_XP_BENCHMARK.md`
 - 하위 문서 예정: `../spec/RNG_PROBABILITY.md`
 - 마지막 정리: 2026-08-02
 
@@ -11,7 +11,7 @@
 
 일반 굴리기는 한 번에 정확히 타워 하나를 지급합니다. 각 타워는 공식 기본 확률 `1 / N`을 가지며 분모는 임의 정밀도 10진수 문자열로 저장합니다.
 
-플레이어에게는 공식 기본 확률만 표시합니다. 스테이지, 환생 행운 스탯, 포션과 특수 주사위가 반영된 현재 유효 확률은 표시하지 않습니다.
+플레이어에게는 공식 기본 확률만 표시합니다. 스테이지, 환생 스탯 토큰, 포션과 특수 주사위가 반영된 현재 유효 확률은 표시하지 않습니다.
 
 불변조건:
 
@@ -155,13 +155,13 @@ FinalWeight = RawAdjustedWeight / Σ(RawAdjustedWeight)
 
 ```text
 LuckCompressionBonus(L)
-= 0.0315 × min(L, 25)
-+ 0.0090 × max(L - 25, 0)
+= 0.0340 × min(L, 25)
++ 0.0040 × max(L - 25, 0)
 ```
 
 - `L`: `REBIRTH_LUCK`에 배분한 환생 스탯 포인트
 - 1~25포인트가 주 성장 구간
-- 26포인트부터 감소 효율
+- 26포인트부터 강한 감소 효율
 - 환생 횟수 자체는 행운을 직접 올리지 않음
 
 ### RNG-010: 기본 압축값
@@ -216,22 +216,24 @@ Compression = clamp(BaseCompression + 0.65, 1.00, 6.05)
 
 | 행운 포인트 | Compression 보너스 |
 |---:|---:|
-| 1 | +0.0315 |
-| 4 | +0.1260 |
-| 10 | +0.3150 |
-| 25 | +0.7875 |
-| 50 | +1.0125 |
-| 100 | +1.4625 |
+| 1 | +0.034 |
+| 4 | +0.136 |
+| 10 | +0.340 |
+| 25 | +0.850 |
+| 50 | +0.950 |
+| 100 | +1.150 |
+
+스테이지 15에서는 약 29포인트에 일반 굴림 상한에 도달합니다.
 
 ---
 
-## 6. 환생 스탯과 함께한 시뮬레이션
+## 6. 실제 환생 곡선과 통합한 시뮬레이션
 
 기준:
 
 - 환생 1회당 토큰 4개
 - 균형형은 행운·성능·재화·속도에 1개씩 배분
-- 첫 환생 10분, 두 번째 30분, 이후 평균 40분 간격의 계획 입력
+- `V1_REBIRTH_XP_BENCHMARK.md`의 실제 환생 시각
 - 50자리 공식 확률 사다리
 - 최고 타워 `1 / 10^20`
 - 주사위 속도 스탯이 실제 굴림 간격에 적용
@@ -240,13 +242,13 @@ Compression = clamp(BaseCompression + 0.65, 1.00, 6.05)
 
 균형형 최고 타워 누적 획득률:
 
-| 활성 플레이 | 누적 굴림 | 누적 확률 |
-|---:|---:|---:|
-| 5시간 | 5,221 | 0.011% |
-| 13.5시간 | 14,964 | 3.028% |
-| 15시간 | 16,795 | 4.683% |
-| 25시간 | 29,432 | 17.738% |
-| 30시간 | 35,893 | 24.618% |
+| 활성 플레이 | 환생 횟수 | 행운 포인트 | 누적 굴림 | 누적 확률 |
+|---:|---:|---:|---:|---:|
+| 5시간 | 8 | 8 | 5,210 | 0.011% |
+| 13.5시간 | 20 | 20 | 14,859 | **3.005%** |
+| 15시간 | 22 | 22 | 16,672 | **4.680%** |
+| 25시간 | 38 | 38 | 29,277 | **18.146%** |
+| 30시간 | 46 | 46 | 35,742 | **24.799%** |
 
 목표 통과:
 
@@ -255,7 +257,7 @@ Compression = clamp(BaseCompression + 0.65, 1.00, 6.05)
 V1 숙련 25~30시간: 15~25%
 ```
 
-행운 집중은 15시간 약 8.216%, 30시간 약 25.706%입니다. 최고 타워를 자동 보장하지 않으며, 행운 소프트캡 때문에 장기적으로 주사위 속도와 섞는 배분도 경쟁력을 가집니다.
+행운 집중은 30시간 약 24.976%입니다. 행운 2·성능 1·속도 1 혼합형은 약 29.093%까지 올라갈 수 있으나 재화 성장을 포기합니다. 최고 타워는 메인 완주 조건이 아닙니다.
 
 세부 결과는 `V1_REBIRTH_STAT_BENCHMARK.md`와 `V1_LUCK_COMPRESSION_BENCHMARK.md`를 따릅니다.
 
@@ -350,5 +352,5 @@ V1 숙련 25~30시간: 15~25%
 - 포션·VIP·서버 부스트 값
 - 후속 코인 굴리기 속도 단계
 - 변종 행운 계수
-- 실제 두 번째 이후 환생 간격
 - 임의 정밀도 컴파일러 자료구조
+- 실제 스테이지 도달 분포가 중앙 경로와 얼마나 다른지
