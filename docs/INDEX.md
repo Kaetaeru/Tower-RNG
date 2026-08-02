@@ -25,7 +25,7 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `../README.md` | Active | 최신 핵심 루프·확률·인플레이션·첫 경제·환생 개요 |
+| `../README.md` | Active | 최신 핵심 루프·확률·인플레이션·첫 경제·V1 완주 개요 |
 | `../AGENTS.md` | Required | 승인, 계층, 동기화, 감각·수치·저장 원칙 |
 | `INDEX.md` | Active | 전체 문서 위치와 상태 |
 
@@ -37,7 +37,8 @@ AGENTS.md
 
 | 문서 | 상태 | 책임 |
 |---|---|---|
-| `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, 첫 15분, Defense XP 환생과 기능 순서 |
+| `design/PROGRESSION.md` | Confirmed · Living | 최초 25초, 첫 15분, V1 완주와 기능 순서 |
+| `design/V1_COMPLETION_PACING.md` | Confirmed · Living | 스테이지 15까지 12~15시간, 숙련·수집 시간층 |
 | `design/RNG_PROBABILITY.md` | Confirmed · Living | 임의 정밀도 `1/N`, 확률표, 숨겨진 유효 확률과 행운 |
 | `design/BALANCE_MODEL.md` | Confirmed · Living | 희귀도 PowerBudget, StageScale, SpawnCost, 보상 인플레이션 |
 | `design/ECONOMY_PACING.md` | Confirmed · Living | 초기 가격, 문·스탯·환생 시간과 경제 검증 지표 |
@@ -125,6 +126,7 @@ AGENTS.md
 
 ```text
 spec/PROGRESSION.md
+spec/V1_COMPLETION_PACING.md
 spec/RNG_PROBABILITY.md
 spec/BALANCE_MODEL.md
 spec/ECONOMY_PACING.md
@@ -177,6 +179,9 @@ spec/LIVE_WAVE.md
 타워·몬스터·스테이지 수치
 → design/BALANCE_MODEL.md
 
+V1 전체 완주 시간
+→ design/V1_COMPLETION_PACING.md
+
 웨이브 목표시간
 → design/WAVE_PACING.md
 
@@ -211,19 +216,24 @@ spec/LIVE_WAVE.md
 - 첫 환생 7,000 Defense XP
 - 소비 성향별 첫 환생 7.80~14.34분 검증
 - 최초 튜토리얼·빈 슬롯 채움 저장 계약
+- V1 스테이지 15 최초 클리어 중앙값 12~15시간
+- 빠른 8~10시간, 느린 18~22시간, 숙련 20~30시간
 
 다음
-1. 스테이지 2 실제 몬스터·웨이브·보스 작성
-2. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
-3. 역할별 `1 / 100` 기준 타워 6종 작성
-4. 초기 확률 사다리와 4초 굴림의 전투력 분포 시뮬레이션
-5. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
-6. 스테이지 1 Min·MaxBudget 변형 검증
-7. 두 번째 환생과 환생 영구 보상 시뮬레이션
-8. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
-9. UI·전투 피드백 토큰과 설정 Preview 기준 작성
-10. 지역 1 수직 슬라이스 구현
-11. 검증 후 타워 50종·15스테이지 확장
+1. V1 최고 일반 굴리기 타워의 공식 분모와 PowerBudget 기준 설정
+2. 최고점에서 역산한 50종 희귀도 사다리 초안
+3. 스테이지 15 권장 편성·환생 배율 목표 설정
+4. 스테이지 2 실제 몬스터·웨이브·보스 작성
+5. 스테이지 2 진입·파밍 목표 시간 시뮬레이션
+6. 역할별 `1 / 100` 기준 타워 6종 작성
+7. 초기 확률 사다리와 4초 굴림의 전투력 분포 시뮬레이션
+8. 경제의 스테이지 2 준비 시나리오를 실제 분포로 교체
+9. 스테이지 1 Min·MaxBudget 변형 검증
+10. 두 번째 환생과 환생 영구 보상 시뮬레이션
+11. 확률 컴파일러·PowerBudget·SpawnCost 통합 도구 설계
+12. UI·전투 피드백 토큰과 설정 Preview 기준 작성
+13. 지역 1 수직 슬라이스 구현
+14. 검증 후 타워 50종·15스테이지 확장
 ```
 
 라이브 웨이브는 기본 수직 슬라이스와 저장·밸런스 계약 검증 뒤 진행합니다.
