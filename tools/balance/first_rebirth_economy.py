@@ -1,9 +1,9 @@
 """Deterministic first-rebirth economy benchmark for Tower RNG.
 
-This planning model connects Stage 1 combat output to early permanent purchases,
-Stage 2/3 gate prices, and the first Defense XP requirement. It intentionally
-uses scenario-based stage readiness because the launch probability table and
-full tower roster are not complete yet.
+This planning model connects the verified Stage 1 cycle to early permanent
+purchases, Stage 2/3 gate prices, and the first Defense XP requirement. It uses
+scenario-based stage readiness because the launch probability table and full
+tower roster are not complete yet.
 """
 
 from __future__ import annotations
@@ -13,8 +13,11 @@ from statistics import mean
 
 TICK_SECONDS = 0.10
 MAX_SECONDS = 15 * 60
-STAGE_BUDGET_PER_CYCLE = 385.0
-FIRST_REBIRTH_XP = 6_500.0
+STAGE_BUDGET_PER_CYCLE = 400.0
+FIRST_REBIRTH_XP = 7_000.0
+TUTORIAL_AUTO_ROLL_SECOND = 8.0
+REGULAR_WAVES_START_SECOND = 25.0
+TUTORIAL_DEFENSE_XP = 10.0
 
 STAGE_REWARD_SCALE = {
     1: 1.0,
@@ -55,6 +58,7 @@ class ScenarioResult:
     rebirth_second: float
     final_stage: int
     remaining_coin: float
+    defense_xp: float
     events: tuple[Event, ...]
 
 
@@ -143,17 +147,6 @@ READINESS_SCENARIOS = {
 }
 
 
-def onboarding_efficiency(second: float) -> float:
-    """Approximate the first rolls filling four formation slots."""
-    if second < 10:
-        return 0.25
-    if second < 25:
-        return 0.55
-    if second < 40:
-        return 0.80
-    return 1.0
-
-
 def cycle_seconds(stage: int, output_multiplier: float) -> float:
     """Planning-only output elasticity with a spawn/animation floor."""
     nominal = BASE_CYCLE_SECONDS[stage]
@@ -164,16 +157,26 @@ def simulate(strategy: str, readiness: str) -> ScenarioResult:
     order = STRATEGIES[strategy]
     ready_at = READINESS_SCENARIOS[readiness]
 
-    second = 0.0
+    # The first normal slime funds Auto Roll. Three 4-second rolls fill the
+    # remaining empty formation slots before canonical Wave 1 starts.
+    second = REGULAR_WAVES_START_SECOND
     coin = 0.0
-    defense_xp = 0.0
+    defense_xp = TUTORIAL_DEFENSE_XP
     collection_efficiency = 0.75
     output_multiplier = 1.0
     coin_multiplier = 1.0
     current_stage = 1
     opened_stages = {1}
-    next_purchase_index = 0
-    events: list[Event] = []
+    next_purchase_index = 1  # AUTO_ROLL was bought during the tutorial.
+    events: list[Event] = [
+        Event(
+            second=TUTORIAL_AUTO_ROLL_SECOND,
+            name=PURCHASES["AUTO_ROLL"].name,
+            stage=1,
+            defense_xp=TUTORIAL_DEFENSE_XP,
+            remaining_coin=0.0,
+        )
+    ]
 
     while second < MAX_SECONDS and defense_xp < FIRST_REBIRTH_XP:
         if next_purchase_index < len(order):
@@ -206,19 +209,17 @@ def simulate(strategy: str, readiness: str) -> ScenarioResult:
                 current_stage = stage
                 break
 
-        efficiency = onboarding_efficiency(second)
         gross_rate = (
             STAGE_BUDGET_PER_CYCLE
             * STAGE_REWARD_SCALE[current_stage]
             / cycle_seconds(current_stage, output_multiplier)
         )
 
-        defense_xp += gross_rate * efficiency * TICK_SECONDS
+        defense_xp += gross_rate * TICK_SECONDS
         coin += (
             gross_rate
             * collection_efficiency
             * coin_multiplier
-            * efficiency
             * TICK_SECONDS
         )
         second += TICK_SECONDS
@@ -229,6 +230,7 @@ def simulate(strategy: str, readiness: str) -> ScenarioResult:
         rebirth_second=second,
         final_stage=current_stage,
         remaining_coin=coin,
+        defense_xp=defense_xp,
         events=tuple(events),
     )
 
@@ -242,6 +244,7 @@ def event_time(result: ScenarioResult, name: str) -> float | None:
 
 def validate(results: list[ScenarioResult]) -> None:
     for result in results:
+        assert result.defense_xp >= FIRST_REBIRTH_XP, result
         assert 7 * 60 <= result.rebirth_second <= 15 * 60, result
 
     balanced_median = next(
@@ -250,9 +253,9 @@ def validate(results: list[ScenarioResult]) -> None:
         if result.strategy == "balanced" and result.readiness == "median_stage2"
     )
 
-    assert (event_time(balanced_median, "자동 굴리기") or 999) <= 15
-    assert (event_time(balanced_median, "자동 편성") or 999) <= 30
-    assert (event_time(balanced_median, "자석 범위 I") or 999) <= 45
+    assert (event_time(balanced_median, "자동 굴리기") or 999) <= 10
+    assert (event_time(balanced_median, "자동 편성") or 999) <= 45
+    assert (event_time(balanced_median, "자석 범위 I") or 999) <= 60
 
     stage_2_time = event_time(balanced_median, "스테이지 2 문")
     stage_3_time = event_time(balanced_median, "스테이지 3 문")
@@ -270,6 +273,7 @@ def main() -> None:
 
     print("First rebirth economy benchmark")
     print("StageCoinUnit: 1")
+    print("Boss reward modifier: 1.15")
     print(f"FirstRebirthXP: {FIRST_REBIRTH_XP:,.0f}")
     print()
 
