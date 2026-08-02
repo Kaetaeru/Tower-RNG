@@ -3,7 +3,7 @@
 - 계층: 게임 기획
 - 상태: **Confirmed (Living Document)**
 - 필수 참고: `../../AGENTS.md`
-- 관련 문서: `BALANCE_MODEL.md`, `STAT_TREE.md`, `CURRENCY.md`, `ROLLING.md`, `LEVEL_DESIGN.md`, `TUTORIAL.md`, `PROGRESSION.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `WORLD_NAVIGATION.md`, `RNG_PROBABILITY.md`, `../technical/STATE_LIFECYCLE.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`
+- 관련 문서: `BALANCE_MODEL.md`, `STAT_TREE.md`, `CURRENCY.md`, `ROLLING.md`, `LEVEL_DESIGN.md`, `TUTORIAL.md`, `PROGRESSION.md`, `ECONOMY_PACING.md`, `OFFLINE_PROGRESS.md`, `WORLD_NAVIGATION.md`, `RNG_PROBABILITY.md`, `../technical/STATE_LIFECYCLE.md`, `../reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md`, `../reference/V1_LUCK_COMPRESSION_BENCHMARK.md`, `../reference/V1_REBIRTH_STAT_BENCHMARK.md`, `../reference/V1_REBIRTH_XP_BENCHMARK.md`
 - 하위 문서 예정: `../spec/REBIRTH.md`
 - 마지막 정리: 2026-08-02
 
@@ -11,15 +11,13 @@
 
 환생은 진행을 처음으로 되돌리는 프레스티지가 아니라, 전투로 모은 **Defense XP를 영구 스탯 토큰으로 전환하는 연속 성장 행동**입니다.
 
-환생 시 초기화되는 영구 상태는 Defense XP뿐입니다.
-
 ```text
 유지
 - 코인
 - 열린 스테이지 문
 - 현재 위치와 활성 스테이지
 - 현재 웨이브와 전투
-- 타워·스탯·도감·합체·변종
+- 타워·코인 스탯·도감·합체·변종
 
 변경
 - Defense XP → 0
@@ -27,7 +25,7 @@
 - 환생 스탯 토큰 4개 지급
 ```
 
-토큰은 다음 네 분야에 배분합니다.
+토큰 배분처:
 
 ```text
 행운
@@ -36,7 +34,7 @@
 주사위 속도
 ```
 
-첫 환생 요구량은 `7,000 Defense XP`이며 기존 첫 경제 벤치마크의 도달 시간 `7.80~14.34분`은 그대로 유효합니다. 환생 뒤 코인과 문을 다시 모으는 이전 순환 구조는 사용하지 않습니다.
+첫 환생은 `7,000 Defense XP`, 이후 요구량은 실제로 XP를 얻은 가장 높은 스테이지의 기준 수입과 목표 환생 간격으로 계산합니다.
 
 ---
 
@@ -57,6 +55,7 @@ Defense XP
 - 베이스에 도달한 몬스터는 지급하지 않음
 - 오프라인에는 증가하지 않음
 - 코인 또는 Robux로 직접 구매하지 않음
+- 재화 스탯으로 증가하지 않음
 
 첫 버전은 별도 웨이브 완료 XP 보너스를 사용하지 않습니다.
 
@@ -68,15 +67,15 @@ Defense XP
 ```
 
 - 자동 실행 없음
-- 전투 중에도 원하는 시점에 실행 가능
+- 전투 중에도 실행 가능
 - 요구량을 채운 뒤 계속 파밍 가능
 - 초과 XP는 환생 시 기본적으로 이월하지 않음
 
 ---
 
-## 2. 요구량과 시간
+## 2. 첫 환생
 
-### REB-003: 첫 환생
+### REB-003: 고정 요구량
 
 ```text
 FirstRebirthXP = 7,000
@@ -88,31 +87,112 @@ FirstRebirthXP = 7,000
 | 문 우선 | 7.80~14.34분 |
 | 트리 우선 | 9.63~12.70분 |
 
-첫 환생까지의 경제·전투 계산은 변경되지 않습니다. 첫 환생은 진행 초기화가 아니라 첫 토큰 4개를 얻는 시점입니다.
-
-### REB-004: 이후 환생
-
-초기 방향:
-
-- 두 번째 환생 약 15~25분 목표
-- 초기 여러 회 약 20~40분 중심
-- 중기 이후 점진적으로 증가
-- 고정 대기시간·일일 제한 없음
-
-초기 요구량 후보:
-
-```text
-RequiredDefenseXP(r)
-= 7,000 × (r + 1)^1.65
-```
-
-첫 항만 검증되었습니다. 코인·문 초기화가 사라졌으므로 지수 `1.65`는 새 연속 진행 모델에서 다시 시뮬레이션한 뒤 확정합니다.
+중앙 통합 시뮬레이션에서는 약 9.42분에 도달합니다. 첫 환생은 초기화 구간의 끝이 아니라 첫 토큰 4개를 얻는 시점입니다.
 
 ---
 
-## 3. 토큰 지급
+## 3. 두 번째 이후 요구량
 
-### REB-005: 고정 지급량
+### REB-004: XP 기준 스테이지
+
+```text
+RebirthXPAnchorStage
+= Defense XP를 한 번 이상 획득한 가장 높은 스테이지
+```
+
+- 단순 입장으로는 상승하지 않음
+- 높은 스테이지에서 첫 유효 처치 XP가 발생하면 상승
+- 한 번 상승한 기준은 감소하지 않음
+- 낮은 스테이지에서 파밍하면 진행이 느려질 수 있음
+
+높은 스테이지에 들어가 행운만 받고 돌아오는 전략은 요구량을 올리지 않습니다.
+
+### REB-005: 기준 상승 시 진행률 보존
+
+```text
+ProgressRatio
+= CurrentDefenseXP / OldRequiredDefenseXP
+
+NewRequiredDefenseXP
+= Requirement(NextRebirth, NewAnchorStage)
+
+NewCurrentDefenseXP
+= ProgressRatio × NewRequiredDefenseXP
+```
+
+현재 XP 숫자와 요구량 숫자는 함께 바뀌지만 막대의 퍼센트는 그대로 유지합니다.
+
+이 규칙은 다음을 동시에 방지합니다.
+
+- 높은 스테이지 첫 처치로 진행 막대가 뒤로 밀리는 체감
+- 낮은 요구량을 유지한 채 높은 스테이지 XP를 받는 악용
+
+### REB-006: 목표 시간
+
+```text
+두 번째 환생: 기준 20분
+세 번째 환생: 기준 35분
+네 번째~50번째: 기준 50분
+```
+
+V1 이후 장기 성장:
+
+```text
+51~100번째: 55분
+101~150번째: 60분
+151~200번째: 65분
+201번째 이후: 최대 70분
+```
+
+이는 스탯이 없는 기준 처리속도입니다. 좋은 타워와 성능 투자는 실제 시간을 단축할 수 있습니다.
+
+### REB-007: 요구량 공식
+
+```text
+PlannedDefenseXPPerMinute(Stage)
+= PlannedCycleDefenseXP(Stage)
+× 60
+/ PlannedFarmCycleSeconds(Stage)
+```
+
+```text
+RequiredDefenseXP(NextRebirth, AnchorStage)
+= NiceRound(
+    PlannedDefenseXPPerMinute(AnchorStage)
+    × TargetRebirthMinutes(NextRebirth)
+  )
+```
+
+- V1 계획용 CycleDefenseXP는 `400 × StageRewardScale`
+- 실제 스테이지 작성 뒤 실제 BaseBudget 주기로 교체
+- `NiceRound`는 세 자리 유효숫자
+- 큰 값은 `MagnitudeNumber` 사용
+
+세부 표는 `V1_REBIRTH_XP_BENCHMARK.md`를 따릅니다.
+
+---
+
+## 4. 환생 횟수 검증
+
+중앙 스테이지 경로와 실제 성능 배분을 결합한 결과입니다.
+
+| 활성 플레이 | 성능 미투자 | 균형형 | 성능 2 | 성능 집중 4 |
+|---:|---:|---:|---:|---:|
+| 30분 | 2 | 2 | 2 | 2 |
+| 2시간 | 4 | 4 | 4 | 4 |
+| 5시간 | 7 | 8 | 8 | 9 |
+| 12시간 | 16 | 17 | 19 | 21 |
+| 15시간 | 19 | 22 | 24 | 26 |
+| 25시간 | 31 | 38 | 41 | 45 |
+| 30시간 | 37 | **46** | 50 | 55 |
+
+성능은 XP를 직접 배율하지 않지만 전투 주기를 단축해 환생도 간접적으로 빠르게 합니다. 계획 시뮬레이션은 clear-speed 효과를 `PerformanceMultiplier^0.60`으로 근사합니다.
+
+---
+
+## 5. 토큰 지급
+
+### REB-008: 고정 지급량
 
 ```text
 TokenReward = 4
@@ -122,6 +202,7 @@ TokenReward = 4
 
 ```text
 RebirthCount +1
+RebirthStatTokensEarned +4
 UnspentRebirthStatTokens +4
 DefenseXP = 0
 ```
@@ -133,18 +214,15 @@ DefenseXP = 0
 - 자동 균등 배분 없음
 - 환생 횟수 자체로 자동 배율을 주지 않음
 
-4개를 사용하는 이유:
-
-- 균형형은 매 환생 네 분야에 한 개씩 투자 가능
-- 집중형은 한 분야에 네 개 전부 투자 가능
-- 배분 선택이 첫 환생부터 즉시 보임
-
-### REB-006: 저장 데이터
+### REB-009: 저장 데이터
 
 ```text
+RebirthCount
+RebirthXPAnchorStage
 RebirthStatTokensEarned
 UnspentRebirthStatTokens
 RebirthStatAllocations[StatId]
+RebirthRespecAvailable
 ```
 
 불변조건:
@@ -157,17 +235,15 @@ RebirthStatAllocations[StatId]
 
 ---
 
-## 4. 네 가지 환생 스탯
+## 6. 네 가지 환생 스탯
 
-### REB-007: 행운 — `REBIRTH_LUCK`
+### REB-010: 행운 — `REBIRTH_LUCK`
 
 ```text
 LuckCompressionBonus(L)
-= 0.0315 × min(L, 25)
-+ 0.0090 × max(L - 25, 0)
+= 0.0340 × min(L, 25)
++ 0.0040 × max(L - 25, 0)
 ```
-
-전체 공식:
 
 ```text
 BaseCompression
@@ -177,7 +253,7 @@ BaseCompression
 + TemporaryCompressionBonus
 ```
 
-굴림 종류별 상한:
+굴림 상한:
 
 ```text
 일반 5.40
@@ -187,7 +263,7 @@ BaseCompression
 
 공식 기본 `1 / N`은 변경하지 않으며 현재 유효 확률은 표시하지 않습니다.
 
-### REB-008: 성능 — `REBIRTH_PERFORMANCE`
+### REB-011: 성능 — `REBIRTH_PERFORMANCE`
 
 ```text
 PerformanceMultiplier(P)
@@ -202,10 +278,9 @@ PerformanceMultiplier(P)
 - 모든 역할의 `EquivalentContribution`에 적용
 - 피해 역할은 피해 중심
 - 제어·지원·마무리는 역할별 기여 환산값에 적용
-- 공격속도만 올리는 별도 배율이 아님
 - 베이스와 몬스터 수치에는 적용하지 않음
 
-### REB-009: 재화 — `REBIRTH_CURRENCY`
+### REB-012: 재화 — `REBIRTH_CURRENCY`
 
 ```text
 CurrencyMultiplier(C)
@@ -217,19 +292,19 @@ CurrencyMultiplier(C)
   )
 ```
 
-V1 적용 대상:
+적용:
 
-- 접속 중 획득 코인
+- 접속 중 코인
 - 오프라인 코인
 
-적용하지 않음:
+미적용:
 
 - Defense XP
-- 환생 스탯 토큰
-- 타워 획득 확률
+- 환생 토큰
+- 타워 확률
 - 연금 정수
 
-### REB-010: 주사위 속도 — `REBIRTH_ROLL_SPEED`
+### REB-013: 주사위 속도 — `REBIRTH_ROLL_SPEED`
 
 ```text
 RollRateMultiplier(S)
@@ -244,99 +319,88 @@ FinalRollInterval
   )
 ```
 
-- 코인 굴리기 속도 노드가 만든 BaseRollInterval에 적용
-- 현재 `굴리기 속도 I` 이후 BaseRollInterval은 3.6초
-- V1 최소 간격 2.0초
-- 실제 굴림이 늘어나므로 황금·다이아몬드 진행도도 빨라짐
-
-세부 표와 시뮬레이션은 `V1_REBIRTH_STAT_BENCHMARK.md`를 따릅니다.
+- 코인 굴리기 속도 노드 뒤 적용
+- 현재 Speed I 이후 BaseRollInterval은 3.6초
+- V1 하한 2.0초
+- 황금·다이아몬드 진행도도 실제 굴림 수만큼 빨라짐
 
 ---
 
-## 5. 소프트캡 철학
+## 7. 소프트캡 철학
 
-네 분야 모두 첫 25포인트의 증가량이 큽니다.
-
-- 1~25포인트: 주 성장 구간
-- 26포인트 이후: 감소 효율
+- 첫 25포인트가 주 성장 구간
+- 26포인트부터 감소 효율
 - 성능 최대 ×2.50
 - 재화 최대 ×4.00
 - 굴리기 최소 2.00초
-- 행운은 Compression 상한으로 제한
+- 행운은 Compression 상한과 강한 후반 감소 효율
 
-한 분야 집중을 금지하지 않습니다. 다만 일정 지점 이후 다른 분야에 투자하는 것이 자연스럽게 효율적이어야 합니다.
+한 분야 집중을 금지하지 않지만 일정 지점부터 다른 분야 투자가 자연스럽게 경쟁력을 가져야 합니다.
 
 ---
 
-## 6. 재분배
+## 8. 재분배
 
-### REB-011: 사용과 유지
+### REB-014: 사용과 유지
 
-- 새로 받은 미사용 토큰은 언제든 배분 가능
+- 새 미사용 토큰은 언제든 배분 가능
 - 기존 배분은 다음 환생 전까지 유지
-- 환생을 실행한 직후 전체 재분배 기회 1회 제공
-- 재분배 비용 없음
-- 선택하지 않으면 기존 배분 그대로 유지
+- 환생 직후 전체 재분배 기회 1회
+- 비용 없음
+- 사용하지 않으면 기존 배분 유지
 
-### REB-012: 제한 이유
-
-상시 무료 재분배는 다음 행동을 유도할 수 있으므로 사용하지 않습니다.
+상시 재분배는 다음 행동을 유도하므로 사용하지 않습니다.
 
 ```text
-공격 직전 성능 몰입
-→ 처치 직전 재화 몰입
-→ 굴림 직전 행운 몰입
-→ 즉시 주사위 속도 몰입
+공격 직전 성능
+→ 처치 직전 재화
+→ 굴림 직전 행운
+→ 대기 중 주사위 속도
 ```
 
-재분배를 환생 시점으로 제한하면 빌드 선택은 유지하면서 영구 실수를 방지할 수 있습니다.
-
 ---
 
-## 7. 환생 실행 결과
+## 9. 환생 실행 결과
 
-### REB-013: 초기화
+### REB-015: 초기화
 
 ```text
-Defense XP만 0으로 초기화
+Defense XP만 0
 ```
 
 초기화하지 않음:
 
 - 코인
 - 열린 문
-- 최고 도달 스테이지
-- 마지막 활동 스테이지
-- 현재 위치
+- 현재 위치·스테이지
 - 현재 웨이브·몬스터·보스·베이스
 - 바닥 코인
 - 타워 타겟·투사체·소환체
 - 포션 활성 시간
 
-환생 때문에 로비로 이동하거나 웨이브 1로 되돌리지 않습니다.
-
-### REB-014: 유지
+### REB-016: 유지
 
 - 보유 타워·보호·편성
 - 도감·최초 획득 기록
-- 코인 스탯 트리 노드
-- 합체·변종 진행
-- 굴림 횟수와 특수 주사위 진행
-- 연금 정수와 포션
+- 코인 스탯 트리
+- 합체·변종
+- 굴림 횟수·특수 주사위 진행
+- 연금 정수·포션
 - 오프라인 업그레이드
-- 열린 문과 텔레포터 목적지
-- 최초 튜토리얼 완료 상태
-- 환생 횟수·토큰·배분
+- 열린 문·텔레포터 목적지
+- 튜토리얼 완료 상태
+- 환생 횟수·기준 스테이지·토큰·배분
 - 설정
 
 ---
 
-## 8. UI 흐름
+## 10. UI 흐름
 
-환생 가능 상태 표시:
+환생 가능 상태:
 
-- 현재 Defense XP와 요구량
-- 이번 환생 보상 `스탯 토큰 4개`
+- 현재 Defense XP / 요구량 / 진행률
+- XP 기준 스테이지
+- 이번 보상 스탯 토큰 4개
 - Defense XP만 0이 된다는 설명
 - 코인·문·현재 전투 유지
 - 현재 네 분야 배분 요약
@@ -350,61 +414,65 @@ Defense XP만 0으로 초기화
 취소
 ```
 
-환생 직후:
-
-```text
-토큰 4개 획득 연출
-→ 미사용 토큰 갱신
-→ 선택했다면 전체 재분배 화면
-→ 현재 전투 계속
-```
-
-연출은 자동 전투와 굴리기를 장시간 멈추지 않습니다.
+기준 스테이지가 상승해 요구량이 재계산될 때는 막대 퍼센트가 유지되며, 짧게 `XP 기준: 스테이지 N`만 갱신합니다.
 
 ---
 
-## 9. 저장과 원자성
+## 11. 저장과 원자성
 
-환생은 하나의 원자적 프로필 변경입니다.
+환생:
 
 ```text
 Defense XP 요구량 검증
 → 중복 TransactionId 검증
 → RebirthCount 증가
-→ RebirthStatTokensEarned +4
-→ UnspentRebirthStatTokens +4
+→ 토큰 누적 +4
+→ 미사용 토큰 +4
 → Defense XP 0
-→ 재분배 기회 플래그 설정
-→ 중요 저장 큐 등록
+→ 재분배 기회 설정
+→ 중요 저장 큐
 ```
 
-토큰 배분과 재분배도 서버 권위로 처리합니다. 실패한 요청은 토큰 또는 기존 배분을 변경하지 않습니다.
+XP 기준 스테이지 상승:
+
+```text
+새 스테이지 XP 획득 검증
+→ 기존 진행률 계산
+→ RebirthXPAnchorStage 상승
+→ 새 요구량 계산
+→ Defense XP를 같은 진행률로 재조정
+→ 같은 프로필 변경으로 저장
+```
+
+실패한 요청은 일부 값만 변경하지 않습니다.
 
 ---
 
-## 10. 사용하지 않는 구조
+## 12. 사용하지 않는 구조
 
 - 환생 코인 비용
 - 환생 시 코인 초기화
 - 환생 시 문 재잠금
 - 환생 시 로비 강제 이동
 - 환생 시 웨이브·전투 초기화
-- 환생 횟수에 따른 자동 고정 스탯 지급
+- 단순 `7,000 × RebirthCount^지수`만으로 전체 구간 계산
+- 높은 스테이지 첫 처치 시 진행률 하락
+- 낮은 XP 요구량으로 높은 스테이지 XP 악용
+- 환생 횟수만으로 자동 스탯 지급
 - Defense XP 유료 직접 구매
 - 오프라인 Defense XP
 - 초과 XP로 여러 환생 즉시 연속 실행
-- 타워·도감·코인 스탯·합체·변종 초기화
-- 환생 실패 확률과 무작위 토큰 보상
 - 전투 중 무제한 실시간 재분배
 
 ---
 
-## 11. 남은 검증
+## 13. 남은 검증
 
-- 새 연속 진행 구조의 두 번째 이후 Defense XP 요구량
-- 실제 환생 횟수와 토큰 획득 속도
+- 스테이지 2~15 실제 주기 XP와 파밍 시간
+- 실제 타워 분포에 따른 clear-speed 탄력성
+- 실패·누수 시간이 환생 속도에 미치는 영향
+- 빠른·느린 스테이지 경로
 - 성능 배율의 역할별 런타임 변환
-- 코인 포션·오프라인과 재화 배율의 중첩 순서
+- 코인 포션·오프라인과 재화 배율의 중첩
 - 후속 코인 굴리기 속도 노드
-- 토큰 배분별 스테이지 15 도달 시간
-- 환생·재분배 UI 실제 조작성
+- 50회 이후 장기 환생 체감
