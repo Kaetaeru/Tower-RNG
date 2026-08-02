@@ -17,8 +17,8 @@
 현재 준비도:
 
 ```text
-전체 V1 약 36%
-기획·밸런스 약 79%
+전체 V1 약 37%
+기획·밸런스 약 81%
 콘텐츠 카탈로그 약 12%
 Roblox 구현·QA는 저장소 기준 초기 단계
 ```
@@ -73,6 +73,7 @@ balance가 값을 추천
 | `design/TOWERS.md` | 50종 이상과 역할·희귀도 |
 | `design/COMBAT.md` | 추종 자동 전투 |
 | `design/FORMATION.md` | 4→12슬롯과 역할 상한 |
+| `design/EFFECT_STACKING.md` | 지원 출처 예산, 감속·완전 제어 중첩 계약 |
 | `design/TARGETING.md` | 타겟 선정과 예약 피해 |
 | `design/TOWER_BEHAVIOR.md` | 타워 행동 문법 |
 | `design/TOWER_EXTENSIONS.md` | 고유 능력 확장 |
@@ -113,7 +114,7 @@ balance가 값을 추천
 
 권위 인덱스: `balance/INDEX.md`
 
-## 확률·경제
+## 확률·경제·편성
 
 | 문서 | 책임 |
 |---|---|
@@ -125,6 +126,7 @@ balance가 값을 추천
 | `reference/V1_FORMATION_SLOT_BENCHMARK.md` | 슬롯 가격과 역할 제한 |
 | `reference/V1_COIN_COMBAT_BENCHMARK.md` | 독립 전투 성장 |
 | `balance/V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투 통합 경제 |
+| `balance/SUPPORT_CONTROL_STACKING_BENCHMARK.md` | 지원·제어 중첩과 자동 편성 기여 |
 
 ## 스테이지 전투
 
@@ -149,6 +151,7 @@ balance가 값을 추천
 행동형 또는 경량 검증 완료: 스테이지 1~15
 미검증 스테이지: 없음
 수치상 완료: 15 / 15
+지원·제어 중첩 계산 완료
 ```
 
 ---
@@ -156,6 +159,8 @@ balance가 값을 추천
 # 밸런스 재현 도구
 
 경로: `../tools/balance`
+
+## 성장·경제·편성
 
 | 도구 | 책임 |
 |---|---|
@@ -166,8 +171,14 @@ balance가 값을 추천
 | `rebirth_stat_tokens.py` | 환생 스탯·굴림 통합 |
 | `v1_roster_power_distribution.py` | 보유 전력 분포 |
 | `v1_formation_slot_economy.py` | 슬롯 경제 |
-| `v1_coin_combat_curve.py` | 독립 코인 전투 성장 |
+| `v1_coin_combat_curve.py` | 독립 전투 성장 |
 | `v1_gate_economy.py` | 문·슬롯·전투 통합 경제 |
+| `support_control_stacking.py` | 지원·제어 중첩과 감쇠 |
+
+## 스테이지
+
+| 도구 | 책임 |
+|---|---|
 | `stage1_wave_sim.py` | 스테이지 1 |
 | `stage2_wave_sim.py` | 스테이지 2 |
 | `stage3_wave_sim.py` | 스테이지 3 |
@@ -204,11 +215,11 @@ balance가 값을 추천
 확률·행운·환생·슬롯·코인 성장 계산 완료
 문 가격과 12~15시간 통합 경제 계산 완료
 스테이지 1~15 웨이브 전투 검증 완료
-S13 계획 86초 → 실제 86.13초, 대표 편성 누수 0
-S14 계획 93초 → 실제 93.11초, 대표 편성 누수 0
-S15 15h P10 평균 113.20초, 1,266편성 누수 0
+지원 출처 전력 예산과 동일 효과 중첩 규칙 계산 완료
+감속 상한과 완전 제어 최근 5초 예산 계산 완료
+지원·제어 합리적 혼합은 기준 편성의 85~105% 범위
 실제 타워 콘텐츠는 기준 6종 중심
-지원·제어·변종·합체·런타임 계산 미완료
+변종·합체·런타임 계산 미완료
 가격 권고안은 카탈로그 채택 전
 Roblox 수직 슬라이스는 저장소 기준 미완료
 ```
@@ -218,15 +229,16 @@ Roblox 수직 슬라이스는 저장소 기준 미완료
 # 현재 다음 작업
 
 ```text
-BAL-NEXT-008
-지원·제어 중첩 효율과 감쇠 벤치마크
+BAL-NEXT-009
+변종 타워 획득률·전투력·코인 싱크 벤치마크
 ```
 
 이후:
 
 ```text
-변종·합체
+합체
 → 런타임 손실
+→ 오프라인·후반 코인 싱크
 → 최종 통합
 → 카탈로그 채택
 → 지역 1 수직 슬라이스
