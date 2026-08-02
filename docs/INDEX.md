@@ -106,6 +106,7 @@ AGENTS.md
 | `reference/STAGE1_WAVE_BENCHMARK.md` | Active Benchmark | 스테이지 1 전체 15개 4역할 편성 검증 |
 | `reference/STAGE2_WAVE_BENCHMARK.md` | Active Benchmark | 스테이지 2 진입·파밍과 66초 경제 프록시 검증 |
 | `reference/STAGE3_WAVE_BENCHMARK.md` | Active Benchmark | 지역 1 최종전, 4슬롯 진입·5슬롯 78초 파밍 검증 |
+| `reference/STAGE6_WAVE_BENCHMARK.md` | Active Benchmark | 지역 2 최종전, 6슬롯 진입·7슬롯 75초 파밍 검증 |
 | `reference/STAGE15_WAVE_BENCHMARK.md` | Active Benchmark | 15h P10/P50·30h P10의 스테이지 15 직접 클리어 검증 |
 | `reference/FIRST_REBIRTH_ECONOMY_BENCHMARK.md` | Active Benchmark | 첫 7,000 XP 도달 |
 | `reference/STAT_TREE_CATALOG.md` | Active Catalog | 초기 코인 노드·좌표·가격 |
@@ -130,6 +131,7 @@ AGENTS.md
 | `../tools/balance/stage1_wave_sim.py` | 스테이지 1 웨이브 1~5 |
 | `../tools/balance/stage2_wave_sim.py` | 스테이지 2 진입·파밍과 66초 프록시 |
 | `../tools/balance/stage3_wave_sim.py` | 스테이지 3 지역 최종전과 78초 프록시 |
+| `../tools/balance/stage6_wave_sim.py` | 스테이지 6 지역 최종전과 75초 프록시 |
 | `../tools/balance/stage15_wave_sim.py` | 스테이지 15 집계 EC 직접 클리어 검증 |
 | `../tools/balance/stage_validation_plan.py` | 완전·경량 검증 스테이지와 15스테이지 계획률 |
 | `../tools/balance/first_rebirth_economy.py` | 첫 환생 임계점 경제 |
@@ -191,6 +193,7 @@ AGENTS.md
 → reference/STAGE1_WAVE_BENCHMARK.md
 → reference/STAGE2_WAVE_BENCHMARK.md
 → reference/STAGE3_WAVE_BENCHMARK.md
+→ reference/STAGE6_WAVE_BENCHMARK.md
 → reference/STAGE15_WAVE_BENCHMARK.md
 
 완주 시간·완주 전력
@@ -205,6 +208,7 @@ AGENTS.md
 → reference/STAGE1_WAVE_BENCHMARK.md
 → reference/STAGE2_WAVE_BENCHMARK.md
 → reference/STAGE3_WAVE_BENCHMARK.md
+→ reference/STAGE6_WAVE_BENCHMARK.md
 → reference/STAGE15_WAVE_BENCHMARK.md
 ```
 
@@ -217,6 +221,8 @@ AGENTS.md
 - 스테이지 1 실제 주기 56.28초, 전체 15개 편성 누수 0
 - 스테이지 2 실제 파밍 주기 65.90초, 계획 66초와 약 0.15% 차이
 - 스테이지 3 실제 파밍 주기 78.00초, 5슬롯 전체 6개 편성 누수 0
+- 스테이지 6 실제 파밍 주기 75.00초, 7슬롯 96개 편성 누수 0
+- 스테이지 6 정상 진입 6슬롯 31개 최소 5역할 편성 누수 0
 - 기준 스테이지 1·3·6·9·12·15 완전 검증, 나머지 경량 검증 정책
 - 첫 7,000 Defense XP 7.80~14.34분
 - 코인·문·전투를 유지하는 환생
@@ -242,14 +248,14 @@ AGENTS.md
 ## 다음 우선순위
 
 ```text
-1. 스테이지 6 지역 2 최종전 완전 검증
-2. 스테이지 4·5 경량 웨이브 작성과 대표 편성 검사
-3. 스테이지 4~15 문 가격과 전체 12~15시간 경제
-4. 스테이지 9·12 기준점과 7·8·10·11 경량 검사
-5. 스테이지 13·14 경량 검사와 스테이지 15 실제 행동형 재검증
-6. 중간 희귀도 실제 타워 작성
-7. 변종·합체의 시간대별 전투력 기여
-8. 실제 지원·제어 중첩과 자동 편성 평가
-9. 환생 스탯 배분·재분배 UI 상세 명세
+1. 스테이지 4·5 경량 웨이브 작성과 대표 편성 검사
+2. 스테이지 4~15 문 가격과 전체 12~15시간 경제
+3. 스테이지 9 지역 3 최종전 완전 검증
+4. 스테이지 7·8 경량 검사
+5. 스테이지 12 기준점과 10·11 경량 검사
+6. 스테이지 13·14 경량 검사와 스테이지 15 실제 행동형 재검증
+7. 중간 희귀도 실제 타워 작성
+8. 변종·합체의 시간대별 전투력 기여
+9. 실제 지원·제어 중첩과 자동 편성 평가
 10. 지역 1 수직 슬라이스 구현
 ```
