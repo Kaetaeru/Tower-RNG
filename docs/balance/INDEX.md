@@ -54,7 +54,18 @@
 | `../reference/V1_REBIRTH_XP_BENCHMARK.md` | 이후 환생 XP 곡선 |
 | `../reference/V1_REBIRTH_STAT_BENCHMARK.md` | 네 분야 환생 스탯 |
 | `../reference/V1_FORMATION_SLOT_BENCHMARK.md` | 4→12슬롯 가격과 역할 제한 |
-| `../reference/V1_COIN_COMBAT_BENCHMARK.md` | 코인 전투 성장 |
+| `../reference/V1_COIN_COMBAT_BENCHMARK.md` | 코인 전투 성장의 독립 구성요소 계산 |
+| `V1_GATE_ECONOMY_BENCHMARK.md` | 문·슬롯·전투·유연 예산 통합과 소비 전략 비교 |
+
+통합 경제의 가격 우선순위:
+
+```text
+V1_GATE_ECONOMY_BENCHMARK.md
+→ 문 가격과 코인 전투 XI 가격의 현재 계산 권고안
+
+기존 V1_COIN_COMBAT_BENCHMARK.md
+→ 독립 전투 예산 구성요소와 배율 단계 참고
+```
 
 ### 스테이지 전투
 
@@ -80,7 +91,8 @@
 | `../../tools/balance/rebirth_stat_tokens.py` | 환생 스탯·굴림 통합 |
 | `../../tools/balance/v1_roster_power_distribution.py` | 보유 전력 분포 |
 | `../../tools/balance/v1_formation_slot_economy.py` | 슬롯 경제 |
-| `../../tools/balance/v1_coin_combat_curve.py` | 코인 전투 성장 |
+| `../../tools/balance/v1_coin_combat_curve.py` | 독립 코인 전투 성장 |
+| `../../tools/balance/v1_gate_economy.py` | 문·슬롯·전투 통합 코인 경제 |
 | `../../tools/balance/stage1_wave_sim.py` | 스테이지 1 |
 | `../../tools/balance/stage2_wave_sim.py` | 스테이지 2 |
 | `../../tools/balance/stage3_wave_sim.py` | 스테이지 3 |
@@ -102,6 +114,10 @@
 - 시간대별 굴림·보유 전력 분포
 - 4→12슬롯과 역할 상한
 - 코인 전투 ×1.25→×5.00
+- 스테이지 4~15 문 가격 권고안
+- 문·슬롯·전투·유연 예산 통합 12~15시간 경제
+- 문 우선·전투 우선·슬롯 우선 소비 전략 비교
+- 합리적 재분배에서도 ×5.00을 약 20시간에 유지하는 최종 전투 노드 가격
 - 스테이지 1~6 전투 주기
 - 스테이지 15 15h/30h 집계 클리어
 ```
@@ -112,11 +128,18 @@
 
 ### 경제
 
-- [ ] 스테이지 4~15 문 가격
-- [ ] 전체 12~15시간 코인 흐름
-- [ ] 소비 전략별 도달시간
+- [x] 스테이지 4~15 문 가격
+- [x] 전체 12~15시간 핵심 코인 흐름
+- [x] 소비 전략별 도달시간
 - [ ] 오프라인 코인 민감도
-- [ ] V1 코인 과잉·부족 검사
+- [~] V1 코인 과잉·부족 검사
+
+현재 확인된 경제 후속 문제:
+
+```text
+20~30시간에는 문·슬롯·공통 전투 성장 이후 큰 잔여 코인이 발생
+→ 합체·변종·편의·수집 엔드게임 코인 싱크가 필요
+```
 
 ### 스테이지
 
@@ -147,18 +170,17 @@
 ## 현재 다음 계산
 
 ```text
-BAL-NEXT-001
-스테이지 4~15 영구 문 가격과 전체 12~15시간 코인 경제
+BAL-NEXT-002
+스테이지 9 지역 3 최종전 완전 검증
 ```
 
-수용 조건 초안:
+이후 순서:
 
 ```text
-빠른 메인 완주 8~10시간
-중앙 메인 완주 12~15시간
-느린 메인 완주 18~22시간
-문 우선·전투 우선·슬롯 우선 중 어느 정상 전략도 영구적으로 막히지 않음
-환생 재화 집중이 모든 다른 선택을 무효화하지 않음
+스테이지 9 완전 검증
+→ 스테이지 7·8 경량 검증
+→ 스테이지 12와 10·11
+→ 스테이지 13·14와 스테이지 15 행동형
 ```
 
 ---
@@ -188,5 +210,5 @@ docs/reference/*BENCHMARK*.md
 - 임시 이름은 `계산용`으로 표시합니다.
 - 계산값과 채택값을 구분합니다.
 - 새 계산 문서는 `docs/balance`에 작성합니다.
-- 완료 시 `PROJECT_STATUS.md`를 같은 커밋에서 갱신합니다.
+- 완료 시 `PROJECT_STATUS.md`를 같은 작업에서 갱신합니다.
 - 카탈로그를 바꿀 필요가 있으면 별도의 채택 단계로 넘깁니다.
